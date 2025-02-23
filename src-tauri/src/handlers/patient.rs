@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
-use tauri::Manager;
+use tauri::{AppHandle,Manager};
+use rusqlite::{Connection, Result, params};
 use crate::datastore::db;
 
 
@@ -20,14 +21,32 @@ pub struct PatientInfo {
 }
 
 #[tauri::command]
-pub fn add_patient(app_handle: tauri::AppHandle, data: PatientInfo) -> String {
-    let conn = db::get_db_connection(&app_handle);
-    
-    println!("Received patient data: {:?}", data);
+pub fn add_patient(data: PatientInfo, window: tauri::Window) -> String {
+    let conn = match db::get_db_connection(window.app_handle()) {
+        Ok(conn) => conn,
+        Err(_) => return String::from("Failed to connect to database!"),
+    };
 
-    println!("Received appointment data: {:?}", data);
-    format!("Ok Patient is Added !")
-}#[tauri::command]
+    let insert_query = "INSERT INTO patients (
+        name, dob, gender, occupation, residence, born_city, 
+        tel, email, marital, smoker, si, special_habits
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+    match conn.execute(
+        insert_query,
+        (
+            data.name, data.dob, data.gender, data.occupation,
+            data.residence, data.born_city, data.tel, data.email,
+            data.marital, data.smoker, data.si, data.special_habits
+        ),
+    ) {
+        Ok(_) => String::from("New patient added successfully!"),
+        Err(_) => String::from("Failed to add new patient!"),
+    }
+}
+
+
+#[tauri::command]
 pub fn get_patient_info(_id: String) -> PatientInfo {
     PatientInfo {
         name: String::from("John Doe"),

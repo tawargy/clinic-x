@@ -58,5 +58,7 @@ pub fn init_db(app_handle: &tauri::AppHandle) -> Result<()> {
 pub fn get_db_connection(app_handle: &tauri::AppHandle) -> Result<Connection> {
     let app_dir = app_handle.path().app_data_dir().unwrap();
     let db_path = app_dir.join("app.db");
+    println!("Database path: {}", db_path.display());
+    if !db_path.exists() { init_db(app_handle)?; };
     Connection::open(db_path)
 }
