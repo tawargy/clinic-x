@@ -1,11 +1,12 @@
 use serde::{Deserialize, Serialize};
 use tauri::{AppHandle,Manager};
-use rusqlite::{Connection, Result, params};
+use rusqlite::{Connection, Result, params, Row};
 use crate::datastore::db;
 
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct PatientInfo {
+    id: String,
     name: String,
     dob: String,
     gender: String,
@@ -18,6 +19,25 @@ pub struct PatientInfo {
     smoker: String,
     si: String,
     special_habits: String,
+}
+impl PatientInfo {
+    fn from_row(row: &Row) -> rusqlite::Result<Self> {
+        Ok(PatientInfo {
+            id: row.get(0)?,
+            name: row.get(1)?,
+            dob: row.get(2)?,
+            gender: row.get(3)?,
+            occupation: row.get(4)?,
+            residence: row.get(5)?,
+            born_city: row.get(6)?,
+            tel: row.get(7)?,
+            email: row.get(8)?,
+            marital: row.get(9)?,
+            smoker: row.get(10)?,
+            si: row.get(11)?,
+            special_habits: row.get(12)?,
+        })
+    }
 }
 
 #[tauri::command]
@@ -47,19 +67,14 @@ pub fn add_patient(data: PatientInfo, window: tauri::Window) -> String {
 
 
 #[tauri::command]
-pub fn get_patient_info(_id: String) -> PatientInfo {
-    PatientInfo {
-        name: String::from("John Doe"),
-        dob: String::from("1990-01-01"),
-        gender: String::from("Male"),
-        occupation: String::from("Software Engineer"),
-        residence: String::from("123 Main Street"),
-        born_city: String::from("New York"),
-        tel: String::from("+1234567890"),
-        email: String::from("john.doe@example.com"),
-        marital: String::from("Single"),
-        smoker: String::from("No"),
-        si: String::from("None"),
-        special_habits: String::from("Regular exercise"),
-    }
+pub fn get_patient_info(patient_id: String, window: tauri::Window) -> Result<PatientInfo, String> {
+    let conn = match db::get_db_connection(window.app_handle()) {
+        Ok(conn) => conn,
+        Err(_) => return Err(String::from("Failed to connect to database!")),
+    };
+    let mut stmt = conn.prepare("SELECT * FROM patients WHERE id = ?").map_err(|e| e.to_string())?;
+
+    let patient: PatientInfo = stmt.query_row([patient_id], |row| PatientInfo::from_row(row))
+        .map_err(|e| e.to_string())?;
+    Ok(patient)
 }
