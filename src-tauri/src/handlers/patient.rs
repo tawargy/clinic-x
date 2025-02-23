@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 use tauri::{AppHandle,Manager};
 use rusqlite::{Connection, Result, params, Row};
+use uuid::Uuid;
 use crate::datastore::db;
 
 
@@ -41,30 +42,31 @@ impl PatientInfo {
 }
 
 #[tauri::command]
-pub fn add_patient(data: PatientInfo, window: tauri::Window) -> String {
+pub fn add_patient(mut data: PatientInfo, window: tauri::Window) -> String {
     let conn = match db::get_db_connection(window.app_handle()) {
         Ok(conn) => conn,
         Err(_) => return String::from("Failed to connect to database!"),
     };
 
+    data.id = Uuid::new_v4().to_string(); // Generate a new UUID
+
     let insert_query = "INSERT INTO patients (
-        name, dob, gender, occupation, residence, born_city, 
+        id, name, dob, gender, occupation, residence, born_city, 
         tel, email, marital, smoker, si, special_habits
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     match conn.execute(
         insert_query,
-        (
-            data.name, data.dob, data.gender, data.occupation,
-            data.residence, data.born_city, data.tel, data.email,
-            data.marital, data.smoker, data.si, data.special_habits
-        ),
+        params![
+            &data.id, &data.name, &data.dob, &data.gender, &data.occupation,
+            &data.residence, &data.born_city, &data.tel, &data.email,
+            &data.marital, &data.smoker, &data.si, &data.special_habits
+        ],
     ) {
-        Ok(_) => String::from("New patient added successfully!"),
+        Ok(_) => String::from(&data.id),
         Err(_) => String::from("Failed to add new patient!"),
     }
 }
-
 
 #[tauri::command]
 pub fn get_patient_info(patient_id: String, window: tauri::Window) -> Result<PatientInfo, String> {

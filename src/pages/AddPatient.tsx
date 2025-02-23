@@ -4,6 +4,7 @@ import Select from "../components/comman/formFaild/Select";
 
 import { invoke } from "@tauri-apps/api/core";
 interface IFormInput {
+  id: string;
   name: string;
   dob: string;
   gender: string;
@@ -41,8 +42,9 @@ function AddPatient() {
       <form
         onSubmit={handleSubmit(onSubmitHandler)}
         noValidate
-        autoComplete="off"
+        autoComplete="on"
       >
+        <input type="hidden" {...register("id")} />
         <Input label="Name" name="name" register={register} />
         <Input label="DOB" name="dob" register={register} />
         <Select
@@ -84,5 +86,4 @@ function AddPatient() {
     </div>
   );
 }
-
 export default AddPatient;

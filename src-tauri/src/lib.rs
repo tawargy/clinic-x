@@ -14,7 +14,7 @@ pub fn run() {
             handlers::appointment::add_appointment_data,
             handlers::queue_and_recently::get_queue,
             handlers::queue_and_recently::get_recently,
-            handlers::search::search_resualt
+            handlers::search::search_result
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

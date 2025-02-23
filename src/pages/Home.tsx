@@ -1,6 +1,6 @@
+import { invoke } from "@tauri-apps/api/core";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { invoke } from "@tauri-apps/api/core";
 
 type TPatient = {
   id: string;
@@ -8,7 +8,7 @@ type TPatient = {
 };
 
 function Home() {
-  const [searchResualt, setSearchResualt] = useState<TPatient | undefined>([]);
+  const [searchResult, setSearchResult] = useState<TPatient | undefined>([]);
   const [queue, setQueue] = useState<TPatient[] | undefined>([]);
   const [recently, setRecently] = useState<TPatient[] | undefined>([]);
 
@@ -27,11 +27,11 @@ function Home() {
     console.log(input);
     //debounce
     try {
-      const res = (await invoke("search_resualt", { input: input })) as
+      const res = (await invoke("search_result", { input: input })) as
         | TPatient
         | undefined;
-      setSearchResualt(res);
-      console.log(searchResualt);
+      setSearchResult(res);
+      console.log(searchResult);
     } catch (e) {
       console.log(e);
     }
@@ -56,8 +56,8 @@ function Home() {
               onChange={onChangeHandler}
             />
             <div>
-              {searchResualt &&
-                searchResualt.map((p) => (
+              {searchResult &&
+                searchResult.map((p) => (
                   <p key={p.id}>
                     <Link to={p.id}>{p.name}</Link>
                   </p>
