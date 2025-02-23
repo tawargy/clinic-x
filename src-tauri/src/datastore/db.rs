@@ -1,12 +1,11 @@
 use rusqlite::{Connection, Result};
-use std::path::PathBuf;
-use tauri::api::path::app_data_dir;
+use tauri::Manager;
 
 pub fn init_db(app_handle: &tauri::AppHandle) -> Result<()> {
-    let app_dir = app_data_dir(&app_handle.config()).unwrap();
-    std::fs::create_dir_all(&app_dir)?;
-    let db_path = app_dir.join("app.db");
+    let app_dir = app_handle.path().app_data_dir().expect("Failed to get app data directory");
+    std::fs::create_dir_all(&app_dir).expect("Failed to create app data directory");
 
+    let db_path = app_dir.join("app.db");
     let conn = Connection::open(db_path)?;
 
     // Create patients table
@@ -56,9 +55,8 @@ pub fn init_db(app_handle: &tauri::AppHandle) -> Result<()> {
 
     Ok(())
 }
-
 pub fn get_db_connection(app_handle: &tauri::AppHandle) -> Result<Connection> {
-    let app_dir = app_data_dir(&app_handle.config()).unwrap();
+    let app_dir = app_handle.path().app_data_dir().unwrap();
     let db_path = app_dir.join("app.db");
     Connection::open(db_path)
 }

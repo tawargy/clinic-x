@@ -1,4 +1,7 @@
 use serde::{Deserialize, Serialize};
+use tauri::Manager;
+use crate::datastore::db;
+
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct PatientInfo {
@@ -17,11 +20,14 @@ pub struct PatientInfo {
 }
 
 #[tauri::command]
-pub fn add_patient(data: PatientInfo) -> String {
+pub fn add_patient(app_handle: tauri::AppHandle, data: PatientInfo) -> String {
+    let conn = db::get_db_connection(&app_handle);
+    
+    println!("Received patient data: {:?}", data);
+
     println!("Received appointment data: {:?}", data);
     format!("Ok Patient is Added !")
-}
-#[tauri::command]
+}#[tauri::command]
 pub fn get_patient_info(_id: String) -> PatientInfo {
     PatientInfo {
         name: String::from("John Doe"),
