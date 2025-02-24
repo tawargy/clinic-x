@@ -15,13 +15,13 @@ function Input<T extends FieldValues>({
   register,
 }: TProps<T>) {
   return (
-    <label className="block w-full text-gray-600 " htmlFor={name}>
+    <label className="block w-full dark:text-white " htmlFor={name}>
       {label}
       <input
         type={type}
         id={name}
         {...register(name)}
-        className="block w-full mt-1 mb-2 px-2 py-1 rounded-md focus:outline-none
+        className="block w-full mt-1 mb-2 px-2 py-2 rounded-md focus:outline-none
              border border-gray-400  focus:border-blue-light text-gray-700 bg-gray-100"
       />
     </label>

@@ -17,10 +17,10 @@ function Select<T extends FieldValues>({
 }: SlectProps<T>) {
   return (
     <div className="w-full">
-      <label className="block w-full text-green-darker " htmlFor={name}>
+      <label className="block w-full dark:text-white " htmlFor={name}>
         {label}
         <select
-          className="block w-full mt-2 mb-4 px-2 py-4 rounded-md focus:outline-none  border border-gray-400  focus:border-blue-light   text-gray-700 bg-gray-100"
+          className="block w-full mt-2 mb-4 px-2 py-2 rounded-md focus:outline-none  border border-gray-400  focus:border-blue-light   text-gray-700 bg-gray-100"
           id={name}
           {...register(name)}
         >

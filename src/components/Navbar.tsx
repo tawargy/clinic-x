@@ -5,14 +5,19 @@ import { MdOutlineDarkMode } from "react-icons/md";
 import { FiSettings } from "react-icons/fi";
 
 function Navbar() {
-  const { themeMode, setThemeMode } = useAppSettings();
+  const { themeMode, setThemeMode, isAppointment } = useAppSettings();
   return (
-    <nav className="flex justify-between items-center  p-4  mb-8">
+    <nav className="flex justify-between items-center  p-4  mb-2">
       <h2>
-        <NavLink className="nav-link text-red-500 text-2xl" to="/">
-          Dctor X
-        </NavLink>
+        {!isAppointment ? (
+          <NavLink className="nav-link text-red-500 text-2xl" to="/">
+            Dctor X
+          </NavLink>
+        ) : (
+          <span className="nav-link text-blue-500 text-2xl"> Dctor X</span>
+        )}
       </h2>
+
       <ul className="flex flex-row justify-between items-center gap-3 ">
         <li className="nav-item">
           <button
@@ -27,14 +32,25 @@ function Navbar() {
           </button>
         </li>
         <li className="nav-item">
-          <NavLink className="nav-link dark:text-white" to="/calender">
-            <FiSettings
-              style={{
-                fontSize: "25px",
-                color: `${themeMode ? "#fff" : "#000"}`,
-              }}
-            />
-          </NavLink>
+          {!isAppointment ? (
+            <NavLink className="nav-link dark:text-white" to="/calender">
+              <FiSettings
+                style={{
+                  fontSize: "25px",
+                  color: `${themeMode ? "#fff" : "#000"}`,
+                }}
+              />
+            </NavLink>
+          ) : (
+            <span className=" dark:text-white">
+              <FiSettings
+                style={{
+                  fontSize: "25px",
+                  color: `${themeMode ? "#fff" : "#000"}`,
+                }}
+              />
+            </span>
+          )}
         </li>
       </ul>
     </nav>

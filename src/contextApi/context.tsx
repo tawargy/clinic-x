@@ -4,6 +4,8 @@ import { createContext, ReactNode, useState, useMemo, useContext } from "react";
 interface AppContextType {
   themeMode: boolean;
   setThemeMode: (themeMode: boolean) => void;
+  isAppointment: boolean;
+  setIsAppointment: (status: boolean) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -12,13 +14,16 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 function AppProvider({ children }: { children: ReactNode }) {
   const [themeMode, setThemeMode] = useState(false);
+  const [isAppointment, setIsAppointment] = useState(false);
 
   const memoizedValue = useMemo(
     () => ({
       themeMode,
       setThemeMode,
+      isAppointment,
+      setIsAppointment,
     }),
-    [themeMode],
+    [themeMode, isAppointment],
   );
 
   return (

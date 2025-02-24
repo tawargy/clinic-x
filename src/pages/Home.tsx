@@ -9,7 +9,6 @@ type TPatient = {
   id: string;
   name: string;
 };
-const themes = ["light", "dark"];
 
 function Home() {
   const { themeMode } = useAppSettings();
@@ -46,15 +45,15 @@ function Home() {
     <div>
       <div className={"flex gap-4 "}>
         <div className="w-1/4  bg-white  rounded-lg shadow-lg dark:bg-bg-dark  dark:shadow-blue-500/50 ">
-          <h3 className="bg-blue-700 text-center py-4 rounded-t-md text-white text-lg">
+          <h3 className="bg-blue-700 text-center py-4 rounded-t-md text-white lg:text-lg">
             Queue
           </h3>
-          <div className="px-4">
+          <div className="lg:px-4">
             {queue &&
               queue.map((p) => (
                 <p key={p.id}>
                   <Link
-                    className="bg-blue-400 block py-2 my-3 rounded-md  text-center hover:bg-blue-500 hover:text-white font-bold "
+                    className="bg-blue-400 block py-2 my-3 rounded-md  text-center hover:bg-blue-500 hover:text-white lg:font-bold text-sm lg:text-lg "
                     to={`/appointment/${p.id}`}
                   >
                     {p.name}
@@ -63,10 +62,10 @@ function Home() {
               ))}
           </div>
         </div>
-        <div className="flex flex-col gap-80 h-[85vh] w-1/2 bg-white  text-center rounded-lg shadow-lg dark:bg-bg-dark  dark:shadow-blue-500/50 dark:text-gray-100">
+        <div className="flex flex-col  h-[80vh] w-1/2 bg-white  text-center rounded-lg shadow-lg dark:bg-bg-dark  dark:shadow-blue-500/50 dark:text-gray-100">
           <div className="bg-blue-700 py-3 px-2 rounded-t-lg">
             <input
-              className=" p-2 rounded-md bg-white  inline-block w-1/2 m-auto"
+              className=" p-2 rounded-md bg-white  inline-block w-full lg:w-1/2 m-auto text-gray-700 "
               type="text"
               placeholder="Enter Name"
               onChange={onChangeHandler}
@@ -80,10 +79,10 @@ function Home() {
                 ))}
             </div>
           </div>
-          <div className="flex gap-4 my-8 justify-center items-center">
+          <div className="flex h-[100%] gap-2 lg:gap-8 my-8 justify-center items-center">
             <Link
               title="Add Patient"
-              className="flex justify-center items-center bg-blue-400 rounded-xl w-[70px] h-[70px] hover:bg-blue-500 "
+              className="flex justify-center items-center bg-blue-400 rounded-xl w-[40px] h-[40px] lg:w-[70px] lg:h-[70px] hover:bg-blue-500 "
               to={"/add-patient"}
             >
               <IoPersonAddSharp
@@ -95,7 +94,7 @@ function Home() {
             </Link>
             <Link
               title="Calender"
-              className="flex justify-center items-center bg-blue-400 rounded-xl w-[70px] h-[70px] hover:bg-blue-500 text-black dark:text-white"
+              className="flex justify-center items-center bg-blue-400 rounded-xl w-[40px] h-[40px] lg:w-[70px] lg:h-[70px] hover:bg-blue-500 text-black dark:text-white"
               to={"/calender"}
             >
               <PiCalendarCheck
@@ -106,23 +105,24 @@ function Home() {
               />
             </Link>
             <Link
+              title="Ai Assistant"
               to={"/"}
-              className="flex items-center justify-center bg-blue-400 rounded-xl w-[70px] h-[70px] hover:bg-blue-500 text-black dark:text-white"
+              className="flex items-center justify-center bg-blue-400 rounded-xl w-[40px] h-[40px] lg:w-[70px] lg:h-[70px] hover:bg-blue-500 text-black dark:text-white"
             >
               AI
             </Link>
           </div>
         </div>
         <div className="w-1/4 bg-white rounded-lg shadow-lg dark:bg-bg-dark  dark:shadow-blue-500/50 ">
-          <h3 className="bg-blue-700 text-center py-4 rounded-t-md text-white text-lg ">
+          <h3 className="bg-blue-700 text-center py-4 rounded-t-md text-white lg:text-lg ">
             Recently
           </h3>
-          <div className="px-4">
+          <div className="lg:px-4">
             {recently &&
               recently.map((p) => (
                 <p key={p.id}>
                   <Link
-                    className="bg-blue-400 block py-2 my-3 rounded-md  text-center hover:bg-blue-500 hover:text-white font-bold"
+                    className="bg-blue-400 block py-2 my-3 rounded-md  text-center hover:bg-blue-500 hover:text-white lg:font-bold text-sm lg:text-lg "
                     to={`/patient-basic-info/${p.id}`}
                   >
                     {p.name}
