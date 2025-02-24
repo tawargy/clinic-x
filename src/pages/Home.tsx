@@ -1,13 +1,18 @@
 import { invoke } from "@tauri-apps/api/core";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useAppSettings } from "../contextApi/context";
+import { IoPersonAddSharp } from "react-icons/io5";
+import { PiCalendarCheck } from "react-icons/pi";
 
 type TPatient = {
   id: string;
   name: string;
 };
+const themes = ["light", "dark"];
 
 function Home() {
+  const { themeMode } = useAppSettings();
   const [searchResult, setSearchResult] = useState<TPatient | undefined>([]);
   const [queue, setQueue] = useState<TPatient[] | undefined>([]);
   const [recently, setRecently] = useState<TPatient[] | undefined>([]);
@@ -36,23 +41,34 @@ function Home() {
       console.log(e);
     }
   };
+
   return (
     <div>
-      <div className={"flex gap-4"}>
-        <div className="w-1/4 bg-gray-300">
-          <h3>Queue</h3>
-          {queue &&
-            queue.map((p) => (
-              <p key={p.id}>
-                <Link to={`/appointment/${p.id}`}>{p.name}</Link>
-              </p>
-            ))}
+      <div className={"flex gap-4 "}>
+        <div className="w-1/4  bg-white  rounded-lg shadow-lg dark:bg-bg-dark  dark:shadow-blue-500/50 ">
+          <h3 className="bg-blue-700 text-center py-4 rounded-t-md text-white text-lg">
+            Queue
+          </h3>
+          <div className="px-4">
+            {queue &&
+              queue.map((p) => (
+                <p key={p.id}>
+                  <Link
+                    className="bg-blue-400 block py-2 my-3 rounded-md  text-center hover:bg-blue-500 hover:text-white font-bold "
+                    to={`/appointment/${p.id}`}
+                  >
+                    {p.name}
+                  </Link>
+                </p>
+              ))}
+          </div>
         </div>
-        <div className="w-1/2 bg-gray-500 p-4 text-center">
-          <div>
+        <div className="flex flex-col gap-80 h-[85vh] w-1/2 bg-white  text-center rounded-lg shadow-lg dark:bg-bg-dark  dark:shadow-blue-500/50 dark:text-gray-100">
+          <div className="bg-blue-700 py-3 px-2 rounded-t-lg">
             <input
+              className=" p-2 rounded-md bg-white  inline-block w-1/2 m-auto"
               type="text"
-              placeholder="Enter a name"
+              placeholder="Enter Name"
               onChange={onChangeHandler}
             />
             <div>
@@ -65,20 +81,55 @@ function Home() {
             </div>
           </div>
           <div className="flex gap-4 my-8 justify-center items-center">
-            <div className="w-[70px] h-[70px] bg-blue-400">
-              <Link to={"/add-patient"}>ADD</Link>
-            </div>
-            <div className="w-[70px] h-[70px] bg-red-200">AI</div>
+            <Link
+              title="Add Patient"
+              className="flex justify-center items-center bg-blue-400 rounded-xl w-[70px] h-[70px] hover:bg-blue-500 "
+              to={"/add-patient"}
+            >
+              <IoPersonAddSharp
+                style={{
+                  fontSize: "1.5rem",
+                  color: `${themeMode ? "#fff" : "#000"}`,
+                }}
+              />
+            </Link>
+            <Link
+              title="Calender"
+              className="flex justify-center items-center bg-blue-400 rounded-xl w-[70px] h-[70px] hover:bg-blue-500 text-black dark:text-white"
+              to={"/calender"}
+            >
+              <PiCalendarCheck
+                style={{
+                  fontSize: "1.5rem",
+                  color: `${themeMode ? "#fff" : "#000"}`,
+                }}
+              />
+            </Link>
+            <Link
+              to={"/"}
+              className="flex items-center justify-center bg-blue-400 rounded-xl w-[70px] h-[70px] hover:bg-blue-500 text-black dark:text-white"
+            >
+              AI
+            </Link>
           </div>
         </div>
-        <div className="w-1/4 bg-gray-500">
-          <h3>Recently</h3>
-          {recently &&
-            recently.map((p) => (
-              <p key={p.id}>
-                <Link to={`/patient-basic-info/${p.id}`}>{p.name}</Link>
-              </p>
-            ))}
+        <div className="w-1/4 bg-white rounded-lg shadow-lg dark:bg-bg-dark  dark:shadow-blue-500/50 ">
+          <h3 className="bg-blue-700 text-center py-4 rounded-t-md text-white text-lg ">
+            Recently
+          </h3>
+          <div className="px-4">
+            {recently &&
+              recently.map((p) => (
+                <p key={p.id}>
+                  <Link
+                    className="bg-blue-400 block py-2 my-3 rounded-md  text-center hover:bg-blue-500 hover:text-white font-bold"
+                    to={`/patient-basic-info/${p.id}`}
+                  >
+                    {p.name}
+                  </Link>
+                </p>
+              ))}
+          </div>
         </div>
       </div>
     </div>
