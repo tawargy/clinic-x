@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -9,6 +10,18 @@ type TPatient = {
   id: string;
   name: string;
 };
+
+function debounce<T extends (...args: any[]) => void>(
+  func: T,
+  wait: number,
+): (...args: Parameters<T>) => void {
+  let timeout: NodeJS.Timeout | null = null;
+
+  return (...args: Parameters<T>) => {
+    if (timeout) clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  };
+}
 
 function Home() {
   const { themeMode } = useAppSettings();
@@ -26,10 +39,8 @@ function Home() {
     getQueueAndRecently();
   }, []);
 
-  const onChangeHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.target.value;
+  const addPatient = async (input: string) => {
     console.log(input);
-    //debounce
     try {
       const res = (await invoke("search_result", { input: input })) as
         | TPatient
@@ -41,6 +52,27 @@ function Home() {
     }
   };
 
+  const debouncedSearch = useCallback(
+    debounce((input: string) => {
+      addPatient(input);
+    }, 500),
+    [],
+  );
+  const onChangeHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value;
+    if (input.length < 1) {
+      setSearchResult(undefined);
+      return;
+    }
+    debouncedSearch(input);
+  };
+
+  const onBlurHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTimeout(() => {
+      setSearchResult(undefined);
+      e.target.value = "";
+    }, 200);
+  };
   return (
     <div>
       <div className={"flex gap-4 "}>
@@ -63,18 +95,31 @@ function Home() {
           </div>
         </div>
         <div className="flex flex-col  h-[80vh] w-1/2 bg-white  text-center rounded-lg shadow-lg dark:bg-bg-dark  dark:shadow-blue-500/50 dark:text-gray-100">
-          <div className="bg-blue-700 py-3 px-2 rounded-t-lg">
-            <input
-              className=" p-2 rounded-md bg-white  inline-block w-full lg:w-1/2 m-auto text-gray-700 "
-              type="text"
-              placeholder="Enter Name"
-              onChange={onChangeHandler}
-            />
-            <div>
+          <div>
+            <div className="bg-blue-700 py-3 px-2 rounded-t-lg">
+              <input
+                className=" p-2 rounded-md bg-white  inline-block w-full lg:w-1/2 m-auto text-gray-700 "
+                type="text"
+                placeholder="Enter Name"
+                onChange={onChangeHandler}
+                onBlur={onBlurHandler}
+              />
+            </div>
+
+            <div
+              className={`w-1/2 m-auto search-results ${searchResult ? "show" : ""}`}
+            >
               {searchResult &&
                 searchResult.map((p) => (
                   <p key={p.id}>
-                    <Link to={p.id}>{p.name}</Link>
+                    <Link
+                      to={`/patient-basic-info/${p.id}`}
+                      className="bg-gray-200 block py-2 mb-2 rounded-md
+                      text-center hover:bg-gray-300
+                      lg:font-bold text-sm lg:text-lg dark:text-black "
+                    >
+                      {p.name}
+                    </Link>
                   </p>
                 ))}
             </div>

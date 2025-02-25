@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { invoke } from "@tauri-apps/api/core";
 import { FaWindowClose } from "react-icons/fa";
 
@@ -21,10 +21,12 @@ interface IPatientInfo {
 function PatentBasicInfo() {
   const navigate = useNavigate();
   const [patient, setPatient] = useState<IPatientInfo | undefined>(undefined);
-  const id = "fds77898";
+  const { id } = useParams();
   const getPatientInfo = async () => {
     try {
-      const res = await invoke<IPatientInfo>("get_patient_info", { id });
+      const res = await invoke<IPatientInfo>("get_patient_info", {
+        patientId: id,
+      });
       setPatient(res);
     } catch (e) {
       console.log(e);
@@ -32,7 +34,7 @@ function PatentBasicInfo() {
   };
   useEffect(() => {
     getPatientInfo();
-  }, []); // Added dependency array to prevent infinite loop
+  }, []);
 
   return (
     <div className="flex justify-between relative pt-[50px] h-[80vh]  gap-4 p-4 bg-gray-100 mt-4 w-[97%] m-auto  rounded-lg shadow-lg dark:bg-bg-dark  dark:shadow-blue-500/50 ">
