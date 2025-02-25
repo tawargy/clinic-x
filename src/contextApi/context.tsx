@@ -1,4 +1,11 @@
-import { createContext, ReactNode, useState, useMemo, useContext } from "react";
+import {
+  createContext,
+  ReactNode,
+  useState,
+  useMemo,
+  useContext,
+  useEffect,
+} from "react";
 
 // Step 1: Create the Context =================================================
 interface AppContextType {
@@ -13,9 +20,15 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 // Step 2: Implement the Provider Component ===================================
 
 function AppProvider({ children }: { children: ReactNode }) {
-  const [themeMode, setThemeMode] = useState(false);
+  const [themeMode, setThemeMode] = useState(() => {
+    const savedTheme = localStorage.getItem("themeMode");
+    return savedTheme ? JSON.parse(savedTheme) : false;
+  });
   const [isAppointment, setIsAppointment] = useState(false);
 
+  useEffect(() => {
+    localStorage.setItem("themeMode", JSON.stringify(themeMode));
+  }, [themeMode]);
   const memoizedValue = useMemo(
     () => ({
       themeMode,
