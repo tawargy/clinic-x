@@ -69,6 +69,39 @@ pub fn add_patient(mut data: PatientInfo, window: tauri::Window) -> String {
 }
 
 #[tauri::command]
+pub fn update_patient(data: PatientInfo, window: tauri::Window) -> String {
+    let conn = match db::get_db_connection(window.app_handle()) {
+        Ok(conn) => conn,
+        Err(_) => return String::from("Failed to connect to database!"),
+    };
+
+    let update_query = "UPDATE patients SET 
+        name = ?, dob = ?, gender = ?, occupation = ?, residence = ?, 
+        born_city = ?, tel = ?, email = ?, marital = ?, smoker = ?, 
+        si = ?, special_habits = ? WHERE id = ?";
+
+    match conn.execute(
+        update_query,
+        params![
+            &data.name, &data.dob, &data.gender, &data.occupation,
+            &data.residence, &data.born_city, &data.tel, &data.email,
+            &data.marital, &data.smoker, &data.si, &data.special_habits,
+            &data.id  // `id` is now correctly placed at the end
+        ],
+    ) {
+        Ok(rows_affected) => {
+            if rows_affected > 0 {
+                String::from("Patient record updated successfully!")
+            } else {
+                String::from("No patient record found with the given ID.")
+            }
+        }
+        Err(_) => String::from("Failed to update patient record!"),
+    }
+}
+
+
+#[tauri::command]
 pub fn get_patient_info(patient_id: String, window: tauri::Window) -> Result<PatientInfo, String> {
     let conn = match db::get_db_connection(window.app_handle()) {
         Ok(conn) => conn,
