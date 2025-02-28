@@ -3,31 +3,44 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { invoke } from "@tauri-apps/api/core";
 import { FaWindowClose } from "react-icons/fa";
+import Form from "../components/comman/form/Form";
+import { TFormValue } from "../validations/patientInfoSchema";
 
-interface IPatientInfo {
-  name: string;
-  dob: string;
-  gender: string;
-  occupation: string;
-  residence: string;
-  born_city: string;
-  tel: string;
-  email: string;
-  marital: string;
-  smoker: string;
-  si: string;
-  special_habits: string;
-}
+// interface IPatientInfo {
+//   name: string;
+//   dob: string;
+//   gender: string;
+//   occupation: string;
+//   residence: string;
+//   born_city: string;
+//   tel: string;
+//   email: string;
+//   marital: string;
+//   smoker: string;
+//   si: string;
+//   special_habits: string;
+// }
 function PatentBasicInfo() {
+  const [isEdit, setIsEdit] = useState(false);
   const navigate = useNavigate();
-  const [patient, setPatient] = useState<IPatientInfo | undefined>(undefined);
+  const [patientInfo, setPatientInfo] = useState<TFormValue | undefined>(
+    undefined,
+  );
   const { id } = useParams();
+
   const getPatientInfo = async () => {
     try {
-      const res = await invoke<IPatientInfo>("get_patient_info", {
+      const res = await invoke<TFormValue>("get_patient_info", {
         patientId: id,
       });
-      setPatient(res);
+      const formattedRes = {
+        ...res,
+        dob: res.dob
+          ? new Date(res.dob.split("-").reverse().join("-"))
+          : new Date(),
+        // dob: new Date(res.dob),
+      };
+      setPatientInfo(formattedRes);
     } catch (e) {
       console.log(e);
     }
@@ -35,10 +48,20 @@ function PatentBasicInfo() {
   useEffect(() => {
     getPatientInfo();
   }, []);
-
+  const onEdite = async (data: TFormValue) => {
+    try {
+      // const res = await invoke("update_patient_info", {
+      //   patientId: id,
+      //   data,
+      // });
+      console.log(data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   return (
-    <div className="flex justify-between relative pt-[50px] h-[80vh]  gap-4 p-4 bg-gray-100 mt-4 w-[97%] m-auto  rounded-lg shadow-lg dark:bg-bg-dark  dark:shadow-blue-500/50 ">
-      <div className=" w-7 h-7 flex items-center justify-center bg-white p-[1px] rounded-md absolute right-3 top-3  cursor-pointer">
+    <div className="flex justify-between relative  h-[80vh]  gap-4  bg-gray-100  w-[97%] m-auto  rounded-lg shadow-lg dark:bg-bg-dark  dark:shadow-blue-500/50 ">
+      <div className=" w-7 h-7 flex items-center justify-center bg-white p-[1px] rounded-md absolute right-1 top-1  cursor-pointer">
         <FaWindowClose
           onClick={() => navigate("/")}
           className="w-full h-full text-red-500"
@@ -48,20 +71,43 @@ function PatentBasicInfo() {
         <h2 className="bg-blue-700 text-center py-4 rounded-t-md text-white lg:text-lg">
           Patient Basic info
         </h2>
-        <div className="flex flex-col gap-4 p-4">
-          <p>Name: {patient?.name}</p>
-          <p>Date of Birth: {patient?.dob}</p>
-          <p>Gender: {patient?.gender}</p>
-          <p>Occupation: {patient?.occupation}</p>
-          <p>Residence: {patient?.residence}</p>
-          <p>Born City: {patient?.born_city}</p>
-          <p>Tel: {patient?.tel}</p>
-          <p>Email: {patient?.email}</p>
-          <p>Marital Status: {patient?.marital}</p>
-          <p>Smoker: {patient?.smoker}</p>
-          <p>SI: {patient?.si}</p>
-          <p>Special Habits: {patient?.special_habits}</p>
-        </div>
+        {isEdit ? (
+          <Form
+            onSubmitHandler={onEdite}
+            btnText="edit"
+            patientInfo={patientInfo}
+          />
+        ) : (
+          <>
+            <div className="flex flex-col text-sm lg:text-lg lg:gap-4 lg:p-4 ">
+              <p>Name: {patientInfo?.name}</p>
+              <p>
+                Date of Birth:{" "}
+                {patientInfo?.dob instanceof Date
+                  ? patientInfo.dob.toLocaleDateString()
+                  : typeof patientInfo?.dob === "string"
+                    ? new Date(patientInfo.dob).toLocaleDateString()
+                    : ""}
+              </p>
+              <p>Gender: {patientInfo?.gender}</p>
+              <p>Occupation: {patientInfo?.occupation}</p>
+              <p>Residence: {patientInfo?.residence}</p>
+              <p>Born City: {patientInfo?.born_city}</p>
+              <p>Tel: {patientInfo?.tel}</p>
+              <p>Email: {patientInfo?.email}</p>
+              <p>Marital Status: {patientInfo?.marital}</p>
+              <p>Smoker: {patientInfo?.smoker}</p>
+              <p>SI: {patientInfo?.si}</p>
+              <p>Special Habits: {patientInfo?.special_habits}</p>
+            </div>
+            <button
+              className="bg-blue-700 text-white py-2 px-4 rounded-md "
+              onClick={() => setIsEdit(true)}
+            >
+              Edit
+            </button>
+          </>
+        )}
       </div>
       <div className="w-[50%] bg-white rounded-md flex flex-col gap-4">
         <h2 className="bg-blue-700 text-center py-4 rounded-t-md text-white lg:text-lg">
