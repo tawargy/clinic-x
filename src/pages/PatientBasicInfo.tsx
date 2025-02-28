@@ -5,21 +5,8 @@ import { invoke } from "@tauri-apps/api/core";
 import { FaWindowClose } from "react-icons/fa";
 import Form from "../components/comman/form/Form";
 import { TFormValue } from "../validations/patientInfoSchema";
+import { toastSuccess, toastError } from "../utils/toastify";
 
-// interface IPatientInfo {
-//   name: string;
-//   dob: string;
-//   gender: string;
-//   occupation: string;
-//   residence: string;
-//   born_city: string;
-//   tel: string;
-//   email: string;
-//   marital: string;
-//   smoker: string;
-//   si: string;
-//   special_habits: string;
-// }
 function PatentBasicInfo() {
   const [isEdit, setIsEdit] = useState(false);
   const navigate = useNavigate();
@@ -42,6 +29,7 @@ function PatentBasicInfo() {
       };
       setPatientInfo(formattedRes);
     } catch (e) {
+      toastError("Failed to update patient");
       console.log(e);
     }
   };
@@ -49,12 +37,20 @@ function PatentBasicInfo() {
     getPatientInfo();
   }, []);
   const onEdite = async (data: TFormValue) => {
+    if (!data.dob) data.dob = "";
+    if (data.dob instanceof Date)
+      data.dob = new Date(data.dob)
+        .toLocaleDateString("en-GB")
+        .split("/")
+        .join("-");
     try {
-      // const res = await invoke("update_patient_info", {
-      //   patientId: id,
-      //   data,
-      // });
-      console.log(data);
+      const res = await invoke("update_patient", {
+        patientId: id,
+        data,
+      });
+      toastSuccess("Successfully updated patient");
+      navigate("/");
+      console.log(res);
     } catch (e) {
       console.log(e);
     }

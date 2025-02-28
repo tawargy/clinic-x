@@ -1,8 +1,8 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 //
 
-mod handlers;
 mod datastore;
+mod handlers;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -11,6 +11,7 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             handlers::patient::get_patient_info,
             handlers::patient::add_patient,
+            handlers::patient::update_patient,
             handlers::appointment::add_appointment_data,
             handlers::queue_and_recently::get_queue,
             handlers::queue_and_recently::get_recently,
