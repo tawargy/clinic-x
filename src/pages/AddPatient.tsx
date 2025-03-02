@@ -1,13 +1,15 @@
 import { useNavigate } from "react-router-dom";
-import { FaWindowClose } from "react-icons/fa";
 import { toastSuccess, toastError } from "../utils/toastify";
 import Form from "../components/comman/form/Form";
 import { invoke } from "@tauri-apps/api/core";
-import { TFormValue } from "../validations/patientInfoSchema";
+import { TPatientInfo } from "../validations/patientInfoSchema";
+import { useAppSettings } from "../contextApi/appContext";
+import { X } from "lucide-react";
 
 function AddPatient() {
   const navigate = useNavigate();
-  const onSubmitHandler = async (data: TFormValue) => {
+  const { darkMode } = useAppSettings();
+  const onSubmitHandler = async (data: TPatientInfo) => {
     console.log(data.dob);
     try {
       if (!data.dob) data.dob = "";
@@ -35,17 +37,28 @@ function AddPatient() {
     }
   };
   return (
-    <div className="container mx-auto   bg-white rounded-lg shadow-lg dark:bg-bg-dark  dark:shadow-blue-500/50 pb-2 relative">
-      <div className=" w-7 h-7 flex items-center justify-center bg-white p-[1px] rounded-md absolute right-3 top-3  cursor-pointer">
-        <FaWindowClose
+    <div className="container mx-auto p-4   relative">
+      <div
+        className={`${darkMode ? "bg-gray-800 text-white" : "bg-white"} rounded-lg shadow-md p-4 transition-colors duration-200 `}
+      >
+        <div
+          className=" w-7 h-7 flex items-center justify-center bg-white  rounded-md absolute right-0 top-0  cursor-pointer"
           onClick={() => navigate("/")}
-          className="w-full h-full text-red-500"
+        >
+          <X
+            className="w-full h-full rounded-md bg-red-500 text-white font-bold"
+            size={20}
+          />
+        </div>
+        <h1 className="text-center text-xl text-white  py-4 rounded-t-md">
+          Add Patient
+        </h1>
+        <Form
+          onSubmitHandler={onSubmitHandler}
+          btnText="Save"
+          onCancel={() => navigate("/")}
         />
       </div>
-      <h1 className="text-center text-xl text-white bg-blue-700 py-4 rounded-t-md">
-        Add Patient
-      </h1>
-      <Form onSubmitHandler={onSubmitHandler} btnText="Save" />
     </div>
   );
 }

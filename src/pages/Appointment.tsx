@@ -4,7 +4,7 @@ import { FaWindowClose } from "react-icons/fa";
 import AppointmentForm from "../components/appointment/AppointmentForm";
 import BasicPatientInfo from "../components/appointment/BasicPatientInfo";
 import Prescriptions from "../components/appointment/Prescriptions";
-import { useAppSettings } from "../contextApi/context";
+import { useAppSettings } from "../contextApi/appContext";
 
 const patientInfo = {
   name: "Mohamed Ali",

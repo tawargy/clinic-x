@@ -1,12 +1,12 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import { useAppSettings } from "../contextApi/context";
+import { useAppSettings } from "../contextApi/appContext";
 import { ToastContainer } from "react-toastify";
 
 function MainLayout() {
-  const { themeMode } = useAppSettings();
+  const { darkMode } = useAppSettings();
   return (
-    <div className={`${themeMode && "dark"}`}>
+    <div className={`${darkMode && "dark"}`}>
       <div className={`min-h-screen bg-bg-light dark:bg-bg-dark p-2`}>
         <Navbar />
         <Outlet />

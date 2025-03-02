@@ -4,9 +4,8 @@ import Error from "../pages/Error";
 import Home from "../pages/Home";
 import AddPatient from "../pages/AddPatient";
 import PatientBasicInfo from "../pages/PatientBasicInfo";
-import Calender from "../pages/Calender";
+import Agenda from "../pages/Agenda";
 import Appointment from "../pages/Appointment";
-import Signin from "../pages/Signin";
 
 const MainRoutes = {
   path: "/",
@@ -26,8 +25,8 @@ const MainRoutes = {
       element: <PatientBasicInfo />,
     },
     {
-      path: "calender",
-      element: <Calender />,
+      path: "agenda",
+      element: <Agenda />,
     },
 
     {

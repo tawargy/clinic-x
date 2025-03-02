@@ -1,11 +1,11 @@
 import { NavLink } from "react-router-dom";
-import { useAppSettings } from "../contextApi/context";
+import { useAppSettings } from "../contextApi/appContext";
 import { MdDarkMode } from "react-icons/md";
 import { MdOutlineDarkMode } from "react-icons/md";
 import { FiSettings } from "react-icons/fi";
 
 function Navbar() {
-  const { themeMode, setThemeMode, isAppointment } = useAppSettings();
+  const { darkMode, setDarkMode, isAppointment } = useAppSettings();
   return (
     <nav className="flex justify-between items-center  p-4  mb-2">
       <h2>
@@ -22,9 +22,9 @@ function Navbar() {
         <li className="nav-item">
           <button
             className="nav-link dark:text-white block"
-            onClick={() => setThemeMode((p) => !p)}
+            onClick={() => setDarkMode((p) => !p)}
           >
-            {themeMode ? (
+            {darkMode ? (
               <MdOutlineDarkMode style={{ fontSize: "30px", color: "#fff" }} />
             ) : (
               <MdDarkMode style={{ fontSize: "30px", color: "#000" }} />
@@ -37,7 +37,7 @@ function Navbar() {
               <FiSettings
                 style={{
                   fontSize: "25px",
-                  color: `${themeMode ? "#fff" : "#000"}`,
+                  color: `${darkMode ? "#fff" : "#000"}`,
                 }}
               />
             </NavLink>
@@ -46,7 +46,7 @@ function Navbar() {
               <FiSettings
                 style={{
                   fontSize: "25px",
-                  color: `${themeMode ? "#fff" : "#000"}`,
+                  color: `${darkMode ? "#fff" : "#000"}`,
                 }}
               />
             </span>

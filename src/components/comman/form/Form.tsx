@@ -6,15 +6,16 @@ import Select from "../formFaild/Select";
 import DateInput from "../formFaild/DateInput";
 import {
   patientInfoSchema,
-  TFormValue,
+  TPatientInfo,
 } from "../../../validations/patientInfoSchema";
 
 type TFormProps = {
-  onSubmitHandler: (data: TFormValue) => void;
+  onSubmitHandler: (data: TPatientInfo) => void;
   btnText?: string;
-  patientInfo?: TFormValue;
+  patientInfo?: TPatientInfo;
+  onCancel?: () => void;
 };
-function Form({ onSubmitHandler, btnText, patientInfo }: TFormProps) {
+function Form({ onSubmitHandler, btnText, patientInfo, onCancel }: TFormProps) {
   const {
     register,
     handleSubmit,
@@ -22,10 +23,11 @@ function Form({ onSubmitHandler, btnText, patientInfo }: TFormProps) {
 
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<TFormValue>({
+  } = useForm<TPatientInfo>({
     resolver: zodResolver(patientInfoSchema),
     mode: "onBlur",
   });
+
   useEffect(() => {
     if (patientInfo) {
       const formattedPatientInfo = {
@@ -41,12 +43,12 @@ function Form({ onSubmitHandler, btnText, patientInfo }: TFormProps) {
 
   return (
     <form
-      className="px-8 mt-8"
+      className="px-8 mt-8 h-[100%]"
       onSubmit={handleSubmit(onSubmitHandler)}
       noValidate
     >
       <div className="md:flex gap-16">
-        <div className="md:flex flex-col gap-4 md:w-1/2 ">
+        <div className="md:flex flex-col md:gap-4 md:w-1/2 ">
           <Input
             label="Name"
             name="name"
@@ -56,7 +58,7 @@ function Form({ onSubmitHandler, btnText, patientInfo }: TFormProps) {
           <Select
             label="Gender"
             name="gender"
-            register={register}
+            control={control}
             options={["Male", "Fmale"]}
           />
           <Input label="Born City" name="born_city" register={register} />
@@ -65,7 +67,7 @@ function Form({ onSubmitHandler, btnText, patientInfo }: TFormProps) {
           <Select
             label="Marital Status"
             name="marital"
-            register={register}
+            control={control}
             options={["Single", "Married", "Widowed", "Divorced"]}
           />
           <DateInput label="DOB" name="dob" control={control} />
@@ -83,7 +85,7 @@ function Form({ onSubmitHandler, btnText, patientInfo }: TFormProps) {
           <Select
             label="Smoker"
             name="smoker"
-            register={register}
+            control={control}
             options={["No", "Yes"]}
           />
           <Input
@@ -93,14 +95,22 @@ function Form({ onSubmitHandler, btnText, patientInfo }: TFormProps) {
           />
         </div>
       </div>
-
-      <button
-        disabled={isSubmitting}
-        className="font-bold text-white bg-blue-700 px-16 py-4 rounded-md block w-1/3 m-auto my-8"
-        type="submit"
-      >
-        {btnText}
-      </button>
+      <div className="flex justify-around my-8">
+        <button
+          disabled={isSubmitting}
+          className="font-bold text-white bg-blue-500 hover:bg-blue-700  py-4 rounded-md  w-1/3 "
+          type="submit"
+        >
+          {btnText}
+        </button>
+        <button
+          className="font-bold text-white bg-red-500 hover:bg-red-700  py-4 rounded-md  w-1/3 "
+          onClick={onCancel}
+          type="button"
+        >
+          Cancel
+        </button>
+      </div>
     </form>
   );
 }

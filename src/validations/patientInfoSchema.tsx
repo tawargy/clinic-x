@@ -24,6 +24,6 @@ const patientInfoSchema = z.object({
     }),
 });
 
-type TFormValue = z.infer<typeof patientInfoSchema>;
+type TPatientInfo = z.infer<typeof patientInfoSchema>;
 
-export { patientInfoSchema, type TFormValue };
+export { patientInfoSchema, type TPatientInfo };
