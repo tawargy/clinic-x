@@ -19,6 +19,9 @@ function Navbar() {
       </h2>
 
       <ul className="flex flex-row justify-between items-center gap-3 ">
+        <NavLink className="nav-link dark:text-white" to="/appointment/5435345">
+          Appo
+        </NavLink>
         <li className="nav-item">
           <button
             className="nav-link dark:text-white block"

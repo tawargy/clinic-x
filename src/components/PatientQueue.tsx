@@ -175,7 +175,7 @@ const PatientQueue: React.FC<PatientQueueProps> = ({ patients }) => {
                     <div
                       className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"} flex items-center transition-colors duration-200`}
                     >
-                      <span className="mr-3">Age: {patient.age}</span>
+                      <span className="mr-3">New {patient.age}</span>
                       {patient.checkInTime && (
                         <span className="flex items-center">
                           <Clock size={14} className="mr-1" />

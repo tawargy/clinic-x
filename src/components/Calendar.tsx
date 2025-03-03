@@ -1,5 +1,4 @@
 import React from "react";
-import { Event } from "../App";
 import { useAppSettings } from "../contextApi/appContext";
 
 interface CalendarProps {
@@ -8,11 +7,7 @@ interface CalendarProps {
   onDayClick: (day: number) => void;
 }
 
-const Calendar: React.FC<CalendarProps> = ({
-  currentDate,
-  events,
-  onDayClick,
-}) => {
+const Calendar: React.FC<CalendarProps> = ({ currentDate, onDayClick }) => {
   const { darkMode } = useAppSettings();
   // Get days in month
   const getDaysInMonth = (year: number, month: number) => {

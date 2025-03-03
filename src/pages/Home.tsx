@@ -1,9 +1,8 @@
-import { useCallback } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAppSettings } from "../contextApi/appContext";
-import { Search, Clock, Users, UserPlus, X, Moon, Sun } from "lucide-react";
+import { Search, Clock, Users, UserPlus } from "lucide-react";
 import PatientQueue from "../components/PatientQueue";
 import SearchPatient from "../components/SearchPatient";
 import RecentPatients from "../components/RecentPatients";

@@ -14,12 +14,32 @@ export interface Event {
   patientName: string;
   description?: string;
 }
-
+type Patient = {
+  id: string;
+  name: string;
+};
+const patientList = [
+  { name: "xxxx", id: "342432fsd" },
+  { name: "yyyy", id: "342sd" },
+  { name: "xxxx", id: "34243f2" },
+  { name: "yyyy", id: "342sf" },
+  { name: "xxxx", id: "3424f32" },
+  { name: "yyyy", id: "3sf42" },
+  { name: "xxxx", id: "34ggs2432" },
+  { name: "yyyy", id: "3gs4fd2" },
+  { name: "xxxx", id: "3424g3gg2" },
+  { name: "yyyy", id: "342gsgj" },
+  { name: "xxxx", id: "34243ktr2" },
+  { name: "yyyy", id: "342try" },
+  { name: "xxxx", id: "34243yrty2" },
+  { name: "yyyy", id: "34tery2" },
+];
 function App() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [events, setEvents] = useState<Event[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [showEventForm, setShowEventForm] = useState(false);
+  const [patientQueue, setPatientQueue] = useState<Patient[] | null>([]);
   const { patientInfo, setPatientInfo } = useClinic();
   const { darkMode } = useAppSettings();
   const navigate = useNavigate();
@@ -41,6 +61,7 @@ function App() {
   };
 
   const handleDayClick = (day: number) => {
+    setPatientQueue(patientList);
     const clickedDate = new Date(
       currentDate.getFullYear(),
       currentDate.getMonth(),
@@ -135,7 +156,29 @@ function App() {
         <div
           className={`${darkMode ? "bg-gray-800 text-white " : "bg-white"} w-full  rounded-lg shadow-md p-4 transition-colors duration-200 h-[calc(100vh-120px)] flex flex-col`}
         >
-          Queue
+          <h3 className="text-center py-4 text-lg">
+            {" "}
+            3-March{" "}
+            <span className="text-blue-500 rounded-full bg-green-200 px-2 w-[30px] h-[30px] inline-flex justify-center items-center itext-lg ml-4">
+              {patientQueue?.length}
+            </span>
+          </h3>
+          <ul className=" p-4 w-[90%] lg:w-[70%] mt-2 mx-auto overflow-y-auto custom-scrollbar ">
+            {patientQueue?.map((patient) => (
+              <li
+                className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-50 border-gray-300 text-gray-900"}} flex items-center justify-between bg-blue-100 p-2 lg:p-4 mb-4 rounded-md`}
+                key={patient.id}
+              >
+                <p> {patient.name}</p>
+                <button>
+                  <X
+                    className="w-full h-full rounded-md bg-red-500 text-white font-bold"
+                    size={20}
+                  />
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>
