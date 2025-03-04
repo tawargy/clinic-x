@@ -74,7 +74,7 @@ function PatientMedicalInfo({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <div>
           <h4
-            className={`text-md font-medium mb-2 ${darkMode ? "text-gray-300" : "text-gray-700"}`}
+            className={`text-lg font-medium mb-1 mt-2 ${darkMode ? "text-gray-300" : "text-gray-700"}`}
           >
             Allergies
           </h4>
@@ -133,7 +133,7 @@ function PatientMedicalInfo({
         </div>
         <div>
           <h4
-            className={`text-md font-medium mb-2 ${darkMode ? "text-gray-300" : "text-gray-700"}`}
+            className={`text-lg font-medium mb-1 mt-2 ${darkMode ? "text-gray-300" : "text-gray-700"}`}
           >
             Medications
           </h4>
@@ -192,125 +192,170 @@ function PatientMedicalInfo({
         </div>
       </div>
 
-      <div className="mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div className="mb-6">
+          <h4
+            className={`text-lg font-medium mb-1 mt-2 ${darkMode ? "text-gray-300" : "text-gray-700"}`}
+          >
+            Conditions
+          </h4>
+          {isEdit ? (
+            <div>
+              {conditions.map((condition, index) => (
+                <div key={index} className="flex gap-2 mb-2">
+                  <input
+                    className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-50 border-gray-300 text-gray-900"} border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 p-2.5 transition-colors duration-200`}
+                    value={condition}
+                    onChange={(e) => {
+                      const updatedConditions = [...conditions];
+                      updatedConditions[index] = e.target.value;
+                      setConditions(updatedConditions);
+                    }}
+                  />
+                  <button
+                    onClick={() => {
+                      const updatedConditions = conditions.filter(
+                        (_, i) => i !== index,
+                      );
+                      setConditions(updatedConditions);
+                    }}
+                    className="px-3 py-2 text-red-500 hover:text-red-700 rounded-lg"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+              <button
+                onClick={() => setConditions([...conditions, ""])}
+                className="text-blue-500 hover:text-blue-600 mt-2"
+              >
+                + Add Condition
+              </button>
+            </div>
+          ) : (
+            <>
+              {conditions.length > 0 ? (
+                <ul
+                  className={`list-disc pl-5 ${darkMode ? "text-gray-400" : "text-gray-600"}`}
+                >
+                  {conditions.map((condition, index) => (
+                    <li key={index}>{condition}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p
+                  className={`${darkMode ? "text-gray-400" : "text-gray-600"}`}
+                >
+                  No conditions reported
+                </p>
+              )}
+            </>
+          )}
+        </div>
+        <div>
+          <h4
+            className={`text-lg font-medium mb-1 mt-2 ${darkMode ? "text-gray-300" : "text-gray-700"}`}
+          >
+            Special Habits
+          </h4>
+
+          {isEdit ? (
+            <div>
+              {specialHabits.map((habit, index) => (
+                <div key={index} className="flex gap-2 mb-2">
+                  <input
+                    className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-50 border-gray-300 text-gray-900"} border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 p-2.5 transition-colors duration-200`}
+                    value={habit}
+                    onChange={(e) => {
+                      const updatedHabits = [...specialHabits];
+                      updatedHabits[index] = e.target.value;
+                      setSpecialHabits(updatedHabits);
+                    }}
+                  />
+                  <button
+                    onClick={() => {
+                      const updatedHabits = specialHabits.filter(
+                        (_, i) => i !== index,
+                      );
+                      setSpecialHabits(updatedHabits);
+                    }}
+                    className="px-3 py-2 text-red-500 hover:text-red-700 rounded-lg"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+              <button
+                onClick={() => setSpecialHabits([...specialHabits, ""])}
+                className="text-blue-500 hover:text-blue-600 mt-2"
+              >
+                + Add Habit
+              </button>
+            </div>
+          ) : (
+            <>
+              {specialHabits.length > 0 ? (
+                <ul
+                  className={`list-disc pl-5 ${darkMode ? "text-gray-400" : "text-gray-600"}`}
+                >
+                  {specialHabits.map((habit, index) => (
+                    <li key={index}>{habit}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p
+                  className={`${darkMode ? "text-gray-400" : "text-gray-600"}`}
+                >
+                  No special habits reported
+                </p>
+              )}
+            </>
+          )}
+        </div>
+      </div>
+      <div>
         <h4
-          className={`text-md font-medium mb-2 ${darkMode ? "text-gray-300" : "text-gray-700"}`}
+          className={`text-lg font-medium mb-1 mt-2 ${darkMode ? "text-gray-300" : "text-gray-700"}`}
         >
-          Conditions
+          Past History
         </h4>
         {isEdit ? (
-          <div>
-            {conditions.map((condition, index) => (
-              <div key={index} className="flex gap-2 mb-2">
-                <input
-                  className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-50 border-gray-300 text-gray-900"} border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 p-2.5 transition-colors duration-200`}
-                  value={condition}
-                  onChange={(e) => {
-                    const updatedConditions = [...conditions];
-                    updatedConditions[index] = e.target.value;
-                    setConditions(updatedConditions);
-                  }}
-                />
-                <button
-                  onClick={() => {
-                    const updatedConditions = conditions.filter(
-                      (_, i) => i !== index,
-                    );
-                    setConditions(updatedConditions);
-                  }}
-                  className="px-3 py-2 text-red-500 hover:text-red-700 rounded-lg"
-                >
-                  ✕
-                </button>
-              </div>
-            ))}
-            <button
-              onClick={() => setConditions([...conditions, ""])}
-              className="text-blue-500 hover:text-blue-600 mt-2"
-            >
-              + Add Condition
-            </button>
-          </div>
+          <textarea
+            className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-50 border-gray-300 text-gray-900"} border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 p-2.5 transition-colors duration-200`}
+            value={patient.notes}
+            onChange={(e) =>
+              onPatientUpdate({ ...patient, notes: e.target.value })
+            }
+          />
         ) : (
-          <>
-            {conditions.length > 0 ? (
-              <ul
-                className={`list-disc pl-5 ${darkMode ? "text-gray-400" : "text-gray-600"}`}
-              >
-                {conditions.map((condition, index) => (
-                  <li key={index}>{condition}</li>
-                ))}
-              </ul>
-            ) : (
-              <p className={`${darkMode ? "text-gray-400" : "text-gray-600"}`}>
-                No conditions reported
-              </p>
-            )}
-          </>
+          <p className={`${darkMode ? "text-gray-400" : "text-gray-600"}`}>
+            {patient.notes}
+          </p>
         )}
       </div>
       <div>
         <h4
-          className={`text-md font-medium mb-2 ${darkMode ? "text-gray-300" : "text-gray-700"}`}
+          className={`text-lg font-medium mb-1 mt-2 ${darkMode ? "text-gray-300" : "text-gray-700"}`}
         >
-          Special Habits
+          Family History
         </h4>
-
         {isEdit ? (
-          <div>
-            {specialHabits.map((habit, index) => (
-              <div key={index} className="flex gap-2 mb-2">
-                <input
-                  className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-50 border-gray-300 text-gray-900"} border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 p-2.5 transition-colors duration-200`}
-                  value={habit}
-                  onChange={(e) => {
-                    const updatedHabits = [...specialHabits];
-                    updatedHabits[index] = e.target.value;
-                    setSpecialHabits(updatedHabits);
-                  }}
-                />
-                <button
-                  onClick={() => {
-                    const updatedHabits = specialHabits.filter(
-                      (_, i) => i !== index,
-                    );
-                    setSpecialHabits(updatedHabits);
-                  }}
-                  className="px-3 py-2 text-red-500 hover:text-red-700 rounded-lg"
-                >
-                  ✕
-                </button>
-              </div>
-            ))}
-            <button
-              onClick={() => setSpecialHabits([...specialHabits, ""])}
-              className="text-blue-500 hover:text-blue-600 mt-2"
-            >
-              + Add Habit
-            </button>
-          </div>
+          <textarea
+            className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-50 border-gray-300 text-gray-900"} border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 p-2.5 transition-colors duration-200`}
+            value={patient.notes}
+            onChange={(e) =>
+              onPatientUpdate({ ...patient, notes: e.target.value })
+            }
+          />
         ) : (
-          <>
-            {specialHabits.length > 0 ? (
-              <ul
-                className={`list-disc pl-5 ${darkMode ? "text-gray-400" : "text-gray-600"}`}
-              >
-                {specialHabits.map((habit, index) => (
-                  <li key={index}>{habit}</li>
-                ))}
-              </ul>
-            ) : (
-              <p className={`${darkMode ? "text-gray-400" : "text-gray-600"}`}>
-                No special habits reported
-              </p>
-            )}
-          </>
+          <p className={`${darkMode ? "text-gray-400" : "text-gray-600"}`}>
+            {patient.notes}
+          </p>
         )}
       </div>
-
       <div>
         <h4
-          className={`text-md font-medium mb-2 ${darkMode ? "text-gray-300" : "text-gray-700"}`}
+          className={`text-lg font-medium mb-1 mt-2 ${darkMode ? "text-gray-300" : "text-gray-700"}`}
         >
           Notes
         </h4>

@@ -9,7 +9,7 @@ function PatientVisitHistory({ patient }: Tprops) {
   const { darkMode } = useAppSettings();
   return (
     <div
-      className={`${darkMode ? "bg-gray-800" : "bg-white"} w-full rounded-lg shadow-md p-6 transition-colors duration-200`}
+      className={`${darkMode ? "bg-gray-800" : "bg-white"} w-full rounded-lg shadow-md mt-4  transition-colors duration-200`}
     >
       <h3 className="text-lg font-semibold mb-4 flex items-center">
         <History className="mr-2" size={18} />
@@ -17,7 +17,7 @@ function PatientVisitHistory({ patient }: Tprops) {
       </h3>
 
       {patient.history.length > 0 ? (
-        <div className="space-y-6 max-h-[700px] overflow-y-auto custom-scrollbar pr-2">
+        <div className="space-y-6 max-h-[260px] overflow-y-auto custom-scrollbar pr-2">
           {patient.history.map((visit, index) => (
             <div
               key={index}

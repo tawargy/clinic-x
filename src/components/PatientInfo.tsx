@@ -1,18 +1,10 @@
 import { useState } from "react";
 import { useAppSettings } from "../contextApi/appContext";
 import { TPatientInfo } from "../types";
-import {
-  User,
-  Heart,
-  Activity,
-  Clipboard,
-  Phone,
-  Mail,
-  Home,
-  Shield,
-  Pencil,
-  Save,
-} from "lucide-react";
+import ContactAndInsurance from "./ContactAndInsurance";
+import { User, Heart, Activity, Clipboard, Pencil, Save } from "lucide-react";
+
+import PatientVisitHistory from "../components/PatientVisitHistory";
 
 type Tprops = {
   patient: TPatientInfo;
@@ -245,182 +237,13 @@ function PatientInfo({
           </div>
         </div>
       </div>
+      <ContactAndInsurance
+        patient={patient}
+        onPatientUpdate={onPatientUpdate}
+        isEdit={isEdit}
+      />
 
-      <div
-        className={`${darkMode ? "bg-gray-800" : "bg-white"} rounded-lg shadow-md p-6 mb-6 transition-colors duration-200`}
-      >
-        <h3 className="text-lg font-semibold mb-4 flex items-center">
-          <Phone className="mr-2" size={18} />
-          Contact Information
-        </h3>
-        <div className="space-y-3">
-          <div className="flex items-center">
-            <Phone
-              className={`mr-3 ${darkMode ? "text-gray-400" : "text-gray-500"}`}
-              size={16}
-            />
-            {isEdit ? (
-              <input
-                className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-200 border-gray-300 text-gray-900"} w-[80%] text-sm p-1 rounded-md`}
-                type="text"
-                value={patient.contactInfo.phone}
-                name="phone"
-                onChange={(e) =>
-                  onPatientUpdate({
-                    ...patient,
-                    contactInfo: {
-                      ...patient.contactInfo,
-                      phone: e.target.value,
-                    },
-                  })
-                }
-              />
-            ) : (
-              <p>{patient.contactInfo.phone}</p>
-            )}
-          </div>
-          <div className="flex items-center">
-            <Mail
-              className={`mr-3 ${darkMode ? "text-gray-400" : "text-gray-500"}`}
-              size={16}
-            />
-            {isEdit ? (
-              <input
-                className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-200 border-gray-300 text-gray-900"} w-[80%] text-sm p-1 rounded-md`}
-                type="text"
-                value={patient.contactInfo.email}
-                name="email"
-                onChange={(e) =>
-                  onPatientUpdate({
-                    ...patient,
-                    contactInfo: {
-                      ...patient.contactInfo,
-                      email: e.target.value,
-                    },
-                  })
-                }
-              />
-            ) : (
-              <p>{patient.contactInfo.email}</p>
-            )}
-          </div>
-          <div className="flex items-start">
-            <Home
-              className={`mr-3 mt-1 ${darkMode ? "text-gray-400" : "text-gray-500"}`}
-              size={16}
-            />
-
-            {isEdit ? (
-              <input
-                className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-200 border-gray-300 text-gray-900"} w-[80%] text-sm p-1 rounded-md`}
-                type="text"
-                value={patient.contactInfo.address}
-                name="address"
-                onChange={(e) =>
-                  onPatientUpdate({
-                    ...patient,
-                    contactInfo: {
-                      ...patient.contactInfo,
-                      address: e.target.value,
-                    },
-                  })
-                }
-              />
-            ) : (
-              <p>{patient.contactInfo.address}</p>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div
-        className={`${darkMode ? "bg-gray-800" : "bg-white"} rounded-lg shadow-md p-6 transition-colors duration-200`}
-      >
-        <h3 className="text-lg font-semibold mb-4 flex items-center">
-          <Shield className="mr-2" size={18} />
-          Insurance
-        </h3>
-        <div className="space-y-3">
-          <div>
-            <p
-              className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}
-            >
-              Provider
-            </p>
-            {isEdit ? (
-              <input
-                className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-200 border-gray-300 text-gray-900"} w-[80%] text-sm p-1 rounded-md`}
-                type="text"
-                value={patient.insurance.provider}
-                name="provider"
-                onChange={(e) =>
-                  onPatientUpdate({
-                    ...patient,
-                    insurance: {
-                      ...patient.insurance,
-                      provider: e.target.value,
-                    },
-                  })
-                }
-              />
-            ) : (
-              <p className="font-medium">{patient.insurance.provider}</p>
-            )}
-          </div>
-          <div>
-            <p
-              className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}
-            >
-              Policy Number
-            </p>
-            {isEdit ? (
-              <input
-                className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-200 border-gray-300 text-gray-900"} w-[80%] text-sm p-1 rounded-md`}
-                type="text"
-                value={patient.insurance.policyNumber}
-                name="policyNumber"
-                onChange={(e) =>
-                  onPatientUpdate({
-                    ...patient,
-                    insurance: {
-                      ...patient.insurance,
-                      policyNumber: e.target.value,
-                    },
-                  })
-                }
-              />
-            ) : (
-              <p className="font-medium">{patient.insurance.policyNumber}</p>
-            )}
-          </div>
-          <div>
-            <p
-              className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}
-            >
-              Group Number
-            </p>
-            {isEdit ? (
-              <input
-                className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-200 border-gray-300 text-gray-900"} w-[80%] text-sm p-1 rounded-md`}
-                type="text"
-                value={patient.insurance.groupNumber}
-                name="golicyNumber"
-                onChange={(e) =>
-                  onPatientUpdate({
-                    ...patient,
-                    insurance: {
-                      ...patient.insurance,
-                      groupNumber: e.target.value,
-                    },
-                  })
-                }
-              />
-            ) : (
-              <p className="font-medium">{patient.insurance.groupNumber}</p>
-            )}
-          </div>
-        </div>
-      </div>
+      <PatientVisitHistory patient={patient} />
     </div>
   );
 }

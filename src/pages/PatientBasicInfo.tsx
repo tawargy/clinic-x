@@ -13,6 +13,7 @@ import PatientVisitHistory from "../components/PatientVisitHistory";
 import { X } from "lucide-react";
 import { TPatientInfo } from "../types";
 import { dumy_patient } from "../initData";
+import Visit from "../components/Visit";
 
 function PatentBasicInfo() {
   // const [patient, setPatient] = useState<TPatientInfo | undefined>(patientInit);
@@ -75,7 +76,7 @@ function PatentBasicInfo() {
     navigate("/agenda");
   };
   return (
-    <div className="container mx-auto px-4 relative">
+    <div className="container mx-auto  relative">
       <div
         className=" w-7 h-7 flex items-center justify-center bg-white  rounded-md absolute right-0 top-0  cursor-pointer"
         onClick={() => navigate("/")}
@@ -89,7 +90,7 @@ function PatentBasicInfo() {
         className={`${darkMode ? "bg-gray-800 text-white" : "bg-white"} w-full  rounded-lg shadow-md p-4 transition-colors duration-200  flex flex-col`}
       >
         {/* Main content */}
-        <main className="container mx-auto p-4">
+        <main className="container mx-auto px-2">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Left column - Patient info */}
             <PatientInfo
@@ -106,8 +107,8 @@ function PatentBasicInfo() {
                 onPatientUpdate={setPatientInfo}
                 onSavePatient={updatePatient}
               />
-              {/* Visit History */}
-              <PatientVisitHistory patient={patientInfo} />
+              {/* Visit  */}
+              <Visit patient={PatientInfo} onPatientUpdate={setPatientInfo} />
             </div>
           </div>
         </main>
