@@ -19,7 +19,7 @@ type Tprops = {
   onOpenViset: () => void;
   onSchedule: () => void;
   onPatientUpdate: (patient: TPatientInfo) => void;
-  onSavePatient: (patient: TPatientInfo) => void;
+  onSavePatient: () => void;
 };
 
 function PatientInfo({
@@ -89,7 +89,7 @@ function PatientInfo({
           {isEdit ? (
             <span
               onClick={() => {
-                onSavePatient(patient);
+                onSavePatient();
                 setIsEdit(!isEdit);
               }}
               className="cursor-pointer"

@@ -101,7 +101,11 @@ function PatentBasicInfo() {
             />
             <div className="lg:col-span-2 flex gap-6 ">
               {/* Right column - Medical info */}
-              <PatientMedicalInfo patient={patientInfo} />
+              <PatientMedicalInfo
+                patient={patientInfo}
+                onPatientUpdate={setPatientInfo}
+                onSavePatient={updatePatient}
+              />
               {/* Visit History */}
               <PatientVisitHistory patient={patientInfo} />
             </div>

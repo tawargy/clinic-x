@@ -11,7 +11,7 @@ export type TPatientInfo = {
   bornCity: string;
   occupation: string;
   temperature: string;
-  allergies: string;
+  allergies: string[];
   medications: string[];
   conditions: string[];
   specialHabits: string[];
