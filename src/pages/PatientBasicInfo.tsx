@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { invoke } from "@tauri-apps/api/core";
@@ -12,7 +12,7 @@ import PatientMedicalInfo from "../components/PatientMedicalInfo";
 import PatientVisitHistory from "../components/PatientVisitHistory";
 import { X } from "lucide-react";
 import { TPatientInfo } from "../types";
-import { dumy_patient, patientInit } from "../initData";
+import { dumy_patient } from "../initData";
 
 function PatentBasicInfo() {
   // const [patient, setPatient] = useState<TPatientInfo | undefined>(patientInit);

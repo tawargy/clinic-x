@@ -1,5 +1,4 @@
-import { useCallback } from "react";
-function debounce<T extends (...args: any[]) => void>(
+export function debounce<T extends (...args: any[]) => void>(
   func: T,
   wait: number,
 ): (...args: Parameters<T>) => void {
@@ -11,12 +10,6 @@ function debounce<T extends (...args: any[]) => void>(
   };
 }
 
-const debouncedSearch = useCallback(
-  debounce((input: string) => {
-    addPatient(input);
-  }, 500),
-  [],
-);
 // const onChangeHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
 //   const input = e.target.value;
 //   if (input.length < 1) {

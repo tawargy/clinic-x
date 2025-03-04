@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAppSettings } from "../contextApi/appContext";
 import { TPatientInfo } from "../types";
 import { Pencil, Save } from "lucide-react";
@@ -17,12 +17,23 @@ function PatientMedicalInfo({
 }: Tprops) {
   const { darkMode } = useAppSettings();
   const [isEdit, setIsEdit] = useState(false);
-  const [specialHabits, setSpecialHabits] = useState([
-    ...patient.specialHabits,
-  ]);
-  const [conditions, setConditions] = useState([...patient.conditions]);
-  const [medications, setMedications] = useState([...patient.medications]);
-  const [allergies, setAllergies] = useState([...patient.allergies]);
+  const [specialHabits, setSpecialHabits] = useState<string[]>(
+    patient.specialHabits || [],
+  );
+  const [conditions, setConditions] = useState<string[]>(
+    patient.conditions || [],
+  );
+  const [medications, setMedications] = useState<string[]>(
+    patient.medications || [],
+  );
+  const [allergies, setAllergies] = useState<string[]>(patient.allergies || []);
+
+  useEffect(() => {
+    setSpecialHabits(patient.specialHabits || []);
+    setConditions(patient.conditions || []);
+    setMedications(patient.medications || []);
+    setAllergies(patient.allergies || []);
+  }, [patient]);
 
   const onSaveHandler = () => {
     onPatientUpdate({

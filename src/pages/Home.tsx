@@ -36,7 +36,7 @@ function Home() {
       const res = (await invoke("search_result", { input: input })) as
         | TPatient
         | undefined;
-      setSearchResults(res);
+      setSearchResults(res || []);
       console.log("res", searchResults);
     } catch (e) {
       console.log(e);

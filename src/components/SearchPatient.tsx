@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, UserPlus } from "lucide-react";
+import { debounce } from "../utils/debounce";
 import { Patient } from "../types";
 
 interface SearchPatientProps {
@@ -16,18 +17,28 @@ const SearchPatient: React.FC<SearchPatientProps> = ({
   searchResults,
   darkMode,
 }) => {
-  const [vInput, setVInput] = useState("");
+  const [inputValue, setInputValue] = useState("");
   const navigate = useNavigate();
 
-  const onChangehandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setVInput(e.target.value);
-    onSearch(vInput);
+  const debouncedSearch = useCallback(
+    debounce((query: string) => {
+      onSearch(query);
+    }, 500),
+    [onSearch],
+  );
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // setVInput(e.target.value);
+    const value = e.target.value;
+    setInputValue(value);
+    if (value.trim() === "") {
+      onSearch("");
+      return;
+    }
+    debouncedSearch(value);
     console.log("res2", searchResults);
   };
 
-  const patientInfoHandler = (patientId: string) => {
-    navigate(`/patient-basic-info/${patientId}`);
-  };
   return (
     <div className="h-full flex flex-col">
       <div className="relative mb-4">
@@ -40,8 +51,8 @@ const SearchPatient: React.FC<SearchPatientProps> = ({
           type="text"
           className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-50 border-gray-300 text-gray-900"} border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 transition-colors duration-200`}
           placeholder="Search patients by name or phone..."
-          value={vInput}
-          onChange={onChangehandler}
+          value={inputValue}
+          onChange={handleInputChange}
         />
       </div>
 
@@ -59,8 +70,7 @@ const SearchPatient: React.FC<SearchPatientProps> = ({
             {searchResults.map((patient) => (
               <li
                 key={patient.id}
-                className={`cursor-pointer py-3 flex justify-between items-center ${darkMode ? "hover:bg-gray-700" : "hover:bg-gray-50"} px-2 rounded transition-colors duration-200`}
-                onClick={() => patientInfoHandler(patient.id)}
+                className={` py-3 flex justify-between items-center ${darkMode ? "hover:bg-gray-700" : "hover:bg-gray-50"} px-2 rounded transition-colors duration-200`}
               >
                 <div>
                   <h3 className="font-medium">{patient.name}</h3>
@@ -71,21 +81,13 @@ const SearchPatient: React.FC<SearchPatientProps> = ({
                   </p>
                 </div>
                 <button
-                  onClick={() => console.log("add to queue")}
-                  className={`${
-                    patient.status === "waiting"
-                      ? `${darkMode ? "bg-gray-600 text-gray-300" : "bg-gray-200 text-gray-600"} cursor-not-allowed`
-                      : "bg-blue-500 hover:bg-blue-600 text-white"
-                  } px-3 py-1 rounded-md flex items-center text-sm transition-colors duration-200`}
-                  disabled={patient.status === "waiting"}
-                  title={
-                    patient.status === "waiting"
-                      ? "Already in queue"
-                      : "Add to queue"
-                  }
+                  onClick={() => navigate(`/patient-basic-info/${patient.id}`)}
+                  className={`${darkMode ? "bg-gray-600 text-gray-300" : "bg-gray-200 text-gray-600"}
+                       bg-blue-500 hover:bg-blue-600 text-white
+                   px-3 py-1 rounded-md flex items-center text-sm transition-colors duration-200`}
                 >
                   <UserPlus className="mr-1" size={16} />
-                  {patient.status === "waiting" ? "In Queue" : "Add"}
+                  {"Info"}
                 </button>
               </li>
             ))}
