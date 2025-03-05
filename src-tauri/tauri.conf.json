@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "drx",
+  "productName": "Doctor X",
   "version": "0.1.0",
   "identifier": "com.drx.app",
   "build": {
@@ -12,9 +12,9 @@
   "app": {
     "windows": [
       {
-        "title": "drx",
-        "width": 800,
-        "height": 600
+        "title": "Doctor X",
+        "width": 1200,
+        "height": 900
       }
     ],
     "security": {

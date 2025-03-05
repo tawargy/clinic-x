@@ -9,7 +9,7 @@ function Navbar() {
       <h2>
         {!isAppointment ? (
           <NavLink className="nav-link text-red-500 text-2xl" to="/">
-            Dctor X
+            Doctor X
           </NavLink>
         ) : (
           <span className="nav-link text-blue-500 text-2xl"> Dctor X</span>
