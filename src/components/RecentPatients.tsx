@@ -22,7 +22,7 @@ const RecentPatients: React.FC<RecentPatientsProps> = ({
 
   const navigate = useNavigate();
   const onPatientClick = (patientId: number) => {
-    navigate(`/patient-basic-info/${patientId}`);
+    navigate(`/patient/${patientId}`);
   };
   return (
     <div className="h-full overflow-y-auto pr-1 custom-scrollbar">

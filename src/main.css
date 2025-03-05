@@ -50,3 +50,26 @@
 .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background-color: rgba(55, 65, 81, 0.7);
 }
+@media print {
+    /* Hide everything except the print content */
+    body * {
+        visibility: hidden;
+    }
+
+    .print-content,
+    .print-content * {
+        visibility: visible;
+    }
+
+    .print-content {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+
+    /* Hide the print button when printing */
+    .print:hidden {
+        display: none !important;
+    }
+}

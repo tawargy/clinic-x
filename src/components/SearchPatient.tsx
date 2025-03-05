@@ -81,7 +81,7 @@ const SearchPatient: React.FC<SearchPatientProps> = ({
                   </p>
                 </div>
                 <button
-                  onClick={() => navigate(`/patient-basic-info/${patient.id}`)}
+                  onClick={() => navigate(`/patient/${patient.id}`)}
                   className={`${darkMode ? "bg-gray-600 text-gray-300" : "bg-gray-200 text-gray-600"}
                        bg-blue-500 hover:bg-blue-600 text-white
                    px-3 py-1 rounded-md flex items-center text-sm transition-colors duration-200`}

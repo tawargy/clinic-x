@@ -1,9 +1,7 @@
 import { NavLink } from "react-router-dom";
-import { useAppSettings } from "../contextApi/appContext";
-import { MdDarkMode } from "react-icons/md";
-import { MdOutlineDarkMode } from "react-icons/md";
-import { FiSettings } from "react-icons/fi";
+import { useAppSettings } from "../../contextApi/appContext";
 
+import { Settings2, SunMoon, Moon } from "lucide-react";
 function Navbar() {
   const { darkMode, setDarkMode, isAppointment } = useAppSettings();
   return (
@@ -19,39 +17,29 @@ function Navbar() {
       </h2>
 
       <ul className="flex flex-row justify-between items-center gap-3 ">
-        <NavLink className="nav-link dark:text-white" to="/appointment/5435345">
-          Appo
-        </NavLink>
         <li className="nav-item">
           <button
             className="nav-link dark:text-white block"
             onClick={() => setDarkMode((p) => !p)}
           >
             {darkMode ? (
-              <MdOutlineDarkMode style={{ fontSize: "30px", color: "#fff" }} />
+              <SunMoon className="hover:text-yellow-400" size={28} />
             ) : (
-              <MdDarkMode style={{ fontSize: "30px", color: "#000" }} />
+              <Moon className="hover:text-blue-900 " size={28} />
             )}
           </button>
         </li>
         <li className="nav-item">
           {!isAppointment ? (
             <NavLink className="nav-link dark:text-white" to="/calender">
-              <FiSettings
-                style={{
-                  fontSize: "25px",
-                  color: `${darkMode ? "#fff" : "#000"}`,
-                }}
+              <Settings2
+                className="hover:text-green-500 duration-200"
+                size={28}
               />
             </NavLink>
           ) : (
             <span className=" dark:text-white">
-              <FiSettings
-                style={{
-                  fontSize: "25px",
-                  color: `${darkMode ? "#fff" : "#000"}`,
-                }}
-              />
+              <Settings2 size={28} />
             </span>
           )}
         </li>

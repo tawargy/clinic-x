@@ -142,7 +142,7 @@ const PatientQueue: React.FC<PatientQueueProps> = ({ patients }) => {
   };
 
   const onPatientClick = (patientId: number) => {
-    navigate(`/patient-basic-info/${patientId}`);
+    navigate(`/patient/${patientId}`);
   };
 
   return (

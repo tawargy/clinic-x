@@ -1,9 +1,9 @@
-import MainLayout from "../layouts/MainLout";
+import MainLayout from "../layouts/MainLayout";
 import Error from "../pages/Error";
 
 import Home from "../pages/Home";
 import AddPatient from "../pages/AddPatient";
-import PatientBasicInfo from "../pages/PatientBasicInfo";
+import Patient from "../pages/Patient";
 import Agenda from "../pages/Agenda";
 import Appointment from "../pages/Appointment";
 
@@ -21,8 +21,8 @@ const MainRoutes = {
       element: <AddPatient />,
     },
     {
-      path: "patient-basic-info/:id",
-      element: <PatientBasicInfo />,
+      path: "patient/:id",
+      element: <Patient />,
     },
     {
       path: "agenda",

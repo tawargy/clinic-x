@@ -1,25 +1,18 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { invoke } from "@tauri-apps/api/core";
-import Form from "../components/comman/form/Form";
 //import { TPatientInfo } from "../validations/patientInfoSchema";
-import { toastSuccess, toastError } from "../utils/toastify";
 import { useClinic } from "../contextApi/clinicContext";
-import { useAppSettings } from "../contextApi/appContext";
 import PatientInfo from "../components/PatientInfo";
 import PatientMedicalInfo from "../components/PatientMedicalInfo";
-import PatientVisitHistory from "../components/PatientVisitHistory";
-import { X } from "lucide-react";
-import { TPatientInfo } from "../types";
 import { dumy_patient } from "../initData";
 import Visit from "../components/Visit";
+import PatientLayout from "../layouts/PatientLayout";
 
 function PatentBasicInfo() {
   // const [patient, setPatient] = useState<TPatientInfo | undefined>(patientInit);
   const { patientInfo, setPatientInfo } = useClinic();
   const navigate = useNavigate();
-  const { darkMode } = useAppSettings();
   const { id } = useParams();
 
   // const getPatientInfo = async () => {
@@ -76,44 +69,21 @@ function PatentBasicInfo() {
     navigate("/agenda");
   };
   return (
-    <div className="container mx-auto  relative">
-      <div
-        className=" w-7 h-7 flex items-center justify-center bg-white  rounded-md absolute right-0 top-0  cursor-pointer"
-        onClick={() => navigate("/")}
-      >
-        <X
-          className="w-full h-full rounded-md bg-red-500 text-white font-bold"
-          size={20}
-        />
-      </div>
-      <div
-        className={`${darkMode ? "bg-gray-800 text-white" : "bg-white"} w-full  rounded-lg shadow-md p-4 transition-colors duration-200  flex flex-col`}
-      >
-        {/* Main content */}
-        <main className="container mx-auto px-2">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Left column - Patient info */}
-            <PatientInfo
-              patient={patientInfo}
-              onOpenViset={onOpenVisit}
-              onSchedule={onSchedule}
-              onPatientUpdate={setPatientInfo}
-              onSavePatient={updatePatient}
-            />
-            <div className="lg:col-span-2 flex gap-6 ">
-              {/* Right column - Medical info */}
-              <PatientMedicalInfo
-                patient={patientInfo}
-                onPatientUpdate={setPatientInfo}
-                onSavePatient={updatePatient}
-              />
-              {/* Visit  */}
-              <Visit patient={PatientInfo} onPatientUpdate={setPatientInfo} />
-            </div>
-          </div>
-        </main>
-      </div>
-    </div>
+    <PatientLayout>
+      <PatientInfo
+        patient={patientInfo}
+        onOpenViset={onOpenVisit}
+        onSchedule={onSchedule}
+        onPatientUpdate={setPatientInfo}
+        onSavePatient={updatePatient}
+      />
+      <PatientMedicalInfo
+        patient={patientInfo}
+        onPatientUpdate={setPatientInfo}
+        onSavePatient={updatePatient}
+      />
+      <Visit patient={PatientInfo} onPatientUpdate={setPatientInfo} />
+    </PatientLayout>
   );
 }
 export default PatentBasicInfo;

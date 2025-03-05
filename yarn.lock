@@ -1572,6 +1572,11 @@ react-select@^5.10.0:
     react-transition-group "^4.3.0"
     use-isomorphic-layout-effect "^1.2.0"
 
+react-to-print@^3.0.5:
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/react-to-print/-/react-to-print-3.0.5.tgz#7569f9ac5e7854dbec79f449501fedf28cda82ab"
+  integrity sha512-Z15MwMOzYCHWi26CZeFNwflAg7Nr8uWD6FTj+EkfIOjYyjr0MXGbI0c7rF4Fgrbj3XG9hFndb1ourxpPz2RAiA==
+
 react-toastify@^11.0.5:
   version "11.0.5"
   resolved "https://registry.yarnpkg.com/react-toastify/-/react-toastify-11.0.5.tgz#ce4c42d10eeb433988ab2264d3e445c4e9d13313"

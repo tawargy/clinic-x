@@ -49,7 +49,7 @@ function PatientMedicalInfo({
   };
   return (
     <div
-      className={`${darkMode ? "bg-gray-800" : "bg-white"} h-[100%] w-full  rounded-lg shadow-md p-6 mb-6 transition-colors duration-200`}
+      className={`${darkMode ? "bg-gray-800" : "bg-white"} max-h-[850px] h-[100%]  overflow-y-auto custom-scrollbar w-full  rounded-lg shadow-md p-6 mb-6 transition-colors duration-200`}
     >
       <h3 className=" text-lg font-semibold mb-4 flex items-center">
         <Pill className="mr-2" size={18} />
