@@ -12,19 +12,26 @@ pub fn init_db(app_handle: &tauri::AppHandle) -> Result<()> {
     conn.execute(
         "CREATE TABLE IF NOT EXISTS patients (
             id TEXT PRIMARY KEY,
-            name TEXT NOT NULL,
+            name TEXT,
             dob TEXT,
             gender TEXT,
-            occupation TEXT,
-            residence TEXT,
-            born_city TEXT,
-            tel TEXT,
-            email TEXT,
+            height TEXT,
+            weight TEXT,
+            blood_pressure TEXT,
+            heart_rate TEXT,
             marital TEXT,
-            smoker TEXT,
-            si TEXT,
-            special_habits TEXT
-        )",
+            born_city TEXT,
+            occupation TEXT,
+            temperature TEXT,
+            allergies TEXT,  -- Stores a JSON string
+            medications TEXT,  -- Stores a JSON string
+            conditions TEXT,  -- Stores a JSON string
+            special_habits TEXT,  -- Stores a JSON string
+            notes TEXT,
+            history TEXT,  -- Stores a JSON string
+            contact_info TEXT,  -- Stores a JSON string
+            insurance TEXT   -- Stores a JSON string
+        );",
         [],
     )?;
 
@@ -55,10 +62,11 @@ pub fn init_db(app_handle: &tauri::AppHandle) -> Result<()> {
 
     Ok(())
 }
+
 pub fn get_db_connection(app_handle: &tauri::AppHandle) -> Result<Connection> {
     let app_dir = app_handle.path().app_data_dir().unwrap();
     let db_path = app_dir.join("app.db");
     println!("Database path: {}", db_path.display());
-    if !db_path.exists() { init_db(app_handle)?; };
+    if !db_path.exists() { init_db(app_handle)?; }
     Connection::open(db_path)
 }

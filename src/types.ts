@@ -1,7 +1,7 @@
 export type TPatientInfo = {
   id: string;
   name: string;
-  age: string;
+  dob: string;
   gender: string;
   height: string;
   weight: string;

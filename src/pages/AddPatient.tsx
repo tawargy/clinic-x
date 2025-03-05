@@ -1,10 +1,10 @@
-import { useNavigate } from "react-router-dom";
-import { toastSuccess, toastError } from "../utils/toastify";
-import Form from "../components/comman/form/Form";
 import { invoke } from "@tauri-apps/api/core";
-import { TPatientInfo } from "../validations/patientInfoSchema";
-import { useAppSettings } from "../contextApi/appContext";
 import { X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import Form from "../components/comman/form/Form";
+import { useAppSettings } from "../contextApi/appContext";
+import { toastError, toastSuccess } from "../utils/toastify";
+import { TPatientInfo } from "../validations/patientInfoSchema";
 
 function AddPatient() {
   const navigate = useNavigate();
