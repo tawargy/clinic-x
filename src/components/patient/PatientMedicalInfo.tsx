@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { useAppSettings } from "../contextApi/appContext";
-import { TpatientMedicalHistory } from "../types";
-import { patientMedicalHistoryInit } from "../initData";
+import { useAppSettings } from "../../contextApi/appContext";
+import { TpatientMedicalHistory } from "../../types";
+import { patientMedicalHistoryInit } from "../../initData";
 import { Pencil, Save } from "lucide-react";
 import { Pill, X } from "lucide-react";
 import { invoke } from "@tauri-apps/api/core";
-import { toastError, toastSuccess } from "../utils/toastify";
+import { toastError, toastSuccess } from "../../utils/toastify";
 
 type Tprops = {
   id: string | undefined;
@@ -20,16 +20,16 @@ function PatientMedicalInfo({ id }: Tprops) {
     useState<TpatientMedicalHistory>(patientMedicalHistoryInit);
 
   const [special_habits, setSpecialHabits] = useState<string[]>(
-    patientMedicalHistory.special_habits || []
+    patientMedicalHistory.special_habits || [],
   );
   const [conditions, setConditions] = useState<string[]>(
-    patientMedicalHistory.conditions || []
+    patientMedicalHistory.conditions || [],
   );
   const [medications, setMedications] = useState<string[]>(
-    patientMedicalHistory.medications || []
+    patientMedicalHistory.medications || [],
   );
   const [allergies, setAllergies] = useState<string[]>(
-    patientMedicalHistory.allergies || []
+    patientMedicalHistory.allergies || [],
   );
 
   useEffect(() => {
@@ -49,7 +49,6 @@ function PatientMedicalInfo({ id }: Tprops) {
       setPatientMedicalHistory(res);
       setOriginalPatientMedicalHistory(res);
       setIsPatientMedicalHistory(true);
-      console.log(res);
     } catch (e) {
       console.log(e);
     }
@@ -165,7 +164,7 @@ function PatientMedicalInfo({ id }: Tprops) {
                   <button
                     onClick={() => {
                       const updatedAllergies = allergies.filter(
-                        (_, i) => i !== index
+                        (_, i) => i !== index,
                       );
                       setAllergies(updatedAllergies);
                     }}
@@ -232,7 +231,7 @@ function PatientMedicalInfo({ id }: Tprops) {
                   <button
                     onClick={() => {
                       const updatedMedications = medications.filter(
-                        (_, i) => i !== index
+                        (_, i) => i !== index,
                       );
                       setMedications(updatedMedications);
                     }}
@@ -302,7 +301,7 @@ function PatientMedicalInfo({ id }: Tprops) {
                   <button
                     onClick={() => {
                       const updatedConditions = conditions.filter(
-                        (_, i) => i !== index
+                        (_, i) => i !== index,
                       );
                       setConditions(updatedConditions);
                     }}
@@ -370,7 +369,7 @@ function PatientMedicalInfo({ id }: Tprops) {
                   <button
                     onClick={() => {
                       const updatedHabits = special_habits.filter(
-                        (_, i) => i !== index
+                        (_, i) => i !== index,
                       );
                       setSpecialHabits(updatedHabits);
                     }}

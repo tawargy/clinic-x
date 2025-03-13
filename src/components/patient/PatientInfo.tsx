@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppSettings } from "../contextApi/appContext";
-import { TPatientInfo } from "../types";
+import { useAppSettings } from "../../contextApi/appContext";
+import { TPatientInfo, TAppointment } from "../../types";
 import ContactAndInsurance from "./ContactAndInsurance";
 import { User, Pencil, Save, X } from "lucide-react";
-import { patientInit } from "../initData";
-import PatientVisitHistory from "../components/PatientVisitHistory";
+import { patientInit } from "../../initData";
+import PatientVisitHistory from "../../components/patient/PatientVisitHistory";
 import { invoke } from "@tauri-apps/api/core";
-import { toastError, toastSuccess } from "../utils/toastify";
+import { toastError, toastSuccess } from "../../utils/toastify";
 
 type Tprops = {
   id: string | undefined;
@@ -18,6 +18,7 @@ function PatientInfo({ id }: Tprops) {
   const [originalPatient, setOriginalPatient] =
     useState<TPatientInfo>(patientInit);
   const [patient, setPatient] = useState<TPatientInfo>(patientInit);
+  const [appointments, setAppointments] = useState<TAppointment[]>([]);
   const [isEdit, setIsEdit] = useState(false);
 
   const navigate = useNavigate();
@@ -36,9 +37,23 @@ function PatientInfo({ id }: Tprops) {
       console.log(e);
     }
   };
+  const getAppointments = async () => {
+    try {
+      const res = await invoke<TAppointment[]>(
+        "get_appointments_by_patient_id",
+        {
+          patientId: id,
+        },
+      );
+      setAppointments(res);
+      console.log("appointments", res);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   useEffect(() => {
-    console.log(new Date());
     getPatientInfo();
+    getAppointments();
   }, []);
 
   const updatePatient = async () => {
@@ -235,7 +250,7 @@ function PatientInfo({ id }: Tprops) {
         isEdit={isEdit}
       />
 
-      <PatientVisitHistory patient={patient} />
+      <PatientVisitHistory appointments={appointments} />
     </div>
   );
 }

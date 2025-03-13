@@ -13,7 +13,7 @@ type Tprops = {
   patient_id: string | undefined;
 };
 
-function Visit({ patient_id }: Tprops) {
+function Appointment({ patient_id }: Tprops) {
   const [isOpen, setIsOpen] = useState(false);
   const [isVisit, setIsVisit] = useState(false);
   const [appointment, setAppointment] = useState<TAppointment>(appointmentInit);
@@ -50,7 +50,7 @@ function Visit({ patient_id }: Tprops) {
         weight: appointment.weight || null,
         height: appointment.height || null,
         prescription: appointment.prescription || [],
-        created_at: new Date().toISOString(),
+        created_at: formatDate(new Date()),
       };
 
       console.log("Sending to backend:", appointmentData); // Debug log
@@ -175,4 +175,4 @@ function Visit({ patient_id }: Tprops) {
     </div>
   );
 }
-export default Visit;
+export default Appointment;

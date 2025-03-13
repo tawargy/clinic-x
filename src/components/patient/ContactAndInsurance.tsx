@@ -1,8 +1,7 @@
-import { useState } from "react";
-import { useAppSettings } from "../contextApi/appContext";
+import { useAppSettings } from "../../contextApi/appContext";
 import { Phone, Mail, Home, Shield } from "lucide-react";
 
-import { TPatientInfo } from "../types";
+import { TPatientInfo } from "../../types";
 
 type Tprops = {
   patient: TPatientInfo;

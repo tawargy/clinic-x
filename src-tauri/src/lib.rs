@@ -24,6 +24,8 @@ pub fn run() {
             handlers::patient::delete_patient,
             handlers::patient::search_patients,
             handlers::appointment::add_appointment,
+            handlers::appointment::get_appointments_by_patient_id,
+            handlers::appointment::get_appointment_by_id,
             handlers::queue_and_recently::get_queue,
             handlers::queue_and_recently::get_recently,
             handlers::patient_medical_history::get_patient_medical_history,
