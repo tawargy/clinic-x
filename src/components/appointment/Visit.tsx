@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { useAppSettings } from "../../contextApi/appContext";
-import Vitals from "../Vitals";
+import Vitals from "./Vitals";
 import { Stethoscope } from "lucide-react";
 import { TAppointment } from "../../types";
-import Prescriptions from "../Prescriptions";
+import Prescriptions from "./Prescriptions";
 import { appointmentInit } from "../../initData";
 import { toastError, toastSuccess } from "../../utils/toastify";
+import { formatDate } from "../../utils/date";
 
 type Tprops = {
   patient_id: string | undefined;
@@ -77,7 +78,9 @@ function Visit({ patient_id }: Tprops) {
           <Stethoscope className="mr-2" size={18} />
           Visit
           {isVisit ? (
-            <span className="text-sm text-gray-400 ml-2">3/3/2022</span>
+            <span className="text-sm text-gray-400 ml-2">
+              {formatDate(new Date())}
+            </span>
           ) : (
             <button
               className="bg-green-500 text-white ml-2 text-sm py-1  px-2 rounded-md hover:bg-green-700"
@@ -90,7 +93,10 @@ function Visit({ patient_id }: Tprops) {
         {isVisit && (
           <>
             <div>
-              {/* <Vitals patient={patient} onPatientUpdate={onPatientUpdate} /> */}
+              <Vitals
+                appointment={appointment}
+                onChangeHandler={onChangeHandler}
+              />
               <h4
                 className={`text-lg font-medium mb-1 mt-2 ${darkMode ? "text-gray-300" : "text-gray-700"}`}
               >

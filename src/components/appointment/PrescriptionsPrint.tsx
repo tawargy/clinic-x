@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useReactToPrint } from "react-to-print"; // First install this package: npm install react-to-print
-import { useAppSettings } from "../contextApi/appContext";
-import Rx from "../assets/rx.png";
+import { useAppSettings } from "../../contextApi/appContext";
+import Rx from "../../assets/rx.png";
 
 type TMedicine = {
   name: string;

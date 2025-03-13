@@ -28,11 +28,6 @@ const MainRoutes = {
       path: "agenda",
       element: <Agenda />,
     },
-
-    {
-      path: "appointment/:id",
-      element: <Appointment />,
-    },
   ],
 };
 
