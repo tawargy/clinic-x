@@ -32,20 +32,18 @@ function ContactAndInsurance({ patient, onPatientUpdate, isEdit }: Tprops) {
               <input
                 className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-200 border-gray-300 text-gray-900"} w-[80%] text-sm p-1 rounded-md`}
                 type="text"
-                value={patient.contactInfo.phone}
+                value={patient.phone}
                 name="phone"
                 onChange={(e) =>
                   onPatientUpdate({
                     ...patient,
-                    contactInfo: {
-                      ...patient.contactInfo,
-                      phone: e.target.value,
-                    },
+
+                    phone: e.target.value,
                   })
                 }
               />
             ) : (
-              <p>{patient.contactInfo.phone}</p>
+              <p>{patient.phone}</p>
             )}
           </div>
           <div className="flex items-center">
@@ -57,20 +55,17 @@ function ContactAndInsurance({ patient, onPatientUpdate, isEdit }: Tprops) {
               <input
                 className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-200 border-gray-300 text-gray-900"} w-[80%] text-sm p-1 rounded-md`}
                 type="text"
-                value={patient.contactInfo.email}
+                value={patient.email}
                 name="email"
                 onChange={(e) =>
                   onPatientUpdate({
                     ...patient,
-                    contactInfo: {
-                      ...patient.contactInfo,
-                      email: e.target.value,
-                    },
+                    email: e.target.value,
                   })
                 }
               />
             ) : (
-              <p>{patient.contactInfo.email}</p>
+              <p>{patient.email}</p>
             )}
           </div>
           <div className="flex items-start">
@@ -83,20 +78,17 @@ function ContactAndInsurance({ patient, onPatientUpdate, isEdit }: Tprops) {
               <input
                 className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-200 border-gray-300 text-gray-900"} w-[80%] text-sm p-1 rounded-md`}
                 type="text"
-                value={patient.contactInfo.address}
-                name="address"
+                value={patient.residence}
+                name="residence"
                 onChange={(e) =>
                   onPatientUpdate({
                     ...patient,
-                    contactInfo: {
-                      ...patient.contactInfo,
-                      address: e.target.value,
-                    },
+                    residence: e.target.value,
                   })
                 }
               />
             ) : (
-              <p>{patient.contactInfo.address}</p>
+              <p>{patient.residence}</p>
             )}
           </div>
         </div>
@@ -111,32 +103,39 @@ function ContactAndInsurance({ patient, onPatientUpdate, isEdit }: Tprops) {
         </h3>
         <div className="space-y-1">
           <div className="flex  items-center">
-            <p
-              className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}
-            >
-              Provider:
-            </p>
             {isEdit ? (
-              <input
-                className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-200 border-gray-300 text-gray-900"} w-[80%] text-sm p-1 rounded-md`}
-                type="text"
-                value={patient.insurance.provider}
-                name="provider"
-                onChange={(e) =>
-                  onPatientUpdate({
-                    ...patient,
-                    insurance: {
-                      ...patient.insurance,
-                      provider: e.target.value,
-                    },
-                  })
-                }
-              />
+              <>
+                <p
+                  className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}
+                  title="Provider"
+                >
+                  PR:
+                </p>
+                <input
+                  className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-200 border-gray-300 text-gray-900"} w-[80%] text-sm p-1 rounded-md`}
+                  type="text"
+                  value={patient.insurance_provider}
+                  name="provider"
+                  onChange={(e) =>
+                    onPatientUpdate({
+                      ...patient,
+                      insurance_provider: e.target.value,
+                    })
+                  }
+                />
+              </>
             ) : (
-              <p className="font-medium">
-                {" "}
-                &nbsp; {patient.insurance.provider}
-              </p>
+              <>
+                <p
+                  className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}
+                >
+                  Provider:
+                </p>
+                <p className="font-medium">
+                  {" "}
+                  &nbsp; {patient.insurance_provider}
+                </p>
+              </>
             )}
           </div>
           <div className="flex items-center">
@@ -150,22 +149,19 @@ function ContactAndInsurance({ patient, onPatientUpdate, isEdit }: Tprops) {
               <input
                 className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-200 border-gray-300 text-gray-900"} w-[80%] text-sm p-1 rounded-md`}
                 type="text"
-                value={patient.insurance.policyNumber}
+                value={patient.insurance_policy_number}
                 name="policyNumber"
                 onChange={(e) =>
                   onPatientUpdate({
                     ...patient,
-                    insurance: {
-                      ...patient.insurance,
-                      policyNumber: e.target.value,
-                    },
+                    insurance_policy_number: e.target.value,
                   })
                 }
               />
             ) : (
               <p className="font-medium">
                 {" "}
-                &nbsp; {patient.insurance.policyNumber}
+                &nbsp; {patient.insurance_policy_number}
               </p>
             )}
           </div>
@@ -180,22 +176,19 @@ function ContactAndInsurance({ patient, onPatientUpdate, isEdit }: Tprops) {
               <input
                 className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-200 border-gray-300 text-gray-900"} w-[80%] text-sm p-1 rounded-md`}
                 type="text"
-                value={patient.insurance.groupNumber}
+                value={patient.insurance_group_number}
                 name="golicyNumber"
                 onChange={(e) =>
                   onPatientUpdate({
                     ...patient,
-                    insurance: {
-                      ...patient.insurance,
-                      groupNumber: e.target.value,
-                    },
+                    insurance_group_number: e.target.value,
                   })
                 }
               />
             ) : (
               <p className="font-medium">
                 {" "}
-                &nbsp; {patient.insurance.groupNumber}
+                &nbsp; {patient.insurance_group_number}
               </p>
             )}
           </div>

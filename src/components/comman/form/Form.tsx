@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Input from "../formFaild/Input";
@@ -6,40 +5,50 @@ import Select from "../formFaild/Select";
 import DateInput from "../formFaild/DateInput";
 import {
   patientInfoSchema,
-  TPatientInfo,
+  TPatientSchema,
 } from "../../../validations/patientInfoSchema";
 
 type TFormProps = {
-  onSubmitHandler: (data: TPatientInfo) => void;
+  onSubmitHandler: (data: TPatientSchema) => void;
   btnText?: string;
-  patientInfo?: TPatientInfo;
+  patientInfo?: TPatientSchema;
   onCancel?: () => void;
 };
-function Form({ onSubmitHandler, btnText, patientInfo, onCancel }: TFormProps) {
+function Form({ onSubmitHandler, btnText }: TFormProps) {
   const {
     register,
     handleSubmit,
     control,
 
     formState: { errors, isSubmitting },
-    reset,
-  } = useForm<TPatientInfo>({
+  } = useForm<TPatientSchema>({
     resolver: zodResolver(patientInfoSchema),
     mode: "onBlur",
+    defaultValues: {
+      name: "",
+      gender: "Male",
+      born_city: "",
+      residence: "",
+      dob: new Date(),
+      phone: "",
+      email: "",
+      occupation: "",
+      marital_status: "Single",
+    },
   });
 
-  useEffect(() => {
-    if (patientInfo) {
-      const formattedPatientInfo = {
-        ...patientInfo,
-        dob:
-          patientInfo.dob instanceof Date
-            ? patientInfo.dob
-            : new Date(patientInfo.dob),
-      };
-      reset(formattedPatientInfo);
-    }
-  }, [patientInfo, reset]);
+  // useEffect(() => {
+  //   if (patientInfo) {
+  //     const formattedPatientInfo = {
+  //       ...patientInfo,
+  //       dob:
+  //         patientInfo.dob instanceof Date
+  //           ? patientInfo.dob
+  //           : new Date(patientInfo.dob),
+  //     };
+  //     reset(formattedPatientInfo);
+  //   }
+  // }, [patientInfo, reset]);
 
   return (
     <form
@@ -64,34 +73,22 @@ function Form({ onSubmitHandler, btnText, patientInfo, onCancel }: TFormProps) {
           <Input label="Born City" name="born_city" register={register} />
           <Input label="Residence" name="residence" register={register} />
 
-          <Select
-            label="Marital Status"
-            name="marital"
-            control={control}
-            options={["Single", "Married", "Widowed", "Divorced"]}
-          />
           <DateInput label="DOB" name="dob" control={control} />
         </div>
         <div className="md:flex flex-col gap-4 md:w-1/2">
           <Input
             label="Tel"
-            name="tel"
+            name="phone"
             register={register}
-            error={errors.tel?.message}
+            error={errors.phone?.message}
           />
           <Input label="Email" name="email" register={register} />
           <Input label="Occupation" name="occupation" register={register} />
-          <Input label="SI" name="si" register={register} />
           <Select
-            label="Smoker"
-            name="smoker"
+            label="Marital Status"
+            name="marital_status"
             control={control}
-            options={["No", "Yes"]}
-          />
-          <Input
-            label="Special Habits"
-            name="special_habits"
-            register={register}
+            options={["Single", "Married", "Widowed", "Divorced"]}
           />
         </div>
       </div>
@@ -102,13 +99,6 @@ function Form({ onSubmitHandler, btnText, patientInfo, onCancel }: TFormProps) {
           type="submit"
         >
           {btnText}
-        </button>
-        <button
-          className="font-bold text-white bg-red-500 hover:bg-red-700  py-4 rounded-md  w-1/3 "
-          onClick={onCancel}
-          type="button"
-        >
-          Cancel
         </button>
       </div>
     </form>

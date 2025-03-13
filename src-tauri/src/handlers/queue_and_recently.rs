@@ -1,37 +1,12 @@
-use serde::{Deserialize, Serialize};
+use crate::datastore::recent::get_recent_patients_db;
+use crate::types::Patient;
 
-#[derive(Serialize, Deserialize)]
-pub struct Patient {
-    id: String,
-    name: String,
+#[tauri::command]
+pub fn get_queue() -> Result<Vec<Patient>, String> {
+    Ok(vec![])
 }
 
 #[tauri::command]
-pub fn get_queue() -> Vec<Patient> {
-    // For demonstration, returning hardcoded data
-    vec![
-        Patient {
-            id: String::from("df99"),
-            name: String::from("mohamed ali"),
-        },
-        Patient {
-            id: String::from("df98"),
-            name: String::from("ahmed hassan"),
-        },
-    ]
-}
-
-#[tauri::command]
-pub fn get_recently() -> Vec<Patient> {
-    // For demonstration, returning hardcoded data
-    vec![
-        Patient {
-            id: String::from("df77"),
-            name: String::from("mohamed ahmed"),
-        },
-        Patient {
-            id: String::from("df76"),
-            name: String::from("ali mahmoud"),
-        },
-    ]
+pub fn get_recently(window: tauri::Window) -> Result<Vec<Patient>, String> {
+    get_recent_patients_db(window)
 }

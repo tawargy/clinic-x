@@ -6,6 +6,7 @@ import { Search, Clock, Users, UserPlus } from "lucide-react";
 import PatientQueue from "../components/PatientQueue";
 import SearchPatient from "../components/SearchPatient";
 import RecentPatients from "../components/RecentPatients";
+import { TPatientInfo } from "../types";
 
 type TPatient = {
   id: string;
@@ -15,14 +16,16 @@ type TPatient = {
 function Home() {
   const { darkMode } = useAppSettings();
   const [queue, setQueue] = useState<TPatient[] | undefined>([]);
-  const [recently, setRecently] = useState<TPatient[] | undefined>([]);
+  const [recently, setRecently] = useState<TPatientInfo[] | undefined>([]);
   const [searchResults, setSearchResults] = useState<TPatient[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
   async function getQueueAndRecently() {
     const queue = (await invoke("get_queue")) as TPatient[] | undefined;
     setQueue(queue);
-    const recently = (await invoke("get_recently")) as TPatient[] | undefined;
+    const recently = (await invoke("get_recently")) as
+      | TPatientInfo[]
+      | undefined;
     setRecently(recently);
   }
 
@@ -33,13 +36,14 @@ function Home() {
   const getPatient = async (input: string) => {
     console.log(input);
     try {
-      const res = (await invoke("search_result", { input: input })) as
-        | TPatient
-        | undefined;
-      setSearchResults(res || []);
-      console.log("res", searchResults);
+      const res = (await invoke("search_patients", {
+        searchTerm: input,
+      })) as TPatient[];
+      setSearchResults(res);
+      console.log("Search ressults", res);
     } catch (e) {
-      console.log(e);
+      console.log("Search error", e);
+      setSearchResults([]);
     }
   };
 
@@ -65,7 +69,9 @@ function Home() {
     <div className="container mx-auto p-4 ">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div
-          className={`${darkMode ? "bg-gray-800 text-white" : "bg-white"} rounded-lg shadow-md p-4 transition-colors duration-200 h-[calc(100vh-120px)] flex flex-col`}
+          className={`${
+            darkMode ? "bg-gray-800 text-white" : "bg-white"
+          } rounded-lg shadow-md p-4 transition-colors duration-200 h-[calc(100vh-120px)] flex flex-col`}
         >
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold flex items-center">
@@ -73,7 +79,11 @@ function Home() {
               Patient Queue
             </h2>
             <span
-              className={`${darkMode ? "bg-blue-900 text-blue-100" : "bg-blue-100 text-blue-800"} font-medium px-2.5 py-0.5 rounded-full transition-colors duration-200`}
+              className={`${
+                darkMode
+                  ? "bg-blue-900 text-blue-100"
+                  : "bg-blue-100 text-blue-800"
+              } font-medium px-2.5 py-0.5 rounded-full transition-colors duration-200`}
             >
               6
             </span>
@@ -84,7 +94,9 @@ function Home() {
         </div>
         {/* Middle Column - Search */}
         <div
-          className={`${darkMode ? "bg-gray-800 text-white" : "bg-white"} rounded-lg shadow-md p-4 transition-colors duration-200 h-[calc(100vh-120px)] flex flex-col`}
+          className={`${
+            darkMode ? "bg-gray-800 text-white" : "bg-white"
+          } rounded-lg shadow-md p-4 transition-colors duration-200 h-[calc(100vh-120px)] flex flex-col`}
         >
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold flex items-center">
@@ -111,21 +123,18 @@ function Home() {
 
         {/* Right Column - Recent Patients */}
         <div
-          className={`${darkMode ? "bg-gray-800 text-white" : "bg-white"} rounded-lg shadow-md p-4 transition-colors duration-200 h-[calc(100vh-120px)] flex flex-col`}
+          className={`${
+            darkMode ? "bg-gray-800 text-white" : "bg-white"
+          } rounded-lg shadow-md p-4 transition-colors duration-200 h-[calc(100vh-120px)] flex flex-col`}
         >
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold flex items-center">
               <Clock className="mr-2" size={20} />
               Recent Patients
             </h2>
-            <span
-              className={`${darkMode ? "bg-green-900 text-green-100" : "bg-green-100 text-green-800"} font-medium px-2.5 py-0.5 rounded-full transition-colors duration-200`}
-            >
-              7
-            </span>
           </div>
           <div className="flex-grow overflow-hidden">
-            <RecentPatients patients={recently} darkMode={darkMode} />
+            <RecentPatients patients={recently ?? []} darkMode={darkMode} />
           </div>
         </div>
       </div>

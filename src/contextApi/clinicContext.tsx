@@ -1,7 +1,6 @@
 import { createContext, ReactNode, useState, useMemo, useContext } from "react";
 import { TPatientInfo } from "../types";
 import { patientInit } from "../initData";
-//import { TPatientInfo } from "../validations/patientInfoSchema";
 
 interface ClinicContextType {
   patientInfo: TPatientInfo | undefined;

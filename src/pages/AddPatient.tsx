@@ -4,30 +4,27 @@ import { useNavigate } from "react-router-dom";
 import Form from "../components/comman/form/Form";
 import { useAppSettings } from "../contextApi/appContext";
 import { toastError, toastSuccess } from "../utils/toastify";
-import { TPatientInfo } from "../validations/patientInfoSchema";
+import { TPatientSchema } from "../validations/patientInfoSchema";
+import { TPatientInfo } from "../types";
+import { formatDate, getAge } from "../utils/date";
 
 function AddPatient() {
   const navigate = useNavigate();
   const { darkMode } = useAppSettings();
-  const onSubmitHandler = async (data: TPatientInfo) => {
-    console.log(data.dob);
+
+  const onSubmitHandler = async (data: TPatientSchema) => {
     try {
-      if (!data.dob) data.dob = "";
-      if (data.dob instanceof Date)
-        data.dob = new Date(data.dob)
-          .toLocaleDateString("en-GB")
-          .split("/")
-          .join("-");
-      {
-        console.log(data.dob);
-      }
-      const formattedData = {
+      const complatedData: TPatientInfo = {
         ...data,
         id: "",
+        dob: formatDate(data.dob),
+        age: getAge(data.dob),
+        insurance_group_number: "",
+        insurance_policy_number: "",
+        insurance_provider: "",
       };
-
-      console.log(formattedData);
-      const res = await invoke("add_patient", { data: formattedData });
+      console.log("front", complatedData);
+      const res = await invoke("add_patient", { data: complatedData });
       console.log(res);
       toastSuccess("Successfully added patient");
       navigate("/");
@@ -39,7 +36,9 @@ function AddPatient() {
   return (
     <div className="container mx-auto p-4   relative">
       <div
-        className={`${darkMode ? "bg-gray-800 text-white" : "bg-white"} rounded-lg shadow-md p-4 transition-colors duration-200 `}
+        className={`${
+          darkMode ? "bg-gray-800 text-white" : "bg-white"
+        } rounded-lg shadow-md p-4 transition-colors duration-200 `}
       >
         <div
           className=" w-7 h-7 flex items-center justify-center bg-white  rounded-md absolute right-0 top-0  cursor-pointer"

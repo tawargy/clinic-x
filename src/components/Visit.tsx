@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAppSettings } from "../contextApi/appContext";
-
+import Vitals from "./Vitals";
 import { Stethoscope } from "lucide-react";
 import { TPatientInfo } from "../types";
 import Prescriptions from "./Prescriptions";
@@ -37,6 +37,11 @@ function Visit({ patient, onPatientUpdate }: Tprops) {
         {isVisit && (
           <>
             <div>
+              <Vitals
+                patient={patient}
+                onPatientUpdate={onPatientUpdate}
+                isEdit={isEdit}
+              />
               <h4
                 className={`text-lg font-medium mb-1 mt-2 ${darkMode ? "text-gray-300" : "text-gray-700"}`}
               >
