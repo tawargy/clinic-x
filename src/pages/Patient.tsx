@@ -2,6 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import PatientInfo from "../components/PatientInfo";
 import PatientMedicalInfo from "../components/PatientMedicalInfo";
 import PatientLayout from "../layouts/PatientLayout";
+import Visit from "../components/appointment/Visit";
 
 function PatentBasicInfo() {
   const navigate = useNavigate();
@@ -17,12 +18,7 @@ function PatentBasicInfo() {
     <PatientLayout>
       <PatientInfo id={id} onSchedule={onSchedule} />
       <PatientMedicalInfo id={id} />
-      {/*
-      <Visit
-        patient={PatientInfo}
-        onPatientUpdate={setPatientInfo}
-        onOpenViset={onOpenVisit}
-      />*/}
+      <Visit patient_id={id} />
     </PatientLayout>
   );
 }

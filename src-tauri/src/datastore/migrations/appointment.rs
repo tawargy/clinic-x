@@ -16,7 +16,7 @@ pub fn appointment_schema() -> String {
                     weight TEXT,
                     height TEXT,
                     provisional_diagnosis TEXT,
-                    prescription TEXT,  
+                    prescription TEXT, -- This will store JSON string
                     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                     FOREIGN KEY (patient_id) REFERENCES patients (id)
                 );",

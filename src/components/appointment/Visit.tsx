@@ -1,20 +1,73 @@
 import { useState } from "react";
-import { useAppSettings } from "../contextApi/appContext";
-import Vitals from "./Vitals";
+import { invoke } from "@tauri-apps/api/core";
+import { useAppSettings } from "../../contextApi/appContext";
+import Vitals from "../Vitals";
 import { Stethoscope } from "lucide-react";
-import { TPatientInfo } from "../types";
-import Prescriptions from "./Prescriptions";
+import { TAppointment } from "../../types";
+import Prescriptions from "../Prescriptions";
+import { appointmentInit } from "../../initData";
+import { toastError, toastSuccess } from "../../utils/toastify";
 
 type Tprops = {
-  patient: TPatientInfo;
-
-  onPatientUpdate: (patient: TPatientInfo) => void;
+  patient_id: string | undefined;
 };
 
-function Visit({ patient, onPatientUpdate }: Tprops) {
+function Visit({ patient_id }: Tprops) {
   const [isOpen, setIsOpen] = useState(false);
   const [isVisit, setIsVisit] = useState(false);
+  const [appointment, setAppointment] = useState<TAppointment>(appointmentInit);
+
   const { darkMode } = useAppSettings();
+
+  const onChangeHandler = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    setAppointment((p) => {
+      return { ...p, [name]: value };
+    });
+  };
+  const saveOnDatabase = async () => {
+    try {
+      console.log("Saving appointment:", appointment); // Debug log
+
+      const appointmentData = {
+        id: "", // Let backend generate this
+        patient_id: patient_id || "",
+        complaint: appointment.complaint || null,
+        present_history: appointment.present_history || null,
+        examination: appointment.examination || null,
+        provisional_diagnosis: appointment.provisional_diagnosis || null,
+        past_history: appointment.past_history || null,
+        bp: appointment.bp || null,
+        p: appointment.p || null,
+        t: appointment.t || null,
+        rr: appointment.rr || null,
+        rbs: appointment.rbs || null,
+        spo2: appointment.spo2 || null,
+        weight: appointment.weight || null,
+        height: appointment.height || null,
+        prescription: appointment.prescription || [],
+        created_at: new Date().toISOString(),
+      };
+
+      console.log("Sending to backend:", appointmentData); // Debug log
+
+      const res = await invoke("add_appointment", {
+        appointment: appointmentData,
+      });
+      console.log("Response from backend:", res);
+      toastSuccess("Appointment saved successfully!");
+    } catch (e) {
+      toastError("Faild to save");
+      console.error("Error saving appointment:", e);
+    }
+  };
+  const onSaveHandler = () => {
+    saveOnDatabase();
+    setIsVisit(false);
+  };
   return (
     <div
       className={`${darkMode ? "bg-gray-800" : "bg-white"} flex flex-col justify-between  h-[100%] w-full  rounded-lg shadow-md p-6 mb-6 transition-colors duration-200`}
@@ -37,11 +90,7 @@ function Visit({ patient, onPatientUpdate }: Tprops) {
         {isVisit && (
           <>
             <div>
-              <Vitals
-                patient={patient}
-                onPatientUpdate={onPatientUpdate}
-                isEdit={isEdit}
-              />
+              {/* <Vitals patient={patient} onPatientUpdate={onPatientUpdate} /> */}
               <h4
                 className={`text-lg font-medium mb-1 mt-2 ${darkMode ? "text-gray-300" : "text-gray-700"}`}
               >
@@ -49,10 +98,9 @@ function Visit({ patient, onPatientUpdate }: Tprops) {
               </h4>
               <textarea
                 className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-50 border-gray-300 text-gray-900"} border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 p-2.5 transition-colors duration-200`}
-                value={patient.notes}
-                onChange={(e) =>
-                  onPatientUpdate({ ...patient, notes: e.target.value })
-                }
+                value={appointment.complaint}
+                name="complaint"
+                onChange={onChangeHandler}
               />
             </div>
             <div>
@@ -63,10 +111,9 @@ function Visit({ patient, onPatientUpdate }: Tprops) {
               </h4>
               <textarea
                 className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-50 border-gray-300 text-gray-900"} border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 p-2.5 transition-colors duration-200`}
-                value={patient.notes}
-                onChange={(e) =>
-                  onPatientUpdate({ ...patient, notes: e.target.value })
-                }
+                value={appointment.present_history}
+                name="present_history"
+                onChange={onChangeHandler}
               />
             </div>
             <div>
@@ -77,10 +124,9 @@ function Visit({ patient, onPatientUpdate }: Tprops) {
               </h4>
               <textarea
                 className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-50 border-gray-300 text-gray-900"} border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 p-2.5 transition-colors duration-200`}
-                value={patient.notes}
-                onChange={(e) =>
-                  onPatientUpdate({ ...patient, notes: e.target.value })
-                }
+                value={appointment.examination}
+                name="examination"
+                onChange={onChangeHandler}
               />
             </div>
             <div>
@@ -91,10 +137,9 @@ function Visit({ patient, onPatientUpdate }: Tprops) {
               </h4>
               <textarea
                 className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-50 border-gray-300 text-gray-900"} border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 p-2.5 transition-colors duration-200`}
-                value={patient.notes}
-                onChange={(e) =>
-                  onPatientUpdate({ ...patient, notes: e.target.value })
-                }
+                value={appointment.provisional_diagnosis}
+                name="provisional_diagnosis"
+                onChange={onChangeHandler}
               />
             </div>
             {isOpen ? (
@@ -107,7 +152,7 @@ function Visit({ patient, onPatientUpdate }: Tprops) {
             <div className="flex gap-8 mt-8">
               <button
                 className="w-1/2 m-auto  bg-green-500 text-white py-4  px-2 rounded-md hover:bg-green-700"
-                onClick={() => console.log("p")}
+                onClick={onSaveHandler}
               >
                 Save & Close
               </button>

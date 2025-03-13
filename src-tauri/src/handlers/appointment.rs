@@ -1,26 +1,10 @@
-use serde::{Deserialize, Serialize};
-
-#[derive(Debug, Deserialize, Serialize)]
-pub struct AppointmentForm {
-    patient_id: String,
-    past_history: String,
-    family_history: String,
-    complaint: String,
-    present_history: String,
-    examination: String,
-    bp: String,
-    p: String,
-    t: String,
-    rr: String,
-    rbs: String,
-    spo2: String,
-    weight: String,
-    height: String,
-    provisional_diagnosis: String,
-}
+use crate::datastore::appointment;
+use crate::types::Appointment;
 
 #[tauri::command]
-pub fn add_appointment_data(formdata: AppointmentForm) -> String {
-    println!("Received appointment data: {:?}", formdata);
-    format!("Ok Data is Added !")
+pub async fn add_appointment(
+    appointment: Appointment,
+    window: tauri::Window,
+) -> Result<String, String> {
+    appointment::add_appointment_db(appointment, &window).map_err(|e| e.to_string())
 }

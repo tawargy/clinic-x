@@ -1,4 +1,4 @@
-use super::{db::get_db_connection, migrations::patient};
+use super::db::get_db_connection;
 use crate::types::PatientMedicalHistory;
 use rusqlite::{params_from_iter, Result};
 use tauri::Manager;
@@ -66,7 +66,7 @@ pub fn add_patient_medical_history_db(
     }
 
     let query = "INSERT INTO patient_medical_history (
-        id, patient_id, allergies, medications, conditions, 
+        id, patient_id, allergies, medications, conditions,
         special_habits, past_history, family_history, notes
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -97,7 +97,7 @@ pub fn update_patient_medical_history_db(
         Err(_) => return Err(String::from("Failed to connect to database!")),
     };
 
-    let query = "UPDATE patient_medical_history SET 
+    let query = "UPDATE patient_medical_history SET
         allergies = ?,
         medications = ?,
         conditions = ?,

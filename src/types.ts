@@ -64,3 +64,30 @@ export type TpatientMedicalHistory = {
   family_history?: string;
   notes?: string;
 };
+
+export type TAppointment = {
+  id: string;
+  patient_id: string;
+  complaint: string;
+  present_history: string;
+  examination: string;
+  provisional_diagnosis: string;
+  past_history: string;
+  bp: string;
+  p: string;
+  t: string;
+  rr: string;
+  rbs: string;
+  spo2: string;
+  weight: string;
+  height: string;
+  prescription: TPrescription[];
+  created_at: string;
+};
+
+type TPrescription = {
+  name?: string;
+  dosage?: string;
+  frequency?: string;
+  duration?: string;
+};

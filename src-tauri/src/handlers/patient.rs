@@ -5,14 +5,12 @@ use crate::types::Patient;
 #[tauri::command]
 pub fn add_patient(data: Patient, window: tauri::Window) -> Result<String, String> {
     let id = patient::add_patient_db(data, window);
-    println!("id: {:?}", id);
     id
 }
 
 #[tauri::command]
 pub fn get_patient_by_id(patient_id: String, window: tauri::Window) -> Result<Patient, String> {
     let patient_res = patient::get_patient_by_id_db(patient_id, window);
-    println!("patient_res: {:?}", patient_res);
     patient_res
 }
 
@@ -28,6 +26,5 @@ pub fn delete_patient(id: String, window: tauri::Window) -> Result<String, Strin
 
 #[tauri::command]
 pub fn search_patients(search_term: String, window: tauri::Window) -> Result<Vec<Patient>, String> {
-    print!("search_term: {:?}", search_term);
     search::search_patients_db(search_term, window)
 }

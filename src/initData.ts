@@ -25,6 +25,25 @@ export const patientMedicalHistoryInit = {
   family_history: "",
   notes: "",
 };
+export const appointmentInit = {
+  id: "",
+  patient_id: "",
+  complaint: "",
+  present_history: "",
+  examination: "",
+  provisional_diagnosis: "",
+  past_history: "",
+  bp: "",
+  p: "",
+  t: "",
+  rr: "",
+  rbs: "",
+  spo2: "",
+  weight: "",
+  height: "",
+  prescription: [],
+  created_at: new Date().toISOString(),
+};
 
 export const dumy_patient = {
   id: "342432",

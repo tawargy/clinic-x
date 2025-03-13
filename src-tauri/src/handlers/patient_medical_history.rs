@@ -7,7 +7,6 @@ pub fn get_patient_medical_history(
     window: tauri::Window,
 ) -> Result<PatientMedicalHistory, String> {
     let patien_med = patient_midcal_history::get_patient_medical_history_db(id, window);
-    println!("id: {:?}", patien_med);
     patien_med
 }
 

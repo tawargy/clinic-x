@@ -1,13 +1,11 @@
 import { useAppSettings } from "../contextApi/appContext";
-import { Patient } from "../types";
 
 import { Heart, Activity, Clipboard } from "lucide-react";
 type TProps = {
   patient: Patient;
   onPatientUpdate: (patient: Patient) => void;
-  isEdit: boolean;
 };
-function Vitals({ patient, onPatientUpdate, isEdit }: TProps) {
+function Vitals({ patient, onPatientUpdate }: TProps) {
   const { darkMode } = useAppSettings();
 
   return (
@@ -23,19 +21,15 @@ function Vitals({ patient, onPatientUpdate, isEdit }: TProps) {
           >
             Height
           </p>
-          {isEdit ? (
-            <input
-              className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-200 border-gray-300 text-gray-900"} w-[80%] text-sm p-1 rounded-md`}
-              type="text"
-              value={patient.height}
-              name="height"
-              onChange={(e) =>
-                onPatientUpdate({ ...patient, height: e.target.value })
-              }
-            />
-          ) : (
-            <p className="font-medium">{patient.height}</p>
-          )}
+          <input
+            className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-200 border-gray-300 text-gray-900"} w-[80%] text-sm p-1 rounded-md`}
+            type="text"
+            value={patient.height}
+            name="height"
+            onChange={(e) =>
+              onPatientUpdate({ ...patient, height: e.target.value })
+            }
+          />
         </div>
         <div
           className={`${darkMode ? "bg-gray-700" : "bg-gray-50"} px-4 py-1 rounded-lg`}
@@ -45,19 +39,15 @@ function Vitals({ patient, onPatientUpdate, isEdit }: TProps) {
           >
             Weight
           </p>
-          {isEdit ? (
-            <input
-              className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-200 border-gray-300 text-gray-900"} w-[80%] text-sm p-1 rounded-md`}
-              type="text"
-              value={patient.weight}
-              name="weight"
-              onChange={(e) =>
-                onPatientUpdate({ ...patient, weight: e.target.value })
-              }
-            />
-          ) : (
-            <p className="font-medium">{patient.weight}</p>
-          )}
+          <input
+            className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-200 border-gray-300 text-gray-900"} w-[80%] text-sm p-1 rounded-md`}
+            type="text"
+            value={patient.weight}
+            name="weight"
+            onChange={(e) =>
+              onPatientUpdate({ ...patient, weight: e.target.value })
+            }
+          />
         </div>
       </div>
 
@@ -73,22 +63,18 @@ function Vitals({ patient, onPatientUpdate, isEdit }: TProps) {
             >
               Blood Pressure
             </p>
-            {isEdit ? (
-              <input
-                className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-200 border-gray-300 text-gray-900"} w-[80%] text-sm p-1 rounded-md`}
-                type="text"
-                value={patient.bloodPressure}
-                name="bloodPressure"
-                onChange={(e) =>
-                  onPatientUpdate({
-                    ...patient,
-                    bloodPressure: e.target.value,
-                  })
-                }
-              />
-            ) : (
-              <p className="font-medium">{patient.bloodPressure} mmHg</p>
-            )}
+            <input
+              className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-200 border-gray-300 text-gray-900"} w-[80%] text-sm p-1 rounded-md`}
+              type="text"
+              value={patient.bloodPressure}
+              name="bloodPressure"
+              onChange={(e) =>
+                onPatientUpdate({
+                  ...patient,
+                  bloodPressure: e.target.value,
+                })
+              }
+            />
           </div>
         </div>
         <div className="flex items-center">
@@ -102,19 +88,15 @@ function Vitals({ patient, onPatientUpdate, isEdit }: TProps) {
             >
               Heart Rate
             </p>
-            {isEdit ? (
-              <input
-                className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-200 border-gray-300 text-gray-900"} w-[80%] text-sm p-1 rounded-md`}
-                type="text"
-                value={patient.heartRate}
-                name="heartRate"
-                onChange={(e) =>
-                  onPatientUpdate({ ...patient, heartRate: e.target.value })
-                }
-              />
-            ) : (
-              <p className="font-medium">{patient.heartRate} bpm</p>
-            )}
+            <input
+              className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-200 border-gray-300 text-gray-900"} w-[80%] text-sm p-1 rounded-md`}
+              type="text"
+              value={patient.heartRate}
+              name="heartRate"
+              onChange={(e) =>
+                onPatientUpdate({ ...patient, heartRate: e.target.value })
+              }
+            />
           </div>
         </div>
         <div className="flex items-center">
@@ -128,19 +110,15 @@ function Vitals({ patient, onPatientUpdate, isEdit }: TProps) {
             >
               Temperature
             </p>
-            {isEdit ? (
-              <input
-                className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-200 border-gray-300 text-gray-900"} w-[80%] text-sm p-1 rounded-md`}
-                type="text"
-                value={patient.temperature}
-                name="temperature"
-                onChange={(e) =>
-                  onPatientUpdate({ ...patient, temperature: e.target.value })
-                }
-              />
-            ) : (
-              <p className="font-medium">{patient.temperature} °C</p>
-            )}
+            <input
+              className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-200 border-gray-300 text-gray-900"} w-[80%] text-sm p-1 rounded-md`}
+              type="text"
+              value={patient.temperature}
+              name="temperature"
+              onChange={(e) =>
+                onPatientUpdate({ ...patient, temperature: e.target.value })
+              }
+            />
           </div>
         </div>
       </div>
