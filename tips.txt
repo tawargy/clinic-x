@@ -1,0 +1,3 @@
+RR - respiratory rate (lung icon)
+RBS - blood drop icon - blood sugar
+make medication add dose and show dose on hover 
