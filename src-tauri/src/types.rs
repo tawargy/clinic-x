@@ -57,3 +57,18 @@ pub struct Prescription {
     pub frequency: String,
     pub duration: String,
 }
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct AppointmentDay {
+    pub id: String,
+    pub day: String,
+    pub patient_data: Vec<PatientData>,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct PatientData {
+    pub patient_id: String,
+    pub name: String,
+    pub appointment_type: String,
+    pub description: String,
+}

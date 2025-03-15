@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { useAppSettings } from "../../contextApi/appContext";
+import { CalendarDays } from "lucide-react";
 
 import { Settings2, SunMoon, Moon } from "lucide-react";
 function Navbar() {
@@ -7,16 +8,17 @@ function Navbar() {
   return (
     <nav className="flex justify-between items-center  p-4  mb-2">
       <h2>
-        {!isAppointment ? (
-          <NavLink className="nav-link text-red-500 text-2xl" to="/">
-            Doctor X
-          </NavLink>
-        ) : (
-          <span className="nav-link text-blue-500 text-2xl"> Dctor X</span>
-        )}
+        <NavLink className="nav-link text-blue-500 text-2xl font-medium" to="/">
+          Doctor X
+        </NavLink>
       </h2>
 
       <ul className="flex flex-row justify-between items-center gap-3 ">
+        <li>
+          <NavLink className="nav-link dark:text-white" to="/agenda">
+            <CalendarDays />
+          </NavLink>
+        </li>
         <li className="nav-item">
           <button
             className="nav-link dark:text-white block"

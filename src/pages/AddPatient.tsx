@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -24,10 +25,9 @@ function AddPatient() {
         insurance_provider: "",
       };
       console.log("front", complatedData);
-      const res = await invoke("add_patient", { data: complatedData });
-      console.log(res);
+      const res = await invoke<string>("add_patient", { data: complatedData });
       toastSuccess("Successfully added patient");
-      navigate("/");
+      navigate(`/patient/${res}`);
     } catch (e) {
       toastError("Failed to add patient");
       console.log(e);
@@ -49,7 +49,7 @@ function AddPatient() {
             size={20}
           />
         </div>
-        <h1 className="text-center text-xl text-white  py-4 rounded-t-md">
+        <h1 className="text-center text-3xl text-blue-600  py-4 rounded-t-md">
           Add Patient
         </h1>
         <Form

@@ -17,14 +17,16 @@ function ContactAndInsurance({ patient, onPatientUpdate, isEdit }: Tprops) {
       <div
         className={`${darkMode ? "bg-gray-800" : "bg-white"} w-1/2 rounded-lg shadow-md p-2 mb-1 transition-colors duration-200`}
       >
-        <h3 className="text-lg font-semibold mb-2 flex items-center">
-          <Phone className="mr-2" size={18} />
+        <h3
+          className={`${darkMode ? "text-gray-400" : "text-gray-500"} text-lg font-semibold mb-2 flex items-center `}
+        >
+          <Phone className="mr-2 text-blue-500" size={18} />
           Contact Information
         </h3>
         <div className="space-y-1">
           <div className="flex items-center">
             <Phone
-              className={`mr-3 ${darkMode ? "text-gray-400" : "text-gray-500"}`}
+              className={`mr-3 ${darkMode ? "text-blue-300" : "text-blue-700"}`}
               size={16}
             />
             {isEdit ? (
@@ -42,12 +44,14 @@ function ContactAndInsurance({ patient, onPatientUpdate, isEdit }: Tprops) {
                 }
               />
             ) : (
-              <p>{patient.phone}</p>
+              <p className={`${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+                {patient.phone}
+              </p>
             )}
           </div>
           <div className="flex items-center">
             <Mail
-              className={`mr-3 ${darkMode ? "text-gray-400" : "text-gray-500"}`}
+              className={`mr-3 ${darkMode ? "text-blue-300" : "text-blue-700"}`}
               size={16}
             />
             {isEdit ? (
@@ -64,12 +68,14 @@ function ContactAndInsurance({ patient, onPatientUpdate, isEdit }: Tprops) {
                 }
               />
             ) : (
-              <p>{patient.email}</p>
+              <p className={` ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+                {patient.email}
+              </p>
             )}
           </div>
           <div className="flex items-start">
             <Home
-              className={`mr-3 mt-1 ${darkMode ? "text-gray-400" : "text-gray-500"}`}
+              className={`mr-3 mt-1 ${darkMode ? "text-blue-300" : "text-blue-700"}`}
               size={16}
             />
 
@@ -87,7 +93,9 @@ function ContactAndInsurance({ patient, onPatientUpdate, isEdit }: Tprops) {
                 }
               />
             ) : (
-              <p>{patient.residence}</p>
+              <p className={`${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+                {patient.residence}
+              </p>
             )}
           </div>
         </div>
@@ -96,8 +104,10 @@ function ContactAndInsurance({ patient, onPatientUpdate, isEdit }: Tprops) {
       <div
         className={`${darkMode ? "bg-gray-800" : "bg-white"} w-1/2 rounded-lg shadow-md p-2 mb-1 transition-colors duration-200`}
       >
-        <h3 className="text-lg font-semibold mb-1 flex items-center">
-          <Shield className="mr-2" size={18} />
+        <h3
+          className={` ${darkMode ? "text-gray-400" : "text-gray-500"} text-lg font-semibold mb-1 flex items-center`}
+        >
+          <Shield className="mr-2 text-yellow-400" size={18} />
           Insurance
         </h3>
         <div className="space-y-1">
@@ -130,7 +140,9 @@ function ContactAndInsurance({ patient, onPatientUpdate, isEdit }: Tprops) {
                 >
                   Provider:
                 </p>
-                <p className="font-medium">
+                <p
+                  className={`${darkMode ? "text-gray-400" : "text-gray-500"} font-medium`}
+                >
                   {" "}
                   &nbsp; {patient.insurance_provider}
                 </p>
@@ -158,7 +170,9 @@ function ContactAndInsurance({ patient, onPatientUpdate, isEdit }: Tprops) {
                 }
               />
             ) : (
-              <p className="font-medium">
+              <p
+                className={`${darkMode ? "text-gray-400" : "text-gray-500"} font-medium`}
+              >
                 {" "}
                 &nbsp; {patient.insurance_policy_number}
               </p>
@@ -185,7 +199,9 @@ function ContactAndInsurance({ patient, onPatientUpdate, isEdit }: Tprops) {
                 }
               />
             ) : (
-              <p className="font-medium">
+              <p
+                className={`${darkMode ? "text-gray-400" : "text-gray-500"} font-medium`}
+              >
                 {" "}
                 &nbsp; {patient.insurance_group_number}
               </p>

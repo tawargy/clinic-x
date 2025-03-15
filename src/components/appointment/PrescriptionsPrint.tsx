@@ -2,23 +2,18 @@ import { useRef } from "react";
 import { useReactToPrint } from "react-to-print"; // First install this package: npm install react-to-print
 import { useAppSettings } from "../../contextApi/appContext";
 import Rx from "../../assets/rx.png";
+import { TPrescription } from "../../types";
 
-type TMedicine = {
-  name: string;
-  dosage: string;
-  frequency: string;
-  duration: string;
-};
 type Tprops = {
-  prescriptions: TMedicine[];
+  prescriptions: TPrescription[];
+  saveAndCloseHandler: () => void;
 };
 
-function PrescriptionsPrint({ prescriptions }: Tprops) {
+function PrescriptionsPrint({ prescriptions, saveAndCloseHandler }: Tprops) {
   const { darkMode } = useAppSettings();
 
   const contentRef = useRef<HTMLDivElement>(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
-
   return (
     <div
       className={`${darkMode ? "bg-gray-800" : "bg-white"} max-h-[100vh] overflow-y-auto custom-scrollbar rounded-lg shadow-xl p-6 w-full`}
@@ -64,13 +59,20 @@ function PrescriptionsPrint({ prescriptions }: Tprops) {
             <p>المواعيد</p>
           </div>
         </div>
-
-        <button
-          className="bg-blue-400 block w-1/3 m-auto mt-6 py-3 px-8 rounded-md text-white hover:bg-blue-500 print:hidden"
-          onClick={() => reactToPrintFn()}
-        >
-          Print
-        </button>
+        <div className="flex">
+          <button
+            className="bg-blue-400 block w-1/3 m-auto mt-6 py-3 px-8 rounded-md text-white hover:bg-blue-500 print:hidden"
+            onClick={() => saveAndCloseHandler()}
+          >
+            save & close
+          </button>
+          <button
+            className="bg-blue-400 block w-1/3 m-auto mt-6 py-3 px-8 rounded-md text-white hover:bg-blue-500 print:hidden"
+            onClick={() => reactToPrintFn()}
+          >
+            Print
+          </button>
+        </div>
       </div>
     </div>
   );

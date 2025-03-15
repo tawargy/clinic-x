@@ -31,8 +31,8 @@ function PatientVisitHistory({ appointments }: Tprops) {
           <Visit appointment_id={visitId} onClose={onCloseVisitHandler} />
         </div>
       )}
-      <h3 className="text-lg font-semibold mb-4 flex items-center">
-        <History className="mr-2" size={18} />
+      <h3 className="text-lg font-semibold mb-4 flex items-center text-gray-500">
+        <History className="mr-2 text-green-700" size={18} />
         Visits History
       </h3>
 
@@ -47,11 +47,11 @@ function PatientVisitHistory({ appointments }: Tprops) {
             >
               <div className="flex items-center mb-2 ">
                 <Calendar
-                  className={`mr-2 ${darkMode ? "text-gray-400" : "text-gray-500"}`}
+                  className={`mr-2 ${darkMode ? "text-green-700" : "text-green-300"}`}
                   size={16}
                 />
                 <p
-                  className={`${darkMode ? "text-gray-300" : "text-gray-700"} cursor-pointer font-medium hover:text-yellow-400`}
+                  className={`${darkMode ? "text-green-300" : "text-green-700"} cursor-pointer font-medium hover:text-blue-400`}
                   onClick={() => onOpenVisitHandler(visit.id)}
                 >
                   {formatDateDB(visit.created_at)}
@@ -62,7 +62,7 @@ function PatientVisitHistory({ appointments }: Tprops) {
                   <p
                     className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}
                   >
-                    Complaint
+                    Complaint:
                   </p>
                   <p
                     className={`${darkMode ? "text-gray-300" : "text-gray-700"}`}
@@ -74,7 +74,7 @@ function PatientVisitHistory({ appointments }: Tprops) {
                   <p
                     className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}
                   >
-                    Provisional Diagnosis
+                    Provisional Diagnosis:
                   </p>
                   <p
                     className={`${darkMode ? "text-gray-300" : "text-gray-700"}`}

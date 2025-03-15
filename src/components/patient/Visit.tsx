@@ -49,7 +49,7 @@ function Visit({ appointment_id, onClose }: Tprops) {
             size={20}
           />
         </div>
-        <p className="text-lg font-semibold">Visit Details</p>
+        <p className="text-lg font-semibold text-center">Visit Details</p>
 
         <div
           className={`${darkMode ? "bg-gray-800" : "bg-white"}  rounded-lg shadow-md p-4 mb-2 transition-colors duration-200`}
@@ -166,38 +166,42 @@ function Visit({ appointment_id, onClose }: Tprops) {
         <div
           className={`${darkMode ? "bg-gray-800" : "bg-white"}  rounded-lg shadow-md p-4 mb-2 transition-colors duration-200`}
         >
-          <h3>Complaint</h3>
-          <p>{appointment.complaint}</p>
+          <h3 className="text-gray-500">Complaint</h3>
+          <p className="text-gray-400">{appointment.complaint}</p>
         </div>
         <div
           className={`${darkMode ? "bg-gray-800" : "bg-white"}  rounded-lg shadow-md p-4 mb-2 transition-colors duration-200`}
         >
-          <h3>Present health problems:</h3>
-          <p>{appointment.present_history}</p>
+          <h3 className="text-gray-500">Present health problems:</h3>
+          <p className="text-gray-400">{appointment.present_history}</p>
         </div>
         <div
           className={`${darkMode ? "bg-gray-800" : "bg-white"}  rounded-lg shadow-md p-4 mb-2 transition-colors duration-200`}
         >
-          <h3>Examination:</h3>
-          <p>{appointment.examination}</p>
+          <h3 className="text-gray-500">Examination:</h3>
+          <p className="text-gray-400">{appointment.examination}</p>
         </div>
         <div
           className={`${darkMode ? "bg-gray-800" : "bg-white"}  rounded-lg shadow-md p-4 mb-2 transition-colors duration-200`}
         >
-          <h3>Diagnosis:</h3>
-          <p>{appointment.provisional_diagnosis}</p>
+          <h3 className="text-gray-500">Diagnosis:</h3>
+          <p className="text-gray-400">{appointment.provisional_diagnosis}</p>
         </div>
         <div
-          className={`${darkMode ? "bg-gray-800" : "bg-white"}  rounded-lg shadow-md p-4 mb-2 transition-colors duration-200`}
+          className={`${darkMode ? "bg-gray-800" : "bg-white"}  rounded-lg shadow-md pb-2  transition-colors duration-200`}
         >
-          <h3>Diagnosis:</h3>
-          <p>
+          <h3 className="pb-2 text-gray-500">Prescriptions:</h3>
+          <p
+            className="
+            grid grid-cols-4 gap-4 max-h-[300px] overflow-y-auto custom-scrollbar
+            "
+          >
             {appointment.prescription.map((p, i) => (
               <ul key={i}>
-                <li>name: {p.name}</li>
-                <li>dosage: {p.dosage}</li>
-                <li>duration: {p.duration}</li>
-                <li>frequency: {p.frequency}</li>
+                <li className="text-gray-400">name: {p.name}</li>
+                <li className="text-gray-400">dosage: {p.dosage}</li>
+                <li className="text-gray-400">duration: {p.duration}</li>
+                <li className="text-gray-400">frequency: {p.frequency}</li>
               </ul>
             ))}
           </p>

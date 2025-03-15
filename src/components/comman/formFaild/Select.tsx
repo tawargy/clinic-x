@@ -1,10 +1,4 @@
-import {
-  Path,
-  FieldValues,
-  UseFormRegister,
-  Control,
-  Controller,
-} from "react-hook-form";
+import { Path, FieldValues, Control, Controller } from "react-hook-form";
 import { useAppSettings } from "../../../contextApi/appContext";
 import ReactSelect from "react-select";
 
@@ -90,54 +84,3 @@ function Select<T extends FieldValues>({
 }
 
 export default Select;
-
-// import { Path, FieldValues, UseFormRegister } from "react-hook-form";
-
-// import { useAppSettings } from "../../../contextApi/appContext";
-
-// type SlectProps<T extends FieldValues> = {
-//   label: string;
-//   name: Path<T>;
-//   register: UseFormRegister<T>;
-//   options?: string[];
-//   error?: string;
-// };
-
-// function Select<T extends FieldValues>({
-//   label,
-//   name,
-//   register,
-//   options,
-//   error,
-// }: SlectProps<T>) {
-//   const { darkMode } = useAppSettings();
-//   return (
-//     <div className="w-full">
-//       <label className="block w-full dark:text-white " htmlFor={name}>
-//         {label}
-//         <select
-//           className={`${
-//             darkMode
-//               ? "!bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-//               : "!bg-gray-50 border-gray-300 text-gray-900"
-//           } border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 p-2.5 transition-colors duration-200`}
-//           id={name}
-//           {...register(name)}
-//         >
-//           {options?.map((option) => (
-//             <option
-//               key={option}
-//               value={option}
-//               className={darkMode ? "bg-gray-700" : "bg-gray-50"}
-//             >
-//               {option}
-//             </option>
-//           ))}
-//         </select>
-//       </label>
-//       <p className="text-red-500 text-sm mb-4">{error}</p>
-//     </div>
-//   );
-// }
-
-// export default Select;

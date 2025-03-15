@@ -1,42 +1,32 @@
 import React, { useState } from "react";
 import { useClinic } from "../contextApi/clinicContext";
 import { useAppSettings } from "../contextApi/appContext";
+import { formatDate } from "../utils/date";
 
 interface EventFormProps {
   selectedDate: Date;
-  onSubmit: (event: {
-    patientId: string;
-    patientName: string;
-    appointmentType: string;
-    description: string;
-  }) => void;
+  onAddAppoimtmentDate: (data: any) => void;
   onCancel: () => void;
-  patientName: string;
-  patientId: string;
 }
 
 const CalendarEvent: React.FC<EventFormProps> = ({
   selectedDate,
-  onSubmit,
   onCancel,
-  patientName,
-  patientId,
+  onAddAppoimtmentDate,
 }) => {
   const [description, setDescription] = useState("");
   const [appointmentType, setAppointmentType] = useState("new");
-  const { setPatientInfo } = useClinic();
+  const { patientInfo } = useClinic();
   const { darkMode } = useAppSettings();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    onSubmit({
-      patientId,
-      patientName,
-      appointmentType,
+    onAddAppoimtmentDate({
+      appointment_type: appointmentType,
       description,
     });
-    setPatientInfo(undefined);
+
+    //setPatientInfo(undefined);
   };
   const handleAppointmentTypeChange = (
     e: React.ChangeEvent<HTMLSelectElement>,
@@ -46,7 +36,7 @@ const CalendarEvent: React.FC<EventFormProps> = ({
   return (
     <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
       <h2 className="text-xl font-bold mb-4">
-        Add Patient for {selectedDate.toLocaleDateString()}
+        Add Patient for {formatDate(selectedDate)}
       </h2>
 
       <form onSubmit={handleSubmit}>
@@ -60,7 +50,7 @@ const CalendarEvent: React.FC<EventFormProps> = ({
           <input
             type="text"
             id="title"
-            value={patientName}
+            value={patientInfo?.name}
             disabled
             className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-50 border-gray-300 text-gray-900"} border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 p-2.5 transition-colors duration-200`}
             required

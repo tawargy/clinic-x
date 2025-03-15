@@ -56,7 +56,7 @@ const Calendar: React.FC<CalendarProps> = ({ currentDate, onDayClick }) => {
   const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   return (
-    <div className="p-4">
+    <div className="p-4 ">
       <div className="grid grid-cols-7 gap-1 mb-2">
         {weekdays.map((day) => (
           <div key={day} className="text-center font-medium text-gray-500">

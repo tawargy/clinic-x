@@ -3,11 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { useAppSettings } from "../../contextApi/appContext";
 import { TPatientInfo, TAppointment } from "../../types";
 import ContactAndInsurance from "./ContactAndInsurance";
-import { User, Pencil, Save, X } from "lucide-react";
+import { User, Pencil, Save, X, CircleArrowOutUpRight } from "lucide-react";
 import { patientInit } from "../../initData";
 import PatientVisitHistory from "../../components/patient/PatientVisitHistory";
 import { invoke } from "@tauri-apps/api/core";
 import { toastError, toastSuccess } from "../../utils/toastify";
+import { useClinic } from "../../contextApi/clinicContext";
 
 type Tprops = {
   id: string | undefined;
@@ -20,6 +21,7 @@ function PatientInfo({ id }: Tprops) {
   const [patient, setPatient] = useState<TPatientInfo>(patientInit);
   const [appointments, setAppointments] = useState<TAppointment[]>([]);
   const [isEdit, setIsEdit] = useState(false);
+  const { setPatientInfo } = useClinic();
 
   const navigate = useNavigate();
   const { darkMode } = useAppSettings();
@@ -32,6 +34,7 @@ function PatientInfo({ id }: Tprops) {
       });
       setOriginalPatient(res);
       setPatient(res);
+      setPatientInfo(res);
     } catch (e) {
       toastError("Failed to update patient");
       console.log(e);
@@ -46,7 +49,6 @@ function PatientInfo({ id }: Tprops) {
         },
       );
       setAppointments(res);
-      console.log("appointments", res);
     } catch (e) {
       console.log(e);
     }
@@ -92,7 +94,7 @@ function PatientInfo({ id }: Tprops) {
               />
             </div>
             <div>
-              <h2 className="flex items-center text-2xl font-bold">
+              <h2 className="flex items-center text-2xl font-bold text-gray-500">
                 {isEdit ? (
                   <input
                     className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-200 border-gray-300 text-gray-900"} w-[80%] text-sm p-1 rounded-md`}
@@ -148,7 +150,7 @@ function PatientInfo({ id }: Tprops) {
             </div>
           ) : (
             <button
-              className="bg-purple-500 text-white text-sm lg:py-2  lg:px-2 rounded-md hover:bg-purple-700"
+              className="bg-purple-500 text-white text-sm lg:py-1 ml-4  lg:px-1 rounded-md hover:bg-purple-700"
               onClick={() => onSchedule()}
             >
               Schedule Visit
@@ -220,24 +222,39 @@ function PatientInfo({ id }: Tprops) {
           </div>
         ) : (
           <>
-            <p className={`${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+            <p
+              className={`${darkMode ? "text-gray-400" : "text-gray-500"} flex  items-center gap-2`}
+            >
+              <CircleArrowOutUpRight className="text-purple-500" size={14} />
               Age:&nbsp;{" "}
-              <span className={`${darkMode ? "text-white" : "text-black"}`}>
+              <span
+                className={`${darkMode ? "text-gray-400" : "text-gray-500"}`}
+              >
                 {" "}
                 {patient.age}{" "}
               </span>
               years
             </p>
-            <p className={`${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+            <p
+              className={`${darkMode ? "text-gray-400" : "text-gray-500"} flex  items-center gap-2`}
+            >
+              <CircleArrowOutUpRight className="text-purple-500" size={14} />
               Marital:&nbsp;
-              <span className={`${darkMode ? "text-white" : "text-black"}`}>
+              <span
+                className={`${darkMode ? "text-gray-400" : "text-gray-500"}`}
+              >
                 {patient.marital_status}{" "}
               </span>
             </p>
 
-            <p className={`${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+            <p
+              className={`${darkMode ? "text-gray-400" : "text-gray-500"} flex  items-center gap-2`}
+            >
+              <CircleArrowOutUpRight className="text-purple-500" size={14} />
               Occupation:&nbsp;
-              <span className={`${darkMode ? "text-white" : "text-black"}`}>
+              <span
+                className={`${darkMode ? "text-gray-400" : "text-gray-500"}`}
+              >
                 {patient.occupation}
               </span>
             </p>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Calendar from "../components/Calendar";
 import CalendarEvent from "../components/CalendarEvent";
@@ -6,7 +6,10 @@ import { useClinic } from "../contextApi/clinicContext";
 import { useAppSettings } from "../contextApi/appContext";
 import { useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
+import { formatDate } from "../utils/date";
+import { invoke } from "@tauri-apps/api/core";
 
+import { toastError, toastSuccess } from "../utils/toastify";
 export interface Event {
   id: string;
   date: Date;
@@ -18,28 +21,13 @@ type Patient = {
   id: string;
   name: string;
 };
-const patientList = [
-  { name: "xxxx", id: "342432fsd" },
-  { name: "yyyy", id: "342sd" },
-  { name: "xxxx", id: "34243f2" },
-  { name: "yyyy", id: "342sf" },
-  { name: "xxxx", id: "3424f32" },
-  { name: "yyyy", id: "3sf42" },
-  { name: "xxxx", id: "34ggs2432" },
-  { name: "yyyy", id: "3gs4fd2" },
-  { name: "xxxx", id: "3424g3gg2" },
-  { name: "yyyy", id: "342gsgj" },
-  { name: "xxxx", id: "34243ktr2" },
-  { name: "yyyy", id: "342try" },
-  { name: "xxxx", id: "34243yrty2" },
-  { name: "yyyy", id: "34tery2" },
-];
+
 function App() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [events, setEvents] = useState<Event[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [showEventForm, setShowEventForm] = useState(false);
-  const [patientQueue, setPatientQueue] = useState<Patient[] | null>([]);
+  const [patientQueue, setPatientQueue] = useState([]);
   const { patientInfo, setPatientInfo } = useClinic();
   const { darkMode } = useAppSettings();
   const navigate = useNavigate();
@@ -59,31 +47,35 @@ function App() {
       return newDate;
     });
   };
+  const getAppointmentDays = async (date) => {
+    try {
+      const res = await invoke("get_appointment_days", {
+        date,
+      });
+      console.log(res);
+      if (res) {
+        setPatientQueue(res.patient_data);
+      } else {
+        setPatientQueue([]);
+      }
+    } catch (e) {
+      console.error("Error getting appointment days:", e);
+    }
+  };
+  useEffect(() => {
+    getAppointmentDays(formatDate(currentDate));
+  }, []);
 
   const handleDayClick = (day: number) => {
-    setPatientQueue(patientList);
+    // setPatientQueue(patientList);
     const clickedDate = new Date(
       currentDate.getFullYear(),
       currentDate.getMonth(),
       day,
     );
+    getAppointmentDays(formatDate(clickedDate));
     setSelectedDate(clickedDate);
     if (patientInfo) setShowEventForm(true);
-  };
-
-  const addEvent = (event: Omit<Event, "id" | "date">) => {
-    // TODO: add appointment date for this patient
-    if (!selectedDate) return;
-
-    const newEvent: Event = {
-      id: Date.now().toString(),
-      date: selectedDate,
-      ...event,
-    };
-    console.log(newEvent);
-
-    setEvents((prevEvents) => [...prevEvents, newEvent]);
-    setShowEventForm(false);
   };
 
   const closeForm = () => {
@@ -101,7 +93,54 @@ function App() {
       event.date.getMonth() === currentDate.getMonth() &&
       event.date.getFullYear() === currentDate.getFullYear(),
   );
+  const addAppointmentDay = async (data) => {
+    try {
+      const res = await invoke("add_appointment_day", {
+        appointmentDay: data,
+      });
+      console.log(res);
+      toastSuccess("Appointment saved successfully!");
+    } catch (e) {
+      toastError("Faild to save");
+      console.error("Error saving appointment:", e);
+    }
+  };
+  const onAddAppoimtmentDate = (data: {
+    appointment_type: string;
+    description: string;
+  }) => {
+    const patientData = {
+      ...data,
 
+      patient_id: patientInfo?.id,
+      name: patientInfo?.name,
+    };
+    const appointmentDay = {
+      id: "",
+      day: formatDate(selectedDate),
+      patient_data: [patientData],
+    };
+    addAppointmentDay(appointmentDay);
+
+    setShowEventForm(false);
+  };
+  const deleteAppointmentDay = async (patientId: string) => {
+    try {
+      const res = await invoke("remove_patient_from_appointment_day", {
+        day: formatDate(selectedDate), // Format date as needed
+        patientId: patientId,
+      });
+      console.log(res);
+      toastSuccess("Patient removed from appointment day successfully!");
+    } catch (e) {
+      toastError("Faild to remove patient from appointment day");
+      console.error("Error removing patient from appointment day:", e);
+    }
+  };
+
+  const deletePatientHandler = (patientId: string) => {
+    deleteAppointmentDay(patientId);
+  };
   return (
     <div className="container m-auto   p-4 relative">
       <div
@@ -141,14 +180,12 @@ function App() {
             events={currentMonthEvents}
             onDayClick={handleDayClick}
           />
-          {showEventForm && selectedDate && patientInfo && (
+          {showEventForm && selectedDate && patientInfo?.id && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
               <CalendarEvent
                 selectedDate={selectedDate}
-                onSubmit={addEvent}
+                onAddAppoimtmentDate={onAddAppoimtmentDate}
                 onCancel={closeForm}
-                patientId={patientInfo?.id || ""}
-                patientName={patientInfo?.name}
               />
             </div>
           )}
@@ -158,7 +195,7 @@ function App() {
         >
           <h3 className="text-center py-4 text-lg">
             {" "}
-            3-March{" "}
+            {formatDate(selectedDate)}
             <span className="text-blue-500 rounded-full bg-green-200 px-2 w-[30px] h-[30px] inline-flex justify-center items-center itext-lg ml-4">
               {patientQueue?.length}
             </span>
@@ -167,13 +204,14 @@ function App() {
             {patientQueue?.map((patient) => (
               <li
                 className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-50 border-gray-300 text-gray-900"}} flex items-center justify-between bg-blue-100 p-2 lg:p-4 mb-4 rounded-md`}
-                key={patient.id}
+                key={patient.patient_id}
               >
                 <p> {patient.name}</p>
                 <button>
                   <X
                     className="w-full h-full rounded-md bg-red-500 text-white font-bold"
                     size={20}
+                    onClick={() => deletePatientHandler(patient.patient_id)}
                   />
                 </button>
               </li>

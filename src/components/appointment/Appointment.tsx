@@ -3,7 +3,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { useAppSettings } from "../../contextApi/appContext";
 import Vitals from "./Vitals";
 import { Stethoscope } from "lucide-react";
-import { TAppointment } from "../../types";
+import { TAppointment, TPrescription } from "../../types";
 import Prescriptions from "./Prescriptions";
 import { appointmentInit } from "../../initData";
 import { toastError, toastSuccess } from "../../utils/toastify";
@@ -69,13 +69,19 @@ function Appointment({ patient_id }: Tprops) {
     saveOnDatabase();
     setIsVisit(false);
   };
+  const addPrescriptionHandler = (prescription: TPrescription[]) => {
+    console.log("Prescription:", prescription);
+    setAppointment((prev) => ({ ...prev, prescription: prescription }));
+
+    console.log("AAA", appointment);
+  };
   return (
     <div
       className={`${darkMode ? "bg-gray-800" : "bg-white"} flex flex-col justify-between  h-[100%] w-full  rounded-lg shadow-md p-6 mb-6 transition-colors duration-200`}
     >
       <div>
         <h2 className=" text-lg font-semibold mb-4 flex items-center">
-          <Stethoscope className="mr-2" size={18} />
+          <Stethoscope className="mr-2 text-blue-500" size={18} />
           Visit
           {isVisit ? (
             <span className="text-sm text-gray-400 ml-2">
@@ -150,7 +156,10 @@ function Appointment({ patient_id }: Tprops) {
             </div>
             {isOpen ? (
               <div className="fixed inset-0 bg-black bg-opacity-50  z-50 ">
-                <Prescriptions setIsOpen={setIsOpen} />
+                <Prescriptions
+                  addPrescriptionHandler={addPrescriptionHandler}
+                  setIsOpen={setIsOpen}
+                />
               </div>
             ) : (
               ""

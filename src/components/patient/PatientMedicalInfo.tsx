@@ -111,9 +111,12 @@ function PatientMedicalInfo({ id }: Tprops) {
         darkMode ? "bg-gray-800" : "bg-white"
       } max-h-[850px] h-[100%]  overflow-y-auto custom-scrollbar w-full  rounded-lg shadow-md p-6 mb-6 transition-colors duration-200`}
     >
-      <h3 className=" text-lg font-semibold mb-4 flex items-center justify-between">
-        <Pill className="mr-2" size={18} />
-        <span>Medical Information</span>
+      <div className=" text-lg font-semibold mb-4 flex items-center justify-between">
+        <h3 className="flex items-center gap-2 ">
+          <Pill className="mr-2 text-green-500" size={18} />
+          <span>Medical Information</span>
+        </h3>
+
         {isEdit ? (
           <div className="flex items-center gap-2">
             <span onClick={onSaveHandler} className="cursor-pointer ml-8">
@@ -133,7 +136,7 @@ function PatientMedicalInfo({ id }: Tprops) {
             <Pencil className="text-gray-500 hover:text-green-500" size={22} />
           </span>
         )}
-      </h3>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <div>

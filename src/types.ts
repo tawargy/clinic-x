@@ -47,7 +47,7 @@ export type TAppointment = {
   created_at: string;
 };
 
-type TPrescription = {
+export type TPrescription = {
   name?: string;
   dosage?: string;
   frequency?: string;

@@ -7,6 +7,8 @@ import PatientQueue from "../components/PatientQueue";
 import SearchPatient from "../components/SearchPatient";
 import RecentPatients from "../components/RecentPatients";
 import { TPatientInfo } from "../types";
+import { useClinic } from "../contextApi/clinicContext";
+import { patientInit } from "../initData";
 
 type TPatient = {
   id: string;
@@ -19,6 +21,7 @@ function Home() {
   const [recently, setRecently] = useState<TPatientInfo[] | undefined>([]);
   const [searchResults, setSearchResults] = useState<TPatient[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const { setPatientInfo } = useClinic();
 
   async function getQueueAndRecently() {
     const queue = (await invoke("get_queue")) as TPatient[] | undefined;
@@ -31,6 +34,7 @@ function Home() {
 
   useEffect(() => {
     getQueueAndRecently();
+    setPatientInfo(patientInit);
   }, []);
 
   const getPatient = async (input: string) => {
@@ -74,8 +78,10 @@ function Home() {
           } rounded-lg shadow-md p-4 transition-colors duration-200 h-[calc(100vh-120px)] flex flex-col`}
         >
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold flex items-center">
-              <Users className="mr-2" size={20} />
+            <h2
+              className={`${darkMode ? "text-gray-400" : "text-gray-500"} text-xl font-semibold flex items-center`}
+            >
+              <Users className="mr-2 text-blue-500" size={20} />
               Patient Queue
             </h2>
             <span
@@ -99,8 +105,10 @@ function Home() {
           } rounded-lg shadow-md p-4 transition-colors duration-200 h-[calc(100vh-120px)] flex flex-col`}
         >
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold flex items-center">
-              <Search className="mr-2" size={20} />
+            <h2
+              className={`${darkMode ? "text-gray-400" : "text-gray-500"} text-xl font-semibold flex items-center`}
+            >
+              <Search className="mr-2 text-purple-500" size={20} />
               Search Patients
             </h2>
             <button
@@ -128,8 +136,10 @@ function Home() {
           } rounded-lg shadow-md p-4 transition-colors duration-200 h-[calc(100vh-120px)] flex flex-col`}
         >
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold flex items-center">
-              <Clock className="mr-2" size={20} />
+            <h2
+              className={`${darkMode ? "text-gray-400" : "text-gray-500"} text-xl font-semibold flex items-center`}
+            >
+              <Clock className="mr-2 text-green-500" size={20} />
               Recent Patients
             </h2>
           </div>
