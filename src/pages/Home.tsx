@@ -9,6 +9,7 @@ import RecentPatients from "../components/RecentPatients";
 import { TPatientInfo } from "../types";
 import { useClinic } from "../contextApi/clinicContext";
 import { patientInit } from "../initData";
+import { formatDate } from "../utils/date";
 
 type TPatient = {
   id: string;
@@ -17,25 +18,41 @@ type TPatient = {
 
 function Home() {
   const { darkMode } = useAppSettings();
-  const [queue, setQueue] = useState<TPatient[] | undefined>([]);
+  const [queue, setQueue] = useState([]);
   const [recently, setRecently] = useState<TPatientInfo[] | undefined>([]);
   const [searchResults, setSearchResults] = useState<TPatient[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const { setPatientInfo } = useClinic();
+  const currentDate = new Date();
 
-  async function getQueueAndRecently() {
-    const queue = (await invoke("get_queue")) as TPatient[] | undefined;
-    setQueue(queue);
+  useEffect(() => {
+    getRecently();
+    setPatientInfo(patientInit);
+    getAppointmentDays(formatDate(currentDate));
+  }, []);
+
+  async function getRecently() {
     const recently = (await invoke("get_recently")) as
       | TPatientInfo[]
       | undefined;
     setRecently(recently);
   }
 
-  useEffect(() => {
-    getQueueAndRecently();
-    setPatientInfo(patientInit);
-  }, []);
+  const getAppointmentDays = async (date) => {
+    try {
+      const res = await invoke("get_appointment_days", {
+        date,
+      });
+      console.log(res);
+      if (res) {
+        setQueue(res.patient_data);
+      } else {
+        setQueue([]);
+      }
+    } catch (e) {
+      console.error("Error getting appointment days:", e);
+    }
+  };
 
   const getPatient = async (input: string) => {
     console.log(input);
@@ -77,21 +94,31 @@ function Home() {
             darkMode ? "bg-gray-800 text-white" : "bg-white"
           } rounded-lg shadow-md p-4 transition-colors duration-200 h-[calc(100vh-120px)] flex flex-col`}
         >
-          <div className="flex items-center justify-between mb-4">
-            <h2
-              className={`${darkMode ? "text-gray-400" : "text-gray-500"} text-xl font-semibold flex items-center`}
-            >
-              <Users className="mr-2 text-blue-500" size={20} />
-              Patient Queue
-            </h2>
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <h2
+                className={`${darkMode ? "text-gray-400" : "text-gray-500"} text-xl font-semibold flex items-center`}
+              >
+                <Users className="mr-2 text-blue-500" size={20} />
+                Patient Queue
+              </h2>
+              <span
+                className={`${
+                  darkMode
+                    ? "bg-blue-900 text-blue-100"
+                    : "bg-blue-100 text-blue-800"
+                } font-medium px-2.5 py-0.5 rounded-full transition-colors duration-200`}
+              >
+                {queue.length}
+              </span>
+            </div>
+
             <span
               className={`${
-                darkMode
-                  ? "bg-blue-900 text-blue-100"
-                  : "bg-blue-100 text-blue-800"
-              } font-medium px-2.5 py-0.5 rounded-full transition-colors duration-200`}
+                darkMode ? " text-gray-400" : " text-gray-500"
+              } text-md pl-8`}
             >
-              6
+              {formatDate(currentDate)}
             </span>
           </div>
           <div className="flex-grow overflow-hidden">

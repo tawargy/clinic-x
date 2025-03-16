@@ -21,9 +21,10 @@ type Patient = {
   id: string;
   name: string;
 };
-
+const initDate = formatDate(new Date());
 function App() {
   const [currentDate, setCurrentDate] = useState(new Date());
+
   const [events, setEvents] = useState<Event[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [showEventForm, setShowEventForm] = useState(false);
@@ -63,6 +64,7 @@ function App() {
     }
   };
   useEffect(() => {
+    setSelectedDate(new Date());
     getAppointmentDays(formatDate(currentDate));
   }, []);
 
@@ -140,6 +142,12 @@ function App() {
 
   const deletePatientHandler = (patientId: string) => {
     deleteAppointmentDay(patientId);
+    removeFromPatientQueue(patientId);
+  };
+  const removeFromPatientQueue = (id: string) => {
+    const newQueue = patientQueue.filter((p) => p.patient_id !== id);
+    console.log(newQueue);
+    setPatientQueue(newQueue);
   };
   return (
     <div className="container m-auto   p-4 relative">
@@ -196,7 +204,7 @@ function App() {
           <h3 className="text-center py-4 text-lg">
             {" "}
             {formatDate(selectedDate)}
-            <span className="text-blue-500 rounded-full bg-green-200 px-2 w-[30px] h-[30px] inline-flex justify-center items-center itext-lg ml-4">
+            <span className="text-blue-500 rounded-full bg-blue-200 px-2 w-[30px] h-[30px] inline-flex justify-center items-center itext-lg ml-4">
               {patientQueue?.length}
             </span>
           </h3>
