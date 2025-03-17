@@ -111,3 +111,9 @@ export const dumy_patient = {
     groupNumber: "5235425435",
   },
 };
+export const patientInfoQInit = {
+  patient_id: "",
+  name: "",
+  appointment_type: "",
+  description: "",
+};

@@ -21,7 +21,7 @@ function PatientInfo({ id }: Tprops) {
   const [patient, setPatient] = useState<TPatientInfo>(patientInit);
   const [appointments, setAppointments] = useState<TAppointment[]>([]);
   const [isEdit, setIsEdit] = useState(false);
-  const { setPatientInfo } = useClinic();
+  const { setPatientInfo, isAppointment } = useClinic();
 
   const navigate = useNavigate();
   const { darkMode } = useAppSettings();
@@ -127,7 +127,8 @@ function PatientInfo({ id }: Tprops) {
               </p>
             </div>
           </div>
-          {isEdit ? (
+
+          {isEdit && (
             <div className="flex gap-6">
               <span
                 onClick={() => {
@@ -148,7 +149,8 @@ function PatientInfo({ id }: Tprops) {
                 <X className="text-red-400" size={35} />
               </span>
             </div>
-          ) : (
+          )}
+          {!isAppointment && (
             <button
               className="bg-purple-500 text-white text-sm lg:py-1 ml-4  lg:px-1 rounded-md hover:bg-purple-700"
               onClick={() => onSchedule()}

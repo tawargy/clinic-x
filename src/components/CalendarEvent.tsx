@@ -52,7 +52,8 @@ const CalendarEvent: React.FC<EventFormProps> = ({
             id="title"
             value={patientInfo?.name}
             disabled
-            className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-50 border-gray-300 text-gray-900"} border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 p-2.5 transition-colors duration-200`}
+            className={`${darkMode ? " border-gray-600 text-gray-500 placeholder-gray-400" : "bg-gray-50 border-gray-300 text-gray-900"}
+               border text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 p-2.5 transition-colors duration-200`}
             required
           />
         </div>
@@ -86,7 +87,7 @@ const CalendarEvent: React.FC<EventFormProps> = ({
             id="description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="text-gray-500 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             rows={3}
           />
         </div>

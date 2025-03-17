@@ -4,7 +4,7 @@ import { CalendarDays } from "lucide-react";
 
 import { Settings2, SunMoon, Moon } from "lucide-react";
 function Navbar() {
-  const { darkMode, setDarkMode, isAppointment } = useAppSettings();
+  const { darkMode, setDarkMode } = useAppSettings();
   return (
     <nav className="flex justify-between items-center  p-4  mb-2">
       <h2>
@@ -15,8 +15,12 @@ function Navbar() {
 
       <ul className="flex flex-row justify-between items-center gap-3 ">
         <li>
-          <NavLink className="nav-link dark:text-white" to="/agenda">
-            <CalendarDays />
+          <NavLink
+            className="flex items-center gap-1 nav-link dark:tems-centernav-link dark:text-white bg-blue-500 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg"
+            to="/agenda"
+          >
+            <CalendarDays size={20} />
+            Agenda
           </NavLink>
         </li>
         <li className="nav-item">
@@ -32,18 +36,12 @@ function Navbar() {
           </button>
         </li>
         <li className="nav-item">
-          {!isAppointment ? (
-            <NavLink className="nav-link dark:text-white" to="/calender">
-              <Settings2
-                className="hover:text-green-500 duration-200"
-                size={28}
-              />
-            </NavLink>
-          ) : (
-            <span className=" dark:text-white">
-              <Settings2 size={28} />
-            </span>
-          )}
+          <NavLink className="nav-link dark:text-white" to="/manage">
+            <Settings2
+              className="hover:text-green-500 duration-200"
+              size={28}
+            />
+          </NavLink>
         </li>
       </ul>
     </nav>

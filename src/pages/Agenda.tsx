@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
 import { formatDate } from "../utils/date";
 import { invoke } from "@tauri-apps/api/core";
+import { patientInit } from "../initData";
 
 import { toastError, toastSuccess } from "../utils/toastify";
 export interface Event {
@@ -22,6 +23,7 @@ type Patient = {
   name: string;
 };
 const initDate = formatDate(new Date());
+
 function App() {
   const [currentDate, setCurrentDate] = useState(new Date());
 
@@ -125,6 +127,9 @@ function App() {
     addAppointmentDay(appointmentDay);
 
     setShowEventForm(false);
+
+    getAppointmentDays(formatDate(currentDate));
+    setPatientInfo(patientInit);
   };
   const deleteAppointmentDay = async (patientId: string) => {
     try {
@@ -142,13 +147,10 @@ function App() {
 
   const deletePatientHandler = (patientId: string) => {
     deleteAppointmentDay(patientId);
-    removeFromPatientQueue(patientId);
+
+    getAppointmentDays(formatDate(currentDate));
   };
-  const removeFromPatientQueue = (id: string) => {
-    const newQueue = patientQueue.filter((p) => p.patient_id !== id);
-    console.log(newQueue);
-    setPatientQueue(newQueue);
-  };
+
   return (
     <div className="container m-auto   p-4 relative">
       <div

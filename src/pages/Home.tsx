@@ -6,9 +6,9 @@ import { Search, Clock, Users, UserPlus } from "lucide-react";
 import PatientQueue from "../components/PatientQueue";
 import SearchPatient from "../components/SearchPatient";
 import RecentPatients from "../components/RecentPatients";
-import { TPatientInfo } from "../types";
+import { TPatientInfo, TPatientInfoQ } from "../types";
 import { useClinic } from "../contextApi/clinicContext";
-import { patientInit } from "../initData";
+import { patientInit, patientInfoQInit } from "../initData";
 import { formatDate } from "../utils/date";
 
 type TPatient = {
@@ -18,32 +18,30 @@ type TPatient = {
 
 function Home() {
   const { darkMode } = useAppSettings();
-  const [queue, setQueue] = useState([]);
-  const [recently, setRecently] = useState<TPatientInfo[] | undefined>([]);
+  const [queue, setQueue] = useState<TPatientInfoQ[]>([patientInfoQInit]);
+  const [recently, setRecently] = useState<TPatientInfo[]>([patientInit]);
   const [searchResults, setSearchResults] = useState<TPatient[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const { setPatientInfo } = useClinic();
+  const { setPatientInfo, setIsAppointment } = useClinic();
   const currentDate = new Date();
 
   useEffect(() => {
     getRecently();
     setPatientInfo(patientInit);
     getAppointmentDays(formatDate(currentDate));
+    setIsAppointment(false);
   }, []);
 
   async function getRecently() {
-    const recently = (await invoke("get_recently")) as
-      | TPatientInfo[]
-      | undefined;
+    const recently = await invoke<TPatientInfo[]>("get_recently");
     setRecently(recently);
   }
 
-  const getAppointmentDays = async (date) => {
+  const getAppointmentDays = async (date: string) => {
     try {
       const res = await invoke("get_appointment_days", {
         date,
       });
-      console.log(res);
       if (res) {
         setQueue(res.patient_data);
       } else {
@@ -61,7 +59,6 @@ function Home() {
         searchTerm: input,
       })) as TPatient[];
       setSearchResults(res);
-      console.log("Search ressults", res);
     } catch (e) {
       console.log("Search error", e);
       setSearchResults([]);

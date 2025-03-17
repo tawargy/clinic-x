@@ -5,7 +5,7 @@ import Home from "../pages/Home";
 import AddPatient from "../pages/AddPatient";
 import Patient from "../pages/Patient";
 import Agenda from "../pages/Agenda";
-import Appointment from "../pages/Appointment";
+import Management from "../pages/Management";
 
 const MainRoutes = {
   path: "/",
@@ -27,6 +27,10 @@ const MainRoutes = {
     {
       path: "agenda",
       element: <Agenda />,
+    },
+    {
+      path: "manage",
+      element: <Management />,
     },
   ],
 };

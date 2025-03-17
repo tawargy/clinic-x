@@ -53,3 +53,9 @@ export type TPrescription = {
   frequency?: string;
   duration?: string;
 };
+export type TPatientInfoQ = {
+  patient_id: string;
+  name: string;
+  appointment_type: string;
+  description: string;
+};

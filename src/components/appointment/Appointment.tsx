@@ -8,6 +8,7 @@ import Prescriptions from "./Prescriptions";
 import { appointmentInit } from "../../initData";
 import { toastError, toastSuccess } from "../../utils/toastify";
 import { formatDate } from "../../utils/date";
+import { useClinic } from "../../contextApi/clinicContext";
 
 type Tprops = {
   patient_id: string | undefined;
@@ -15,9 +16,10 @@ type Tprops = {
 
 function Appointment({ patient_id }: Tprops) {
   const [isOpen, setIsOpen] = useState(false);
-  const [isVisit, setIsVisit] = useState(false);
+  //const [isVisit, setIsVisit] = useState(false);
   const [appointment, setAppointment] = useState<TAppointment>(appointmentInit);
-
+  const { isAppointment, setIsAppointment } = useClinic();
+  const [isNext, setIsNext] = useState(false);
   const { darkMode } = useAppSettings();
 
   const onChangeHandler = (
@@ -67,7 +69,7 @@ function Appointment({ patient_id }: Tprops) {
   };
   const onSaveHandler = () => {
     saveOnDatabase();
-    setIsVisit(false);
+    // setIsAppointment(false);
   };
   const addPrescriptionHandler = (prescription: TPrescription[]) => {
     console.log("Prescription:", prescription);
@@ -75,6 +77,7 @@ function Appointment({ patient_id }: Tprops) {
 
     console.log("AAA", appointment);
   };
+
   return (
     <div
       className={`${darkMode ? "bg-gray-800" : "bg-white"} flex flex-col justify-between  h-[100%] w-full  rounded-lg shadow-md p-6 mb-6 transition-colors duration-200`}
@@ -83,20 +86,22 @@ function Appointment({ patient_id }: Tprops) {
         <h2 className=" text-lg font-semibold mb-4 flex items-center">
           <Stethoscope className="mr-2 text-blue-500" size={18} />
           Visit
-          {isVisit ? (
+          {isAppointment ? (
             <span className="text-sm text-gray-400 ml-2">
               {formatDate(new Date())}
             </span>
           ) : (
             <button
               className="bg-green-500 text-white ml-2 text-sm py-1  px-2 rounded-md hover:bg-green-700"
-              onClick={() => setIsVisit(true)}
+              onClick={() => {
+                setIsAppointment(true);
+              }}
             >
               Oppen Visit
             </button>
           )}
         </h2>
-        {isVisit && (
+        {!isNext && isAppointment && (
           <>
             <div>
               <Vitals
@@ -167,9 +172,9 @@ function Appointment({ patient_id }: Tprops) {
             <div className="flex gap-8 mt-8">
               <button
                 className="w-1/2 m-auto  bg-green-500 text-white py-4  px-2 rounded-md hover:bg-green-700"
-                onClick={onSaveHandler}
+                onClick={() => setIsNext(true)}
               >
-                Save & Close
+                Next
               </button>
               <button
                 className="w-1/2 m-auto  bg-purple-500 text-white py-4  px-2 rounded-md hover:bg-purple-700"
@@ -179,6 +184,17 @@ function Appointment({ patient_id }: Tprops) {
               </button>
             </div>
           </>
+        )}
+        {isNext && isAppointment && (
+          <div>
+            Next
+            <button
+              className="w-1/2 m-auto  bg-green-500 text-white py-4  px-2 rounded-md hover:bg-green-700"
+              onClick={() => setIsNext(false)}
+            >
+              Prev
+            </button>
+          </div>
         )}
       </div>
     </div>

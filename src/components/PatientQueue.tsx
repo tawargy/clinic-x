@@ -1,20 +1,22 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Clock, X, Heart, Activity, Pill, Clipboard } from "lucide-react";
+import { Heart, Activity, Clipboard } from "lucide-react";
 import { useAppSettings } from "../contextApi/appContext";
-import { TPatientInfo } from "../types";
-import { patientInit } from "../initData";
+import { TPatientInfo, TPatientInfoQ } from "../types";
+//import { patientInit } from "../initData";
 import { invoke } from "@tauri-apps/api/core";
+import { useClinic } from "../contextApi/clinicContext";
 
 interface PatientQueueProps {
-  patients: Patient[];
+  patients: TPatientInfoQ[];
 }
 
-const PatientQueue: React.FC<PatientQueueProps> = ({ patients }) => {
+const PatientQueue = ({ patients }: PatientQueueProps) => {
   const [hoveredPatientId, setHoveredPatientId] = useState<string | null>(null);
-  const [patientInfo, setPatientInfo] = useState(patientInit);
+  //const [patientInfoQ, setPatientInfoQ] = useState<TPatientInfo>(patientInit);
   const { darkMode } = useAppSettings();
   const navigate = useNavigate();
+  const { patientInfo, setPatientInfo, setIsAppointment } = useClinic();
 
   const getPatientInfo = async (id: string) => {
     if (!id) return;
@@ -28,7 +30,8 @@ const PatientQueue: React.FC<PatientQueueProps> = ({ patients }) => {
       console.log(e);
     }
   };
-  const onPatientClick = (patientId: number) => {
+  const onPatientClick = (patientId: string) => {
+    setIsAppointment(true);
     navigate(`/patient/${patientId}`);
   };
 
@@ -95,7 +98,7 @@ const PatientQueue: React.FC<PatientQueueProps> = ({ patients }) => {
                           className={`text-sm ${darkMode ? "text-gray-300" : "text-gray-700"}`}
                         >
                           <span className="font-medium">Gender:</span>{" "}
-                          {patientInfo.gender}
+                          {patientInfo?.gender}
                         </span>
                       </div>
                       <div className="flex items-center">
@@ -107,8 +110,8 @@ const PatientQueue: React.FC<PatientQueueProps> = ({ patients }) => {
                           className={`text-sm ${darkMode ? "text-gray-300" : "text-gray-700"}`}
                         >
                           <span className="font-medium">Age:</span>{" "}
-                          {patientInfo.age}
-                          {patientInfo.age * 1 <= 0 ? "" : " Years"}
+                          {patientInfo?.age}
+                          {patientInfo?.age * 1 <= 0 ? "" : " Years"}
                         </span>
                       </div>
                       <div className="flex items-center">
@@ -120,7 +123,7 @@ const PatientQueue: React.FC<PatientQueueProps> = ({ patients }) => {
                           className={`text-sm ${darkMode ? "text-gray-300" : "text-gray-700"}`}
                         >
                           <span className="font-medium">Born city:</span>{" "}
-                          {patientInfo.born_city}
+                          {patientInfo?.born_city}
                         </span>
                       </div>
                       <div className="flex items-center">
@@ -132,7 +135,21 @@ const PatientQueue: React.FC<PatientQueueProps> = ({ patients }) => {
                           className={`text-sm ${darkMode ? "text-gray-300" : "text-gray-700"}`}
                         >
                           <span className="font-medium">Marital:</span>{" "}
-                          {patientInfo.marital_status}
+                          {patientInfo?.marital_status}
+                        </span>
+                      </div>
+                      <div className="flex items-center">
+                        <Clipboard
+                          className={`mr-2 ${darkMode ? "text-yellow-400" : "text-yellow-600"}`}
+                          size={16}
+                        />
+                        <span
+                          className={`text-sm ${darkMode ? "text-gray-300" : "text-gray-700"}`}
+                        >
+                          <span className="font-medium">
+                            Appointment decription:
+                          </span>{" "}
+                          {patient.description}
                         </span>
                       </div>
                     </div>
