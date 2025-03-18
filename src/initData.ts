@@ -117,3 +117,9 @@ export const patientInfoQInit = {
   appointment_type: "",
   description: "",
 };
+export const prescriptionsInit = {
+  name: "",
+  dosage: "10mg",
+  frequency: "daily",
+  duration: "1 month",
+};

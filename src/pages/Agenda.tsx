@@ -216,7 +216,12 @@ function App() {
                 className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-50 border-gray-300 text-gray-900"}} flex items-center justify-between bg-blue-100 p-2 lg:p-4 mb-4 rounded-md`}
                 key={patient.patient_id}
               >
-                <p> {patient.name}</p>
+                <button
+                  onClick={() => navigate(`/patient/${patient.patient_id}`)}
+                >
+                  {" "}
+                  {patient.name}
+                </button>
                 <button>
                   <X
                     className="w-full h-full rounded-md bg-red-500 text-white font-bold"
