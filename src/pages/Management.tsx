@@ -5,9 +5,10 @@ import ClinicSettings from "../components/management/ClinicSettings";
 import Accounting from "../components/management/Accounting";
 import Employees from "../components/management/Employees";
 import Statistics from "../components/management/Statistics";
+import AppSettings from "../components/management/AppSettings";
 import { X } from "lucide-react";
 
-function Manage() {
+function Management() {
   const [show, setShow] = useState("clinicSettings");
   const { darkMode } = useAppSettings();
   const navigate = useNavigate();
@@ -41,16 +42,21 @@ function Manage() {
           <li>
             <button onClick={() => setShow("statistics")}>Statistics</button>
           </li>
+
+          <li>
+            <button onClick={() => setShow("appsettings")}>App Settings</button>
+          </li>
         </ul>
-        <div className="w-full bg-gray-500">
+        <div className="w-full border border-gray-600 rounded-lg p-4 ">
           {show === "clinicSettings" && <ClinicSettings />}
           {show === "accountment" && <Accounting />}
           {show === "employees" && <Employees />}
           {show === "statistics" && <Statistics />}
+          {show === "appsettings" && <AppSettings />}
         </div>
       </div>
     </div>
   );
 }
 
-export default Manage;
+export default Management;

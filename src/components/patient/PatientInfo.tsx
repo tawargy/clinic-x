@@ -122,9 +122,6 @@ function PatientInfo({ id }: Tprops) {
                   </>
                 )}
               </h2>
-              <p className={`${darkMode ? "text-gray-400" : "text-gray-500"}`}>
-                Gender: {patient.gender} • Born city: {patient.born_city}
-              </p>
             </div>
           </div>
 
@@ -170,6 +167,22 @@ function PatientInfo({ id }: Tprops) {
               <label
                 className={`${darkMode ? "text-gray-400" : "text-gray-500"}`}
               >
+                Gender
+              </label>{" "}
+              <input
+                className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-200 border-gray-300 text-gray-900"} w-[40%] text-sm p-1 rounded-md`}
+                type="text"
+                value={patient.gender}
+                name="gender"
+                onChange={(e) =>
+                  setPatient({ ...patient, gender: e.target.value })
+                }
+              />
+            </div>
+            <div className="flex justify-between px-8">
+              <label
+                className={`${darkMode ? "text-gray-400" : "text-gray-500"}`}
+              >
                 Age
               </label>{" "}
               <input
@@ -201,7 +214,22 @@ function PatientInfo({ id }: Tprops) {
                 }
               />
             </div>
-
+            <div className="flex justify-between px-8">
+              <label
+                className={`${darkMode ? "text-gray-400" : "text-gray-500"}`}
+              >
+                Born City
+              </label>{" "}
+              <input
+                className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-200 border-gray-300 text-gray-900"} w-[40%] text-sm p-1 rounded-md`}
+                type="text"
+                value={patient.born_city}
+                name="born_city"
+                onChange={(e) =>
+                  setPatient({ ...patient, born_city: e.target.value })
+                }
+              />
+            </div>
             <div className="flex justify-between px-8">
               <label
                 className={`${darkMode ? "text-gray-400" : "text-gray-500"}`}
@@ -228,6 +256,17 @@ function PatientInfo({ id }: Tprops) {
               className={`${darkMode ? "text-gray-400" : "text-gray-500"} flex  items-center gap-2`}
             >
               <CircleArrowOutUpRight className="text-purple-500" size={14} />
+              Gender:&nbsp;{" "}
+              <span
+                className={`${darkMode ? "text-gray-400" : "text-gray-500"}`}
+              >
+                {patient.gender}
+              </span>
+            </p>
+            <p
+              className={`${darkMode ? "text-gray-400" : "text-gray-500"} flex  items-center gap-2`}
+            >
+              <CircleArrowOutUpRight className="text-purple-500" size={14} />
               Age:&nbsp;{" "}
               <span
                 className={`${darkMode ? "text-gray-400" : "text-gray-500"}`}
@@ -248,7 +287,17 @@ function PatientInfo({ id }: Tprops) {
                 {patient.marital_status}{" "}
               </span>
             </p>
-
+            <p
+              className={`${darkMode ? "text-gray-400" : "text-gray-500"} flex  items-center gap-2`}
+            >
+              <CircleArrowOutUpRight className="text-purple-500" size={14} />
+              Born City:&nbsp;
+              <span
+                className={`${darkMode ? "text-gray-400" : "text-gray-500"}`}
+              >
+                {patient.born_city}
+              </span>
+            </p>
             <p
               className={`${darkMode ? "text-gray-400" : "text-gray-500"} flex  items-center gap-2`}
             >

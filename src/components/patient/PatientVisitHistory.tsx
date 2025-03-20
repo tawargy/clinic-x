@@ -37,7 +37,7 @@ function PatientVisitHistory({ appointments }: Tprops) {
       </h3>
 
       {appointments.length > 0 ? (
-        <div className="space-y-6 max-h-[400px] overflow-y-auto custom-scrollbar pr-2">
+        <div className="space-y-6 max-h-[450px] overflow-y-auto custom-scrollbar pr-2">
           {appointments.map((visit, index) => (
             <div
               key={index}

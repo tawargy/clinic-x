@@ -21,7 +21,7 @@ type Tprops = {
 function Appointment({ patient_id }: Tprops) {
   const [isPrecisionOpen, setIsPrecisionOpen] = useState(false);
   const [appointment, setAppointment] = useState<TAppointment>(appointmentInit);
-  const { isAppointment, setIsAppointment } = useClinic();
+  const { isAppointment, setIsAppointment, prescriptions } = useClinic();
   const { darkMode } = useAppSettings();
   const [stage, setStage] = useState("main");
   const navigate = useNavigate();
@@ -54,7 +54,7 @@ function Appointment({ patient_id }: Tprops) {
         spo2: appointment.spo2 || null,
         weight: appointment.weight || null,
         height: appointment.height || null,
-        prescription: appointment.prescription || [],
+        prescription: prescriptions || [],
         created_at: formatDate(new Date()),
       };
 
@@ -95,7 +95,8 @@ function Appointment({ patient_id }: Tprops) {
 
   return (
     <div
-      className={`${darkMode ? "bg-gray-800" : "bg-white"} min-h-[80vh] flex flex-col justify-between  h-[100%] w-full  rounded-lg shadow-md   transition-colors duration-200`}
+      className={`${darkMode ? "bg-gray-800" : "bg-white"}  flex flex-col justify-between   h-[calc(100vh-130px)] w-full
+        rounded-lg shadow-md   transition-colors duration-200`}
     >
       <div>
         <h2 className=" text-lg font-semibold mb-4 flex items-center">
@@ -120,7 +121,7 @@ function Appointment({ patient_id }: Tprops) {
           <>
             <Main appointment={appointment} onChangeHandler={onChangeHandler} />
 
-            <div className="flex gap-8 mt-44 flex-row-reverse">
+            <div className="flex gap-8 mt-52 flex-row-reverse">
               <button
                 className="py-4 px-2 "
                 onClick={() => setStage("prescription")}

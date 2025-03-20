@@ -19,15 +19,14 @@ const prescriptionsInit = {
 };
 type TProps = {
   setStage: (stage: string) => void;
-  onSaveHandler: () => void;
+  // onSaveHandler: () => void;
 
-  addPrescriptionHandler: (prescription: TPrescription[]) => void;
+  // addPrescriptionHandler: (prescription: TPrescription[]) => void;
 };
-function Next({ setStage, onSaveHandler, addPrescriptionHandler }: TProps) {
+function Next({ setStage }: TProps) {
   const { medicine, setMedicine, prescriptions, setPrescriptions } =
     useClinic();
-  //const [prescriptions, setPrescriptions] = useState<TPrescription[]>([]);
-  //const [medicine, setMedicine] = useState<TPrescription>(prescriptionsInit);
+
   const [isIndex, setIsIndex] = useState<number | undefined>(undefined);
   const { darkMode } = useAppSettings();
 

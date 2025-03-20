@@ -59,3 +59,13 @@ export type TPatientInfoQ = {
   appointment_type: string;
   description: string;
 };
+
+export type TClinicManagment = {
+  id: string;
+  clinic_name: string;
+  speciality: string;
+  memberships: string[];
+  address: string;
+  contactus: string[];
+  appointments: { from: string; to: string; excepting: string };
+};

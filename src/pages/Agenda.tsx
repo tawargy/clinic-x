@@ -4,7 +4,7 @@ import Calendar from "../components/Calendar";
 import CalendarEvent from "../components/CalendarEvent";
 import { useClinic } from "../contextApi/clinicContext";
 import { useAppSettings } from "../contextApi/appContext";
-import { useNavigate } from "react-router-dom";
+import { Path, useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
 import { formatDate } from "../utils/date";
 import { invoke } from "@tauri-apps/api/core";
@@ -18,19 +18,25 @@ export interface Event {
   patientName: string;
   description?: string;
 }
-type Patient = {
-  id: string;
+type TPatientData = {
+  patient_id: string;
   name: string;
+  appointment_type: string;
+  description: string;
 };
-const initDate = formatDate(new Date());
+type TAppointmentDay = {
+  id: string;
+  day: string;
+  patient_data: TPatientData[];
+};
 
-function App() {
+function Agenda() {
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const [events, setEvents] = useState<Event[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [showEventForm, setShowEventForm] = useState(false);
-  const [patientQueue, setPatientQueue] = useState([]);
+  const [patientQueue, setPatientQueue] = useState<TPatientData[]>([]);
   const { patientInfo, setPatientInfo } = useClinic();
   const { darkMode } = useAppSettings();
   const navigate = useNavigate();
@@ -50,14 +56,15 @@ function App() {
       return newDate;
     });
   };
-  const getAppointmentDays = async (date) => {
+  const getAppointmentDays = async (date: string) => {
     try {
-      const res = await invoke("get_appointment_days", {
+      const res = await invoke<TAppointmentDay>("get_appointment_days", {
         date,
       });
       console.log(res);
       if (res) {
-        setPatientQueue(res.patient_data);
+        const data = res.patient_data;
+        setPatientQueue(data);
       } else {
         setPatientQueue([]);
       }
@@ -97,13 +104,13 @@ function App() {
       event.date.getMonth() === currentDate.getMonth() &&
       event.date.getFullYear() === currentDate.getFullYear(),
   );
-  const addAppointmentDay = async (data) => {
+  const addAppointmentDay = async (data: object) => {
     try {
       const res = await invoke("add_appointment_day", {
         appointmentDay: data,
       });
       console.log(res);
-      toastSuccess("Appointment saved successfully!");
+      toastSuccess("Appointment Added successfully!");
     } catch (e) {
       toastError("Faild to save");
       console.error("Error saving appointment:", e);
@@ -164,7 +171,8 @@ function App() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div
-          className={`${darkMode ? "bg-gray-800 text-white " : "bg-white"} w-full  rounded-lg shadow-md p-4 transition-colors duration-200 h-[calc(100vh-120px)] flex flex-col`}
+          className={`${darkMode ? "bg-gray-800 text-white " : "bg-white"} w-full  rounded-lg shadow-md p-4 transition-colors
+            duration-200 h-[50vh] flex flex-col`}
         >
           <div className="bg-blue-600 text-white p-4">
             <div className="flex items-center justify-between">
@@ -201,11 +209,13 @@ function App() {
           )}
         </div>
         <div
-          className={`${darkMode ? "bg-gray-800 text-white " : "bg-white"} w-full  rounded-lg shadow-md p-4 transition-colors duration-200 h-[calc(100vh-120px)] flex flex-col`}
+          className={`${darkMode ? "bg-gray-800 text-white " : "bg-white"} w-full  rounded-lg shadow-md p-4 transition-colors
+            duration-200 h-[calc(100vh-130px)] flex flex-col`}
         >
           <h3 className="text-center py-4 text-lg">
-            {" "}
-            {formatDate(selectedDate)}
+            <span className="text-lg text-blue-500">
+              {formatDate(selectedDate)}
+            </span>
             <span className="text-blue-500 rounded-full bg-blue-200 px-2 w-[30px] h-[30px] inline-flex justify-center items-center itext-lg ml-4">
               {patientQueue?.length}
             </span>
@@ -213,14 +223,20 @@ function App() {
           <ul className=" p-4 w-[90%] lg:w-[70%] mt-2 mx-auto overflow-y-auto custom-scrollbar ">
             {patientQueue?.map((patient) => (
               <li
-                className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-50 border-gray-300 text-gray-900"}} flex items-center justify-between bg-blue-100 p-2 lg:p-4 mb-4 rounded-md`}
+                className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-100 border-gray-300 text-gray-900"}}
+                  flex items-center justify-between bg-blue-100 p-1 lg:p-2 mb-4 rounded-md`}
                 key={patient.patient_id}
               >
                 <button
+                  className="flex flex-col"
                   onClick={() => navigate(`/patient/${patient.patient_id}`)}
                 >
-                  {" "}
-                  {patient.name}
+                  <span className="hover:text-blue-500"> {patient.name}</span>
+                  <span
+                    className={`${patient.appointment_type === "new" ? "text-green-500" : "text-yellow-600"} `}
+                  >
+                    {patient.appointment_type.toUpperCase()}
+                  </span>
                 </button>
                 <button>
                   <X
@@ -238,4 +254,4 @@ function App() {
   );
 }
 
-export default App;
+export default Agenda;

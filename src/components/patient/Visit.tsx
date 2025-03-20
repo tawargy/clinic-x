@@ -33,6 +33,7 @@ function Visit({ appointment_id, onClose }: Tprops) {
   };
   useEffect(() => {
     getAppointment(appointment_id);
+    console.log(appointment);
   }, [appointment_id]);
 
   return (
@@ -163,48 +164,63 @@ function Visit({ appointment_id, onClose }: Tprops) {
             </div>
           </div>
         </div>
-        <div
-          className={`${darkMode ? "bg-gray-800" : "bg-white"}  rounded-lg shadow-md p-4 mb-2 transition-colors duration-200`}
-        >
-          <h3 className="text-gray-500">Complaint</h3>
-          <p className="text-gray-400">{appointment.complaint}</p>
-        </div>
-        <div
-          className={`${darkMode ? "bg-gray-800" : "bg-white"}  rounded-lg shadow-md p-4 mb-2 transition-colors duration-200`}
-        >
-          <h3 className="text-gray-500">Present health problems:</h3>
-          <p className="text-gray-400">{appointment.present_history}</p>
-        </div>
-        <div
-          className={`${darkMode ? "bg-gray-800" : "bg-white"}  rounded-lg shadow-md p-4 mb-2 transition-colors duration-200`}
-        >
-          <h3 className="text-gray-500">Examination:</h3>
-          <p className="text-gray-400">{appointment.examination}</p>
-        </div>
-        <div
-          className={`${darkMode ? "bg-gray-800" : "bg-white"}  rounded-lg shadow-md p-4 mb-2 transition-colors duration-200`}
-        >
-          <h3 className="text-gray-500">Diagnosis:</h3>
-          <p className="text-gray-400">{appointment.provisional_diagnosis}</p>
-        </div>
-        <div
-          className={`${darkMode ? "bg-gray-800" : "bg-white"}  rounded-lg shadow-md pb-2  transition-colors duration-200`}
-        >
-          <h3 className="pb-2 text-gray-500">Prescriptions:</h3>
-          <p
-            className="
-            grid grid-cols-4 gap-4 max-h-[300px] overflow-y-auto custom-scrollbar
-            "
+        <div className="grid grid-cols-2 gap-4 overflow-y-auto custom-scrollbar">
+          <div>
+            <div
+              className={`${darkMode ? "bg-gray-800" : "bg-white"}  rounded-lg shadow-md p-4 mb-2 transition-colors duration-200`}
+            >
+              <h3 className="text-gray-500">Complaint</h3>
+              <p className="text-gray-400">{appointment.complaint}</p>
+            </div>
+            <div
+              className={`${darkMode ? "bg-gray-800" : "bg-white"}  rounded-lg shadow-md p-4 mb-2 transition-colors duration-200`}
+            >
+              <h3 className="text-gray-500">Present health problems:</h3>
+              <p className="text-gray-400">{appointment.present_history}</p>
+            </div>
+            <div
+              className={`${darkMode ? "bg-gray-800" : "bg-white"}  rounded-lg shadow-md p-4 mb-2 transition-colors duration-200`}
+            >
+              <h3 className="text-gray-500">Examination:</h3>
+              <p className="text-gray-400">{appointment.examination}</p>
+            </div>
+            <div
+              className={`${darkMode ? "bg-gray-800" : "bg-white"}  rounded-lg shadow-md p-4 mb-2 transition-colors duration-200`}
+            >
+              <h3 className="text-gray-500">Diagnosis:</h3>
+              <p className="text-gray-400">
+                {appointment.provisional_diagnosis}
+              </p>
+            </div>
+          </div>
+
+          <div
+            className={`${darkMode ? "bg-gray-800" : "bg-white"}  rounded-lg shadow-md pb-2  transition-colors duration-200`}
           >
-            {appointment.prescription.map((p, i) => (
-              <ul key={i}>
-                <li className="text-gray-400">name: {p.name}</li>
-                <li className="text-gray-400">dosage: {p.dosage}</li>
-                <li className="text-gray-400">duration: {p.duration}</li>
-                <li className="text-gray-400">frequency: {p.frequency}</li>
-              </ul>
-            ))}
-          </p>
+            <h3 className="pb-2 text-gray-500">Prescriptions:</h3>
+            <div
+              className="
+
+            "
+            >
+              {appointment.prescription.map((p, i) => (
+                <div key={i}>
+                  <p
+                    className={`${darkMode ? "text-gray-300" : "text-gray-600"} pt-2`}
+                  >
+                    name: {p.name}
+                  </p>
+                  <span className="text-gray-400">dosage: {p.dosage} - </span>
+                  <span className="text-gray-400">
+                    duration: {p.duration} -{" "}
+                  </span>
+                  <span className="text-gray-400">
+                    frequency: {p.frequency}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>

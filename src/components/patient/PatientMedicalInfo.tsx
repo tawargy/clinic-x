@@ -109,7 +109,7 @@ function PatientMedicalInfo({ id }: Tprops) {
     <div
       className={`${
         darkMode ? "bg-gray-800" : "bg-white"
-      } max-h-[850px] h-[100%]  overflow-y-auto custom-scrollbar w-full  rounded-lg shadow-md p-6 mb-6 transition-colors duration-200`}
+      }  h-[calc(100vh-130px)]  overflow-y-auto custom-scrollbar w-full  rounded-lg shadow-md p-6  transition-colors duration-200`}
     >
       <div className=" text-lg font-semibold mb-4 flex items-center justify-between">
         <h3 className="flex items-center gap-2 ">

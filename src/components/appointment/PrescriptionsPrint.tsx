@@ -10,14 +10,14 @@ type Tprops = {
 };
 
 function PrescriptionsPrint({ setIsOpen }: Tprops) {
-  const { prescriptions, patientInfo } = useClinic();
+  const { prescriptions, patientInfo, clinicManagment } = useClinic();
   const { darkMode } = useAppSettings();
 
   const contentRef = useRef<HTMLDivElement>(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
   return (
     <div className="flex  justify-center gap-4 min-h-screen p-4 ">
-      <div className="flex w-[50%] gap-4 max-w-7xl relative">
+      <div className="flex w-[40%] gap-4 max-w-7xl relative">
         <div
           className=" w-7 h-7 flex items-center justify-center bg-white  rounded-md absolute right-0 top-0  cursor-pointer"
           onClick={() => setIsOpen(false)}
@@ -47,9 +47,13 @@ function PrescriptionsPrint({ setIsOpen }: Tprops) {
                     <p>Next: تمت الاستشارة</p>
                   </div>
                   <div className="text-right">
-                    <h2 className="text-3xl text-blue-700">عمرو عثمان</h2>
-                    <p>المراسلة الاولى</p>
-                    <p>المراسلة الثانية</p>
+                    <h2 className="text-3xl text-blue-700">
+                      {clinicManagment.clinic_name}
+                    </h2>
+                    <h3>{clinicManagment.speciality}</h3>
+                    {clinicManagment.memberships.map((membership, index) => (
+                      <p key={index}>{membership}</p>
+                    ))}
                   </div>
                 </div>
                 <div className="h-[1px] w-full bg-gray-300 my-4"></div>
@@ -68,8 +72,17 @@ function PrescriptionsPrint({ setIsOpen }: Tprops) {
                 ))}
               </div>
               <div className=" flex flex-col text-right  border-[1px] border-gray-300 rounded-lg p-2 mt-4">
-                <p>العنوان: عزبة البرج شارع الفنار</p>
-                <p>المواعيد</p>
+                <p>{clinicManagment.address}</p>
+                <p className="flex  flex-row-reverse gap-4">
+                  <span>{clinicManagment.appointments.from} </span>
+                  <span>الى : {clinicManagment.appointments.to}</span>
+                  <span>ماعدا : {clinicManagment.appointments.excepting} </span>
+                </p>
+                <p className="flex flex-row-reverse gap-4">
+                  {clinicManagment.contactus.map((c) => (
+                    <span key={c}>{c}</span>
+                  ))}
+                </p>
               </div>
             </div>
             <div className="flex flex-row-reverse">

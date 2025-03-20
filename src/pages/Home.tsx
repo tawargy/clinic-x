@@ -8,9 +8,14 @@ import SearchPatient from "../components/SearchPatient";
 import RecentPatients from "../components/RecentPatients";
 import { TPatientInfo, TPatientInfoQ } from "../types";
 import { useClinic } from "../contextApi/clinicContext";
-import { patientInit, patientInfoQInit, prescriptionsInit } from "../initData";
+import {
+  patientInit,
+  patientInfoQInit,
+  prescriptionsInit,
+  dummyClinicManagmentInit,
+} from "../initData";
 import { formatDate } from "../utils/date";
-import useClinicInit from "../hooks/useClinicInit";
+//import useClinicInit from "../hooks/useClinicInit";
 
 type TPatient = {
   id: string;
@@ -25,8 +30,13 @@ function Home() {
   const [searchTerm, setSearchTerm] = useState("");
   const currentDate = new Date();
   //const { setClinicInit } = useClinicInit();
-  const { setPatientInfo, setIsAppointment, setMedicine, setPrescriptions } =
-    useClinic();
+  const {
+    setPatientInfo,
+    setIsAppointment,
+    setMedicine,
+    setPrescriptions,
+    setClinicManagment,
+  } = useClinic();
   useEffect(() => {
     getRecently();
     getAppointmentDays(formatDate(currentDate));
@@ -35,6 +45,7 @@ function Home() {
     setIsAppointment(false);
     setPrescriptions([]);
     setMedicine(prescriptionsInit);
+    setClinicManagment(dummyClinicManagmentInit);
     //setClinicInit();
   }, []);
 
@@ -95,7 +106,7 @@ function Home() {
         <div
           className={`${
             darkMode ? "bg-gray-800 text-white" : "bg-white"
-          } rounded-lg shadow-md p-4 transition-colors duration-200 h-[calc(100vh-120px)] flex flex-col`}
+          } rounded-lg shadow-md p-4 transition-colors duration-200 h-[calc(100vh-130px)] flex flex-col`}
         >
           <div>
             <div className="flex items-center justify-between mb-1">
@@ -132,7 +143,7 @@ function Home() {
         <div
           className={`${
             darkMode ? "bg-gray-800 text-white" : "bg-white"
-          } rounded-lg shadow-md p-4 transition-colors duration-200 h-[calc(100vh-120px)] flex flex-col`}
+          } rounded-lg shadow-md p-4 transition-colors duration-200 h-[calc(100vh-130px)] flex flex-col`}
         >
           <div className="flex items-center justify-between mb-4">
             <h2
@@ -163,7 +174,7 @@ function Home() {
         <div
           className={`${
             darkMode ? "bg-gray-800 text-white" : "bg-white"
-          } rounded-lg shadow-md p-4 transition-colors duration-200 h-[calc(100vh-120px)] flex flex-col`}
+          } rounded-lg shadow-md p-4 transition-colors duration-200 h-[calc(100vh-130px)] flex flex-col`}
         >
           <div className="flex items-center justify-between mb-4">
             <h2

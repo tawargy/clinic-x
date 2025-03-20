@@ -45,72 +45,6 @@ export const appointmentInit = {
   created_at: new Date().toISOString(),
 };
 
-export const dumy_patient = {
-  id: "342432",
-  name: "John Doe",
-  age: "56",
-  gender: "male",
-  height: "182",
-  weight: "79",
-  bloodPressure: `120/90`,
-  heartRate: `60 `,
-  temperature: `37`,
-  marital: "single",
-  bornCity: "Cairo",
-  occupation: "Doctor",
-  allergies: ["allergies"],
-  specialHabits: ["smoking", "drinking"],
-  medications: ["medications", "fdsf"],
-  conditions: ["conditions"],
-  notes: "fdsf fdsf fdsfds",
-  history: [
-    {
-      date: "20/4/2000",
-      reason: "any",
-      diagnosis: "any",
-      treatment: "any",
-      doctor: "any",
-    },
-    {
-      date: "20/4/2000",
-      reason: "any",
-      diagnosis: "any",
-      treatment: "any",
-      doctor: "any",
-    },
-    {
-      date: "20/4/2000",
-      reason: "any",
-      diagnosis: "any",
-      treatment: "any",
-      doctor: "any",
-    },
-    {
-      date: "20/4/2000",
-      reason: "any",
-      diagnosis: "any",
-      treatment: "any",
-      doctor: "any",
-    },
-    {
-      date: "20/4/2000",
-      reason: "any",
-      diagnosis: "any",
-      treatment: "any",
-      doctor: "any",
-    },
-  ],
-  contactInfo: {
-    phone: "01117834885",
-    email: "test@test.com",
-    address: "cairo ",
-  },
-  insurance: {
-    provider: "xyz",
-    policyNumber: "43243252524",
-    groupNumber: "5235425435",
-  },
-};
 export const patientInfoQInit = {
   patient_id: "",
   name: "",
@@ -122,4 +56,33 @@ export const prescriptionsInit = {
   dosage: "10mg",
   frequency: "daily",
   duration: "1 month",
+};
+export const clinicManagmentInit = {
+  id: "",
+  clinic_name: "",
+  speciality: "",
+  memberships: [""],
+  address: "",
+  contactus: [""],
+  appointments: {
+    from: "",
+    to: "",
+    excepting: "",
+  },
+};
+export const dummyClinicManagmentInit = {
+  id: "",
+  clinic_name: "د.عمرو نصر عثمان",
+  speciality: "استشارى القلب والاوعية الدموي والامراض الباطنيةة ",
+  memberships: [
+    "زمالة القلب والاوعية الدموية",
+    "كلية طب القصر العينى جامعة القاهرة",
+  ],
+  address: " عزبة البرج شارع الفنار اول شارع قاصد كريم",
+  contactus: ["01274779208"],
+  appointments: {
+    from: "يوميا من 5:30 ظهرا",
+    to: "10:00",
+    excepting: "الجمعة",
+  },
 };

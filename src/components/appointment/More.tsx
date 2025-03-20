@@ -8,10 +8,12 @@ type TProps = {
 function More({ setStage, prescriptionOpen, saveHandler }: TProps) {
   const { darkMode } = useAppSettings();
   return (
-    <div
-      className={`${darkMode ? "bg-gray-800" : "bg-white"} min-h-[70vh]  rounded-lg shadow-xl p-1 w-full  flex flex-col justify-between`}
-    >
-      <h2>More</h2>
+    <div>
+      <div
+        className={`${darkMode ? "bg-gray-800" : "bg-white"} h-[70vh]  rounded-lg shadow-xl p-1 w-full  flex flex-col justify-between`}
+      >
+        <h2>More</h2>
+      </div>
       <div className="mt-4 flex justify-between ">
         <button
           className=" py-4  px-2 "
