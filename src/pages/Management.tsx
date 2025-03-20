@@ -47,7 +47,9 @@ function Management() {
             <button onClick={() => setShow("appsettings")}>App Settings</button>
           </li>
         </ul>
-        <div className="w-full border border-gray-600 rounded-lg p-4 ">
+        <div
+          className={`${darkMode ? "border border-gray-700" : " border border-gray-300"} w-full max-h-[80vh] overflow-y-auto custom-scrollbar  rounded-lg p-4 `}
+        >
           {show === "clinicSettings" && <ClinicSettings />}
           {show === "accountment" && <Accounting />}
           {show === "employees" && <Employees />}

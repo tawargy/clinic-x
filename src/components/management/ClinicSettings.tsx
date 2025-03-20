@@ -22,7 +22,6 @@ function ClinicSettings() {
 
   const onChangeHandler = (e: any) => {
     const { name, value } = e.target;
-    console.log(name, value);
     setClinicInfo((prevClinicInfo) => ({
       ...prevClinicInfo,
       [name]: value,
@@ -33,11 +32,16 @@ function ClinicSettings() {
     const updatedData = { ...clinicInfo, memberships, contactus };
     setClinicManagment(updatedData);
   };
+  const onCancelHandler = () => {
+    setClinicInfo(clinicManagment);
+    setMemberships(clinicManagment.memberships || []);
+    setContactus(clinicManagment.contactus || []);
+  };
   return (
     <div className="flex flex-col gap-4 w-full ">
       <h3>Clinic Settings</h3>
-      <form className="w-full flex flex-col " onSubmit={onSaveHandler}>
-        <div className="grid grid-cols-3 gap-8">
+      <form className="w-full flex flex-col  gap-24 " onSubmit={onSaveHandler}>
+        <div className="grid grid-cols-3 gap-8 ">
           <div className=" flex flex-col gap-4 ">
             <div className="mb-2">
               <label htmlFor="clinicName">Clinic Name</label>
@@ -173,12 +177,21 @@ function ClinicSettings() {
             </div>
           </div>
         </div>
-        <button
-          type="submit"
-          className="block w-1/4 m-auto mt-4 bg-green-500 py-6 px-16 rounded-lg text-white text-center"
-        >
-          Save
-        </button>
+        <div className="flex ">
+          <button
+            type="submit"
+            className="block w-1/4 m-auto mt-4 bg-green-500 py-6 px-16 rounded-lg text-white text-center hover:bg-green-700"
+          >
+            Save
+          </button>
+          <button
+            type="button"
+            className="block w-1/4 m-auto mt-4 bg-red-500 py-6 px-16 rounded-lg text-white text-center hover:bg-red-700"
+            onClick={onCancelHandler}
+          >
+            Cancel
+          </button>
+        </div>
       </form>
     </div>
   );
