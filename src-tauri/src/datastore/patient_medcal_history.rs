@@ -15,11 +15,11 @@ pub fn get_patient_medical_history_db(
 
     let mut stmt = conn
         .prepare(
-        "SELECT id, patient_id, allergies, medications, conditions, special_habits, past_history, family_history, notes
-         FROM patient_medical_history
-         WHERE patient_id = ?"
-    )
-     .map_err(|e| e.to_string())?;
+            "SELECT id, patient_id, allergies, medications, conditions, special_habits, past_history, family_history, notes
+            FROM patient_medical_history
+            WHERE patient_id = ?"
+        )
+        .map_err(|e| e.to_string())?;
 
     let result = stmt.query_row([&patient_id], |row| {
         Ok(PatientMedicalHistory {
@@ -125,16 +125,11 @@ pub fn update_patient_medical_history_db(
     }
 }
 
-// Helper function to convert Vec<String> to comma-separated string
-fn vec_to_string(data: &Option<Vec<String>>) -> Option<String> {
-    data.as_ref().map(|v| v.join(","))
+fn vec_to_string<T: serde::Serialize>(data: &Option<Vec<T>>) -> Option<String> {
+    data.as_ref()
+        .map(|v| serde_json::to_string(v).unwrap_or_default())
 }
 
-fn parse_string_to_vec(data: Option<String>) -> Option<Vec<String>> {
-    data.map(|s| {
-        s.split(',')
-            .map(|item| item.trim().to_string())
-            .filter(|item| !item.is_empty())
-            .collect()
-    })
+fn parse_string_to_vec<T: serde::de::DeserializeOwned>(data: Option<String>) -> Option<Vec<T>> {
+    data.and_then(|s| serde_json::from_str(&s).ok())
 }

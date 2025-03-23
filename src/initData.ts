@@ -18,7 +18,8 @@ export const patientMedicalHistoryInit = {
   id: "",
   patient_id: "",
   allergies: [],
-  medications: [],
+  medications: [{ med_name: "", dosage: "" }],
+
   conditions: [],
   special_habits: [],
   past_history: "",
@@ -57,7 +58,7 @@ export const prescriptionsInit = {
   frequency: "daily",
   duration: "1 month",
 };
-export const clinicManagmentInit = {
+export const clinicInfoInit = {
   id: "",
   clinic_name: "",
   speciality: "",
@@ -67,10 +68,10 @@ export const clinicManagmentInit = {
   appointments: {
     from: "",
     to: "",
-    excepting: "",
+    excepting: [""],
   },
 };
-export const dummyClinicManagmentInit = {
+export const dummyClinicInfoInit = {
   id: "",
   clinic_name: "د.عمرو نصر عثمان",
   speciality: "استشارى القلب والاوعية الدموي والامراض الباطنيةة ",
@@ -81,8 +82,17 @@ export const dummyClinicManagmentInit = {
   address: " عزبة البرج شارع الفنار اول شارع قاصد كريم",
   contactus: ["01274779208"],
   appointments: {
-    from: "يوميا من 5:30 ظهرا",
-    to: "10:00",
-    excepting: "الجمعة",
+    from: "5:00 PM",
+    to: "10:00 PM",
+    excepting: ["الجمعة"],
   },
+};
+export const employeeInit = {
+  id: "",
+  name: "",
+  phone: "",
+  address: "",
+  sallary: 0,
+  roull: "",
+  n_id: "",
 };

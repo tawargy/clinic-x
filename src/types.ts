@@ -15,11 +15,15 @@ export type TPatientInfo = {
   insurance_group_number?: string;
 };
 
+export type TMed = {
+  med_name: string;
+  dosage: string;
+};
 export type TpatientMedicalHistory = {
   id: string;
   patient_id: string;
   allergies?: string[];
-  medications?: string[];
+  medications?: TMed[];
   conditions?: string[];
   special_habits?: string[];
   past_history?: string;
@@ -60,12 +64,22 @@ export type TPatientInfoQ = {
   description: string;
 };
 
-export type TClinicManagment = {
+export type TClinicInfo = {
   id: string;
   clinic_name: string;
   speciality: string;
   memberships: string[];
   address: string;
   contactus: string[];
-  appointments: { from: string; to: string; excepting: string };
+  appointments: { from: string; to: string; excepting: string[] };
+};
+
+export type TEmployee = {
+  id: string;
+  name: string;
+  n_id: string;
+  phone: string;
+  address: string;
+  roull: string;
+  sallary: number;
 };

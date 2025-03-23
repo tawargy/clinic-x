@@ -34,6 +34,9 @@ pub fn run() {
             handlers::patient_medical_history::get_patient_medical_history,
             handlers::patient_medical_history::add_patient_medical_history,
             handlers::patient_medical_history::update_patient_medical_history,
+            handlers::clinic_info::add_clinic_info,
+            handlers::clinic_info::update_clinic_info,
+            handlers::clinic_info::get_clinic_info,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

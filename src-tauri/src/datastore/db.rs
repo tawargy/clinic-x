@@ -35,6 +35,10 @@ pub fn init_db(app_handle: &tauri::AppHandle) -> Result<()> {
     println!("Creating medical history table...");
     conn.execute(&patient_medical_history_schema, [])?;
 
+    let clinic_info_schema = clinic_info::clinic_info_schema();
+    println!("Creating clinic info table...");
+    conn.execute(&clinic_info_schema, [])?;
+
     // Verify tables were created
     let mut stmt = conn.prepare("SELECT name FROM sqlite_master WHERE type='table'")?;
     let tables: Vec<String> = stmt

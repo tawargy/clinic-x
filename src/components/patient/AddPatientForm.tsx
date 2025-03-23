@@ -1,12 +1,12 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Input from "../formFaild/Input";
-import Select from "../formFaild/Select";
-import DateInput from "../formFaild/DateInput";
+import Input from "../comman/formFaild/Input";
+import Select from "../comman/formFaild/Select";
+import DateInput from "../comman/formFaild/DateInput";
 import {
   patientInfoSchema,
   TPatientSchema,
-} from "../../../validations/patientInfoSchema";
+} from "../../validations/patientInfoSchema";
 
 type TFormProps = {
   onSubmitHandler: (data: TPatientSchema) => void;
@@ -36,19 +36,6 @@ function Form({ onSubmitHandler, btnText }: TFormProps) {
       marital_status: "Single",
     },
   });
-
-  // useEffect(() => {
-  //   if (patientInfo) {
-  //     const formattedPatientInfo = {
-  //       ...patientInfo,
-  //       dob:
-  //         patientInfo.dob instanceof Date
-  //           ? patientInfo.dob
-  //           : new Date(patientInfo.dob),
-  //     };
-  //     reset(formattedPatientInfo);
-  //   }
-  // }, [patientInfo, reset]);
 
   return (
     <form

@@ -5,7 +5,7 @@ import ReactSelect from "react-select";
 type SelectProps<T extends FieldValues> = {
   label: string;
   name: Path<T>;
-  control: Control<T>; // Add this
+  control: Control<T>;
   options?: string[];
   error?: string;
 };
@@ -13,7 +13,7 @@ type SelectProps<T extends FieldValues> = {
 function Select<T extends FieldValues>({
   label,
   name,
-  control, // Add this
+  control,
   options,
   error,
 }: SelectProps<T>) {

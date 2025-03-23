@@ -8,12 +8,7 @@ import SearchPatient from "../components/SearchPatient";
 import RecentPatients from "../components/RecentPatients";
 import { TPatientInfo, TPatientInfoQ } from "../types";
 import { useClinic } from "../contextApi/clinicContext";
-import {
-  patientInit,
-  patientInfoQInit,
-  prescriptionsInit,
-  dummyClinicManagmentInit,
-} from "../initData";
+import { patientInit, patientInfoQInit, prescriptionsInit } from "../initData";
 import { formatDate } from "../utils/date";
 //import useClinicInit from "../hooks/useClinicInit";
 
@@ -30,13 +25,8 @@ function Home() {
   const [searchTerm, setSearchTerm] = useState("");
   const currentDate = new Date();
   //const { setClinicInit } = useClinicInit();
-  const {
-    setPatientInfo,
-    setIsAppointment,
-    setMedicine,
-    setPrescriptions,
-    setClinicManagment,
-  } = useClinic();
+  const { setPatientInfo, setIsAppointment, setMedicine, setPrescriptions } =
+    useClinic();
   useEffect(() => {
     getRecently();
     getAppointmentDays(formatDate(currentDate));
@@ -45,8 +35,6 @@ function Home() {
     setIsAppointment(false);
     setPrescriptions([]);
     setMedicine(prescriptionsInit);
-    setClinicManagment(dummyClinicManagmentInit);
-    //setClinicInit();
   }, []);
 
   async function getRecently() {

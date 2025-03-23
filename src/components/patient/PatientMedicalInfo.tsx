@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useAppSettings } from "../../contextApi/appContext";
-import { TpatientMedicalHistory } from "../../types";
 import { patientMedicalHistoryInit } from "../../initData";
 import { Pencil, Save } from "lucide-react";
 import { Pill, X } from "lucide-react";
 import { invoke } from "@tauri-apps/api/core";
 import { toastError, toastSuccess } from "../../utils/toastify";
+import { TpatientMedicalHistory, TMed } from "../../types";
 
 type Tprops = {
   id: string | undefined;
@@ -25,7 +25,7 @@ function PatientMedicalInfo({ id }: Tprops) {
   const [conditions, setConditions] = useState<string[]>(
     patientMedicalHistory.conditions || [],
   );
-  const [medications, setMedications] = useState<string[]>(
+  const [medications, setMedications] = useState<TMed[]>(
     patientMedicalHistory.medications || [],
   );
   const [allergies, setAllergies] = useState<string[]>(
@@ -206,7 +206,7 @@ function PatientMedicalInfo({ id }: Tprops) {
             </>
           )}
         </div>
-        <div>
+        {/* <div>
           <h4
             className={`text-lg font-medium mb-1 mt-2 ${
               darkMode ? "text-gray-300" : "text-gray-700"
@@ -261,6 +261,107 @@ function PatientMedicalInfo({ id }: Tprops) {
                 >
                   {medications.map((med, index) => (
                     <li key={index}>{med}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p
+                  className={`${darkMode ? "text-gray-400" : "text-gray-600"}`}
+                >
+                  None
+                </p>
+              )}
+            </>
+          )}
+        </div>*/}
+
+        <div>
+          <h4
+            className={`text-lg font-medium mb-1 mt-2 ${
+              darkMode ? "text-gray-300" : "text-gray-700"
+            }`}
+          >
+            Medications
+          </h4>
+          {isEdit ? (
+            <div>
+              {medications.map((medication, index) => (
+                <div key={index} className="flex gap-2 mb-2">
+                  <input
+                    className={`${
+                      darkMode
+                        ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                        : "bg-gray-50 border-gray-300 text-gray-900"
+                    } border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 p-2.5 transition-colors duration-200`}
+                    placeholder="Medication name"
+                    value={medication.med_name}
+                    onChange={(e) => {
+                      const updatedMedications = [...medications];
+                      updatedMedications[index] = {
+                        ...updatedMedications[index],
+                        med_name: e.target.value,
+                      };
+                      setMedications(updatedMedications);
+                    }}
+                  />
+                  <input
+                    className={`${
+                      darkMode
+                        ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                        : "bg-gray-50 border-gray-300 text-gray-900"
+                    } border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 p-2.5 transition-colors duration-200`}
+                    placeholder="Dosage"
+                    value={medication.dosage}
+                    onChange={(e) => {
+                      const updatedMedications = [...medications];
+                      updatedMedications[index] = {
+                        ...updatedMedications[index],
+                        dosage: e.target.value,
+                      };
+                      setMedications(updatedMedications);
+                    }}
+                  />
+                  <button
+                    onClick={() => {
+                      const updatedMedications = medications.filter(
+                        (_, i) => i !== index,
+                      );
+                      setMedications(updatedMedications);
+                    }}
+                    className="px-3 py-2 text-red-500 hover:text-red-700 rounded-lg"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+              <button
+                onClick={() =>
+                  setMedications([...medications, { med_name: "", dosage: "" }])
+                }
+                className="text-blue-500 hover:text-blue-600 mt-2"
+              >
+                + Add Medication
+              </button>
+            </div>
+          ) : (
+            <>
+              {medications.length > 0 ? (
+                <ul
+                  className={`list-disc pl-5 ${
+                    darkMode ? "text-gray-400" : "text-gray-600"
+                  }`}
+                >
+                  {medications.map((med, index) => (
+                    <li
+                      key={index}
+                      className="relative group cursor-pointer hover:text-yellow-400"
+                    >
+                      {/* {med.med_name} - {med.dosage} */}
+                      <span>{med.med_name}</span>
+                      {/* Tooltip */}
+                      <div className="absolute left-0 -top-8 hidden group-hover:block bg-gray-800 text-yellow-500 text-sm px-2 py-1 rounded shadow-lg whitespace-nowrap">
+                        {med.dosage}
+                      </div>
+                    </li>
                   ))}
                 </ul>
               ) : (

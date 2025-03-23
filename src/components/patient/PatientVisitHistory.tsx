@@ -3,20 +3,22 @@ import { useAppSettings } from "../../contextApi/appContext";
 import { TAppointment } from "../../types";
 import { History, Calendar } from "lucide-react";
 import { formatDateDB } from "../../utils/date";
-import Visit from "./Visit";
+import VisitOverlay from "./VisitOverlay";
 
 type Tprops = {
   appointments: TAppointment[];
+  isEdit: boolean;
 };
-function PatientVisitHistory({ appointments }: Tprops) {
+function PatientVisitHistory({ appointments, isEdit }: Tprops) {
   const { darkMode } = useAppSettings();
   const [isVisitOpen, setIsVisitOpen] = useState(false);
   const [visitId, setVisitId] = useState("");
+  const [visitDate, setVisitDate] = useState("");
 
-  const onOpenVisitHandler = (id: string) => {
-    console.log("id", id);
+  const onOpenVisitHandler = (id: string, date: string) => {
     setIsVisitOpen(true);
     setVisitId(id);
+    setVisitDate(date);
   };
   const onCloseVisitHandler = () => {
     setIsVisitOpen(!isVisitOpen);
@@ -28,7 +30,11 @@ function PatientVisitHistory({ appointments }: Tprops) {
     >
       {isVisitOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50  z-50 ">
-          <Visit appointment_id={visitId} onClose={onCloseVisitHandler} />
+          <VisitOverlay
+            appointment_id={visitId}
+            onClose={onCloseVisitHandler}
+            visitDate={visitDate}
+          />
         </div>
       )}
       <h3 className="text-lg font-semibold mb-4 flex items-center text-gray-500">
@@ -37,7 +43,9 @@ function PatientVisitHistory({ appointments }: Tprops) {
       </h3>
 
       {appointments.length > 0 ? (
-        <div className="space-y-6 max-h-[450px] overflow-y-auto custom-scrollbar pr-2">
+        <div
+          className={`${isEdit ? "max-h-[380px]" : "max-h-[450px]"} space-y-6  overflow-y-auto custom-scrollbar pr-2`}
+        >
           {appointments.map((visit, index) => (
             <div
               key={index}
@@ -51,8 +59,10 @@ function PatientVisitHistory({ appointments }: Tprops) {
                   size={16}
                 />
                 <p
-                  className={`${darkMode ? "text-green-300" : "text-green-700"} cursor-pointer font-medium hover:text-blue-400`}
-                  onClick={() => onOpenVisitHandler(visit.id)}
+                  className={`${darkMode ? "text-green-300" : "text-green-700"} cursor-pointer font-medium hover:text-green-400`}
+                  onClick={() => {
+                    onOpenVisitHandler(visit.id, visit.created_at);
+                  }}
                 >
                   {formatDateDB(visit.created_at)}
                 </p>
@@ -60,24 +70,24 @@ function PatientVisitHistory({ appointments }: Tprops) {
               <div className=" gap-4">
                 <div>
                   <p
-                    className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}
+                    className={` ${darkMode ? "text-gray-400" : "text-gray-700"} pb-1`}
                   >
                     Complaint:
                   </p>
                   <p
-                    className={`${darkMode ? "text-gray-300" : "text-gray-700"}`}
+                    className={`${darkMode ? "text-gray-500" : "text-gray-500"} text-sm`}
                   >
                     {visit.complaint}
                   </p>
                 </div>
                 <div>
                   <p
-                    className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}
+                    className={` ${darkMode ? "text-gray-400" : "text-gray-700"} pb-1 pt-2`}
                   >
                     Provisional Diagnosis:
                   </p>
                   <p
-                    className={`${darkMode ? "text-gray-300" : "text-gray-700"}`}
+                    className={`${darkMode ? "text-gray-500" : "text-gray-500"} text-sm`}
                   >
                     {visit.provisional_diagnosis}
                   </p>

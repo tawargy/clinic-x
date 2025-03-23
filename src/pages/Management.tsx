@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useAppSettings } from "../contextApi/appContext";
 import { useNavigate } from "react-router-dom";
-import ClinicSettings from "../components/management/ClinicSettings";
-import Accounting from "../components/management/Accounting";
+import ClinicInfo from "../components/management/ClinicInfo";
+import Financial from "../components/management/financcial/Financial";
 import Employees from "../components/management/Employees";
 import Statistics from "../components/management/Statistics";
 import AppSettings from "../components/management/AppSettings";
@@ -27,18 +27,19 @@ function Management() {
       <div
         className={`${darkMode ? "bg-gray-800 text-white" : "bg-white"} min-h-[85vh] flex w-full   rounded-lg shadow-md p-4 transition-colors duration-200  `}
       >
-        <ul className="w-[20%] flex flex-col gap-4 ">
+        <ul className="w-[20%] flex flex-col gap-4 pt-4 ">
           <li>
             <button onClick={() => setShow("clinicSettings")}>
-              Clinic Settings
+              Clinic Info
             </button>
-          </li>
-          <li>
-            <button onClick={() => setShow("accountment")}>Accountment</button>
           </li>
           <li>
             <button onClick={() => setShow("employees")}>Employees</button>
           </li>
+          <li>
+            <button onClick={() => setShow("accountment")}>Financial</button>
+          </li>
+
           <li>
             <button onClick={() => setShow("statistics")}>Statistics</button>
           </li>
@@ -48,11 +49,11 @@ function Management() {
           </li>
         </ul>
         <div
-          className={`${darkMode ? "border border-gray-700" : " border border-gray-300"} w-full max-h-[80vh] overflow-y-auto custom-scrollbar  rounded-lg p-4 `}
+          className={`${darkMode ? "border border-gray-700" : " border border-gray-300"} w-full   rounded-lg p-4 `}
         >
-          {show === "clinicSettings" && <ClinicSettings />}
-          {show === "accountment" && <Accounting />}
+          {show === "clinicSettings" && <ClinicInfo />}
           {show === "employees" && <Employees />}
+          {show === "accountment" && <Financial />}
           {show === "statistics" && <Statistics />}
           {show === "appsettings" && <AppSettings />}
         </div>

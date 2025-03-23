@@ -11,7 +11,8 @@ import { useClinic } from "../../contextApi/clinicContext";
 import Main from "./speciality/Main";
 import Next from "./Next";
 import More from "./More";
-import PrescriptionsPrint from "./PrescriptionsPrint";
+//import PrescriptionsPrint from "./PrescriptionsPrint";
+import PrescriptionsPrint from "../comman/PrescriptionsPrint";
 import { ArrowBigRightDash } from "lucide-react";
 
 type Tprops = {
@@ -148,7 +149,11 @@ function Appointment({ patient_id }: Tprops) {
 
       {isPrecisionOpen ? (
         <div className="fixed inset-0 bg-black bg-opacity-50  z-50 ">
-          <PrescriptionsPrint setIsOpen={setIsPrecisionOpen} />
+          <PrescriptionsPrint
+            setIsOpen={setIsPrecisionOpen}
+            printDate={new Date()}
+            visitDate={formatDate(new Date())}
+          />
         </div>
       ) : (
         ""

@@ -1,7 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import Form from "../components/comman/form/Form";
+import AddPatientForm from "../components/patient/AddPatientForm";
 import { useAppSettings } from "../contextApi/appContext";
 import { TPatientInfo } from "../types";
 import { formatDate, getAge } from "../utils/date";
@@ -51,7 +51,7 @@ function AddPatient() {
         <h1 className="text-center text-3xl text-blue-600  py-4 rounded-t-md">
           Add Patient
         </h1>
-        <Form
+        <AddPatientForm
           onSubmitHandler={onSubmitHandler}
           btnText="Save"
           onCancel={() => navigate("/")}

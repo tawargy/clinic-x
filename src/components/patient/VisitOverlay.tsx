@@ -2,8 +2,11 @@ import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { TAppointment } from "../../types";
 import { useAppSettings } from "../../contextApi/appContext";
-import { X } from "lucide-react";
+import PrescriptionsPrint from "../comman/PrescriptionsPrint";
+import { Printer, X } from "lucide-react";
+import { useClinic } from "../../contextApi/clinicContext";
 import { appointmentInit } from "../../initData";
+import { formatDateDB } from "../../utils/date";
 import {
   Heart,
   Activity,
@@ -13,13 +16,17 @@ import {
   ThermometerSun,
   Leaf,
 } from "lucide-react";
+
 type Tprops = {
   appointment_id: string;
   onClose: () => void;
+  visitDate: string;
 };
-function Visit({ appointment_id, onClose }: Tprops) {
+function VisitOverlay({ appointment_id, onClose, visitDate }: Tprops) {
   const [appointment, setAppointment] = useState<TAppointment>(appointmentInit);
   const { darkMode } = useAppSettings();
+  const [isPrint, setIsPrint] = useState(false);
+  const { setPrescriptions } = useClinic();
 
   const getAppointment = async (id: string) => {
     try {
@@ -27,13 +34,14 @@ function Visit({ appointment_id, onClose }: Tprops) {
         appointmentId: id,
       });
       setAppointment(res);
+      setPrescriptions(res.prescription);
     } catch (e) {
       console.log("error", e);
     }
   };
   useEffect(() => {
     getAppointment(appointment_id);
-    console.log(appointment);
+    return () => setPrescriptions([]);
   }, [appointment_id]);
 
   return (
@@ -50,7 +58,24 @@ function Visit({ appointment_id, onClose }: Tprops) {
             size={20}
           />
         </div>
-        <p className="text-lg font-semibold text-center">Visit Details</p>
+        <div className="absolute right-5 bottom-5">
+          <button onClick={() => setIsPrint(true)}>
+            <Printer
+              className="text-yellow-500 hover:text-yellow-600"
+              size={40}
+            />
+          </button>
+        </div>
+        {isPrint && (
+          <PrescriptionsPrint
+            setIsOpen={setIsPrint}
+            printDate={new Date()}
+            visitDate={formatDateDB(visitDate)}
+          />
+        )}
+        <p className="text-lg font-semibold text-center">
+          Visit Details ( {formatDateDB(visitDate)} )
+        </p>
 
         <div
           className={`${darkMode ? "bg-gray-800" : "bg-white"}  rounded-lg shadow-md p-4 mb-2 transition-colors duration-200`}
@@ -227,4 +252,4 @@ function Visit({ appointment_id, onClose }: Tprops) {
   );
 }
 
-export default Visit;
+export default VisitOverlay;

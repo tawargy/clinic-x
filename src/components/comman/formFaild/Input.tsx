@@ -2,7 +2,7 @@ import { Path, FieldValues, UseFormRegister } from "react-hook-form";
 import { useAppSettings } from "../../../contextApi/appContext";
 
 type TProps<T extends FieldValues> = {
-  label: string;
+  label?: string;
   name: Path<T>;
   type?: string;
   register: UseFormRegister<T>;
@@ -24,9 +24,6 @@ function Input<T extends FieldValues>({
         type={type}
         id={name}
         {...register(name)}
-        // className="block w-full mt-1 mb-2 px-2 py-2 rounded-md focus:outline-none
-        //            border border-gray-400  focus:border-blue-light text-gray-700 bg-gray-100"
-
         className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-50 border-gray-300 text-gray-900"} border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 p-2.5 transition-colors duration-200`}
       />
 

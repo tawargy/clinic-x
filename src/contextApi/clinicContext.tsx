@@ -1,10 +1,6 @@
 import { createContext, ReactNode, useState, useMemo, useContext } from "react";
-import { TPatientInfo, TPrescription, TClinicManagment } from "../types";
-import {
-  patientInit,
-  prescriptionsInit,
-  clinicManagmentInit,
-} from "../initData";
+import { TPatientInfo, TPrescription } from "../types";
+import { patientInit, prescriptionsInit } from "../initData";
 
 interface ClinicContextType {
   patientInfo: TPatientInfo | undefined;
@@ -15,8 +11,6 @@ interface ClinicContextType {
   setPrescriptions: (p: TPrescription[]) => void;
   medicine: TPrescription;
   setMedicine: (m: TPrescription) => void;
-  clinicManagment: TClinicManagment;
-  setClinicManagment: (clinicManagment: TClinicManagment) => void;
 }
 
 const ClinicContext = createContext<ClinicContextType | undefined>(undefined);
@@ -28,8 +22,6 @@ function ClinicProvider({ children }: { children: ReactNode }) {
   const [isAppointment, setIsAppointment] = useState(false);
   const [prescriptions, setPrescriptions] = useState<TPrescription[]>([]);
   const [medicine, setMedicine] = useState<TPrescription>(prescriptionsInit);
-  const [clinicManagment, setClinicManagment] =
-    useState<TClinicManagment>(clinicManagmentInit);
   const memoizedValue = useMemo(
     () => ({
       patientInfo,
@@ -40,8 +32,6 @@ function ClinicProvider({ children }: { children: ReactNode }) {
       setPrescriptions,
       medicine,
       setMedicine,
-      clinicManagment,
-      setClinicManagment,
     }),
     [
       patientInfo,
@@ -52,8 +42,6 @@ function ClinicProvider({ children }: { children: ReactNode }) {
       setPrescriptions,
       medicine,
       setMedicine,
-      clinicManagment,
-      setClinicManagment,
     ],
   );
 

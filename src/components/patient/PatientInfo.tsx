@@ -318,7 +318,7 @@ function PatientInfo({ id }: Tprops) {
         isEdit={isEdit}
       />
 
-      <PatientVisitHistory appointments={appointments} />
+      <PatientVisitHistory appointments={appointments} isEdit={isEdit} />
     </div>
   );
 }

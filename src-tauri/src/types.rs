@@ -17,12 +17,18 @@ pub struct Patient {
     pub insurance_policy_number: String,
     pub insurance_group_number: String,
 }
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Med {
+    pub med_name: String,
+    pub dosage: String,
+}
 #[derive(Debug, Deserialize, Serialize)]
 pub struct PatientMedicalHistory {
     pub id: String,
     pub patient_id: String,
     pub allergies: Option<Vec<String>>,
-    pub medications: Option<Vec<String>>,
+    pub medications: Option<Vec<Med>>,
     pub conditions: Option<Vec<String>>,
     pub special_habits: Option<Vec<String>>,
     pub past_history: Option<String>,
@@ -71,4 +77,22 @@ pub struct PatientData {
     pub name: String,
     pub appointment_type: String,
     pub description: String,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct AppointmentsTime {
+    pub from: Option<String>,
+    pub to: Option<String>,
+    pub excepting: Option<Vec<String>>,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct ClinicInfo {
+    pub id: String,
+    pub clinic_name: Option<String>,
+    pub speciality: Option<String>,
+    pub memberships: Option<Vec<String>>,
+    pub address: Option<String>,
+    pub contactus: Option<Vec<String>>,
+    pub appointments: AppointmentsTime,
 }
