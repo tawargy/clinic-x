@@ -35,6 +35,19 @@ pub struct PatientMedicalHistory {
     pub family_history: Option<String>,
     pub notes: Option<String>,
 }
+
+// ---------------------Appointment
+#[derive(Debug, Deserialize, Serialize)]
+pub struct AppointmentWrapper {
+    pub id: String,
+    pub patient_id: String,
+    pub main_complaint: String,
+    pub main_appointment: String,
+    pub followups_num: String,
+    pub followup_appointments: Vec<String>,
+    pub appointment_status: String,
+    pub date: String,
+}
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Appointment {
     pub id: String,
@@ -54,6 +67,46 @@ pub struct Appointment {
     pub provisional_diagnosis: Option<String>,
     pub prescription: Option<Vec<Prescription>>,
     pub created_at: String,
+}
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Appointmentnew {
+    pub id: String,
+    pub patient_id: String,
+    pub vitals: Vec<Vitals>,
+    pub complaint: Option<String>,
+    pub present_history: Option<String>,
+    pub examination: Option<String>,
+    pub provisional_diagnosis: Option<String>, // FOREIGN Key diagnosis
+    pub prescription: Option<Vec<Prescription>>,
+    pub requests: Option<String>, // FOREIGN Key Requests
+    pub services: Option<Vec<Service>>,
+    pub created_at: String,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Vitals {
+    pub v_name: String,
+    pub v_value: String,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Diagnosis {
+    pub id: String,
+    pub diagnosis_type: Option<String>,
+    pub start: Option<String>,
+    pub end: Option<String>,
+    pub ongoing: bool,
+    pub comment: Option<String>,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Request {
+    pub id: String,
+    pub req_date: Option<String>,
+    pub req_name: Option<String>,
+    pub comment: Option<String>,
+    pub req_type: Option<String>,
+    pub resualt: Option<String>,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -86,6 +139,7 @@ pub struct AppointmentsTime {
     pub excepting: Option<Vec<String>>,
 }
 
+//-----------Clinic Mangement
 #[derive(Debug, Deserialize, Serialize)]
 pub struct ClinicInfo {
     pub id: String,
@@ -95,4 +149,35 @@ pub struct ClinicInfo {
     pub address: Option<String>,
     pub contactus: Option<Vec<String>>,
     pub appointments: AppointmentsTime,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Employee {
+    pub id: String,
+    pub name: Option<String>,
+    pub n_id: Option<String>,
+    pub phone: Option<String>,
+    pub address: Option<String>,
+    pub role: Option<String>,
+    pub salary: Option<String>,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct FeeAndServices {
+    pub id: String,
+    pub fee: String,
+    pub followups: Vec<Folloup>,
+    pub services: Vec<Service>,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Folloup {
+    pub followup_name: String,
+    pub followup_fee: String,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Service {
+    pub service_name: String,
+    pub service_fee: String,
 }

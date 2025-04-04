@@ -7,6 +7,8 @@ interface ClinicContextType {
   setPatientInfo: (patient: TPatientInfo) => void;
   isAppointment: boolean;
   setIsAppointment: (isAppointments: boolean) => void;
+  appointmentType: string;
+  setAppointmentType: (type: string) => void;
   prescriptions: TPrescription[];
   setPrescriptions: (p: TPrescription[]) => void;
   medicine: TPrescription;
@@ -19,6 +21,7 @@ function ClinicProvider({ children }: { children: ReactNode }) {
   const [patientInfo, setPatientInfo] = useState<TPatientInfo | undefined>(
     patientInit,
   );
+  const [appointmentType, setAppointmentType] = useState("");
   const [isAppointment, setIsAppointment] = useState(false);
   const [prescriptions, setPrescriptions] = useState<TPrescription[]>([]);
   const [medicine, setMedicine] = useState<TPrescription>(prescriptionsInit);
@@ -26,6 +29,8 @@ function ClinicProvider({ children }: { children: ReactNode }) {
     () => ({
       patientInfo,
       setPatientInfo,
+      appointmentType,
+      setAppointmentType,
       isAppointment,
       setIsAppointment,
       prescriptions,
@@ -36,6 +41,8 @@ function ClinicProvider({ children }: { children: ReactNode }) {
     [
       patientInfo,
       setPatientInfo,
+      appointmentType,
+      setAppointmentType,
       isAppointment,
       setIsAppointment,
       prescriptions,

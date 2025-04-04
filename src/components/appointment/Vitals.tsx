@@ -10,6 +10,7 @@ import {
   ThermometerSun,
   Leaf,
 } from "lucide-react";
+
 type TProps = {
   appointment: TAppointment;
   onChangeHandler: (
@@ -72,6 +73,7 @@ function Vitals({ appointment, onChangeHandler }: TProps) {
           <div>
             <p
               className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}
+              title="blood pressure"
             >
               BP
             </p>
@@ -92,6 +94,7 @@ function Vitals({ appointment, onChangeHandler }: TProps) {
           <div>
             <p
               className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}
+              title="pulse"
             >
               P
             </p>
@@ -112,6 +115,7 @@ function Vitals({ appointment, onChangeHandler }: TProps) {
           <div>
             <p
               className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}
+              title="temperature"
             >
               T
             </p>
@@ -133,6 +137,7 @@ function Vitals({ appointment, onChangeHandler }: TProps) {
           <div>
             <p
               className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}
+              title="respiratory rate"
             >
               RR
             </p>
@@ -153,6 +158,7 @@ function Vitals({ appointment, onChangeHandler }: TProps) {
           <div>
             <p
               className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}
+              title="random blood sugar"
             >
               RBS
             </p>
@@ -174,6 +180,7 @@ function Vitals({ appointment, onChangeHandler }: TProps) {
           <div>
             <p
               className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}
+              title="saturation pressure of oxygen"
             >
               SPO2
             </p>

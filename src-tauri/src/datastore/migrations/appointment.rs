@@ -22,3 +22,18 @@ pub fn appointment_schema() -> String {
                 );",
     )
 }
+
+pub fn appointment_wrapper_schema() -> String {
+    String::from(
+        "CREATE TABLE IF NOT EXISTS appointment_wrappers (
+                    id TEXT PRIMARY KEY,
+                    patient_id TEXT NOT NULL,
+                    main_complaint TEXT,
+                      main_appointment TEXT,
+                      followups_num TEXT,
+                      followup_appointments TEXT,
+                      appointment_status TEXT,
+                      date TEXT
+                );",
+    )
+}

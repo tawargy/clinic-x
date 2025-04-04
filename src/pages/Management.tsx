@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import ClinicInfo from "../components/management/ClinicInfo";
 import Financial from "../components/management/financcial/Financial";
 import Employees from "../components/management/Employees";
-import Statistics from "../components/management/Statistics";
 import AppSettings from "../components/management/AppSettings";
 import { X } from "lucide-react";
 
@@ -33,17 +32,13 @@ function Management() {
               Clinic Info
             </button>
           </li>
-          <li>
-            <button onClick={() => setShow("employees")}>Employees</button>
-          </li>
+
           <li>
             <button onClick={() => setShow("accountment")}>Financial</button>
           </li>
-
           <li>
-            <button onClick={() => setShow("statistics")}>Statistics</button>
+            <button onClick={() => setShow("employees")}>Employees</button>
           </li>
-
           <li>
             <button onClick={() => setShow("appsettings")}>App Settings</button>
           </li>
@@ -54,7 +49,6 @@ function Management() {
           {show === "clinicSettings" && <ClinicInfo />}
           {show === "employees" && <Employees />}
           {show === "accountment" && <Financial />}
-          {show === "statistics" && <Statistics />}
           {show === "appsettings" && <AppSettings />}
         </div>
       </div>

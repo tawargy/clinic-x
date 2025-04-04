@@ -1,13 +1,17 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { invoke } from "@tauri-apps/api/core";
 import { useAppSettings } from "../../contextApi/appContext";
 import Select from "../comman/formFaild/Select";
 import Input from "../comman/formFaild/Input";
-import { TClinicInfo } from "../../types";
 import { clinicInfoInit } from "../../initData";
 import SelectExcepting from "./SelectExcepting";
+import {
+  addClinicInfoApi,
+  getClinicInfoApi,
+  updateClinicInfoApi,
+} from "../../api/clinicInfo";
 import { toastError, toastSuccess } from "../../utils/toastify";
+import { TClinicInfo } from "../../types";
 
 function ClinicInfo() {
   const { darkMode } = useAppSettings();
@@ -21,15 +25,15 @@ function ClinicInfo() {
 
   const getClinicInfo = async () => {
     try {
-      const res = await invoke<TClinicInfo>("get_clinic_info", {});
-      setClinicInfo(res);
+      const res = await getClinicInfoApi();
+      if (res) setClinicInfo(res);
     } catch (e) {
       console.error("Error getting appointment days:", e);
     }
   };
   const addClinicInfo = async (data: TClinicInfo) => {
     try {
-      const res = await invoke<TClinicInfo>("add_clinic_info", { data });
+      const res = await addClinicInfoApi(data);
       console.log(res);
       toastSuccess("The Clinic Info added successfuly");
     } catch (e) {
@@ -40,13 +44,11 @@ function ClinicInfo() {
 
   const updateClinicInfo = async (data: TClinicInfo) => {
     try {
-      const res = await invoke<TClinicInfo>("update_clinic_info", { data });
+      const res = await updateClinicInfoApi(data);
       console.log(res);
-
       toastSuccess("The Clinic Info updated successfuly");
     } catch (e) {
       console.error("Error clinic info updat:", e);
-
       toastError("The Clinic Info not updated!");
     }
   };

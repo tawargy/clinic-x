@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { useAppSettings } from "../../contextApi/appContext";
 import { patientMedicalHistoryInit } from "../../initData";
-import { Pencil, Save } from "lucide-react";
-import { Pill, X } from "lucide-react";
 import { invoke } from "@tauri-apps/api/core";
 import { toastError, toastSuccess } from "../../utils/toastify";
 import { TpatientMedicalHistory, TMed } from "../../types";
+
+import { Pencil, Save, X, Pill } from "lucide-react";
+import PatientColLayout from "../../layouts/PatientColLayout";
 
 type Tprops = {
   id: string | undefined;
@@ -106,11 +107,7 @@ function PatientMedicalInfo({ id }: Tprops) {
     setIsEdit(false);
   };
   return (
-    <div
-      className={`${
-        darkMode ? "bg-gray-800" : "bg-white"
-      }  h-[calc(100vh-130px)]  overflow-y-auto custom-scrollbar w-full  rounded-lg shadow-md p-6  transition-colors duration-200`}
-    >
+    <PatientColLayout>
       <div className=" text-lg font-semibold mb-4 flex items-center justify-between">
         <h3 className="flex items-center gap-2 ">
           <Pill className="mr-2 text-green-500" size={18} />
@@ -206,73 +203,6 @@ function PatientMedicalInfo({ id }: Tprops) {
             </>
           )}
         </div>
-        {/* <div>
-          <h4
-            className={`text-lg font-medium mb-1 mt-2 ${
-              darkMode ? "text-gray-300" : "text-gray-700"
-            }`}
-          >
-            Medications
-          </h4>
-          {isEdit ? (
-            <div>
-              {medications.map((medication, index) => (
-                <div key={index} className="flex gap-2 mb-2">
-                  <input
-                    className={`${
-                      darkMode
-                        ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                        : "bg-gray-50 border-gray-300 text-gray-900"
-                    } border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 p-2.5 transition-colors duration-200`}
-                    value={medication}
-                    onChange={(e) => {
-                      const updatedMedications = [...medications];
-                      updatedMedications[index] = e.target.value;
-                      setMedications(updatedMedications);
-                    }}
-                  />
-                  <button
-                    onClick={() => {
-                      const updatedMedications = medications.filter(
-                        (_, i) => i !== index,
-                      );
-                      setMedications(updatedMedications);
-                    }}
-                    className="px-3 py-2 text-red-500 hover:text-red-700 rounded-lg"
-                  >
-                    ✕
-                  </button>
-                </div>
-              ))}
-              <button
-                onClick={() => setMedications([...medications, ""])}
-                className="text-blue-500 hover:text-blue-600 mt-2"
-              >
-                + Add Medication
-              </button>
-            </div>
-          ) : (
-            <>
-              {medications.length > 0 ? (
-                <ul
-                  className={`list-disc pl-5 ${
-                    darkMode ? "text-gray-400" : "text-gray-600"
-                  }`}
-                >
-                  {medications.map((med, index) => (
-                    <li key={index}>{med}</li>
-                  ))}
-                </ul>
-              ) : (
-                <p
-                  className={`${darkMode ? "text-gray-400" : "text-gray-600"}`}
-                >
-                  None
-                </p>
-              )}
-            </>
-          )}
-        </div>*/}
 
         <div>
           <h4
@@ -609,7 +539,7 @@ function PatientMedicalInfo({ id }: Tprops) {
           </p>
         )}
       </div>
-    </div>
+    </PatientColLayout>
   );
 }
 

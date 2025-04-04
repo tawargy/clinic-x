@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
-import { invoke } from "@tauri-apps/api/core";
-import { TAppointment } from "../../types";
 import { useAppSettings } from "../../contextApi/appContext";
-import PrescriptionsPrint from "../comman/PrescriptionsPrint";
-import { Printer, X } from "lucide-react";
 import { useClinic } from "../../contextApi/clinicContext";
+import PrescriptionsPrint from "../comman/PrescriptionsPrint";
+import { TAppointment, TAppointmentWrapper } from "../../types";
 import { appointmentInit } from "../../initData";
 import { formatDateDB } from "../../utils/date";
+import { invoke } from "@tauri-apps/api/core";
+import { getAppointmentWrapperByIdApi } from "../../api/appointmentWrapper";
 import {
+  X,
+  Printer,
   Heart,
   Activity,
   Clipboard,
@@ -19,30 +21,102 @@ import {
 
 type Tprops = {
   appointment_id: string;
+  appointment_wrapper_id: string;
   onClose: () => void;
   visitDate: string;
+  followupIds: string[];
 };
-function VisitOverlay({ appointment_id, onClose, visitDate }: Tprops) {
+
+function VisitOverlay({
+  appointment_id,
+  appointment_wrapper_id,
+  onClose,
+  visitDate,
+  followupIds,
+}: Tprops) {
   const [appointment, setAppointment] = useState<TAppointment>(appointmentInit);
+
   const { darkMode } = useAppSettings();
   const [isPrint, setIsPrint] = useState(false);
   const { setPrescriptions } = useClinic();
-
+  const [pId, setPId] = useState(appointment_id);
+  const [appointmentWrapper, setAppointmentWrapper] =
+    useState<TAppointmentWrapper>();
   const getAppointment = async (id: string) => {
     try {
       const res = await invoke<TAppointment>("get_appointment_by_id", {
         appointmentId: id,
       });
+
       setAppointment(res);
       setPrescriptions(res.prescription);
+      console.log("appointment", res);
     } catch (e) {
       console.log("error", e);
     }
   };
+  const getAppointmentWrapper = async () => {
+    try {
+      const res = await getAppointmentWrapperByIdApi(appointment_wrapper_id);
+      res && setAppointmentWrapper(res);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  useEffect(() => {
+    getAppointmentWrapper();
+  }, []);
+
   useEffect(() => {
     getAppointment(appointment_id);
     return () => setPrescriptions([]);
   }, [appointment_id]);
+
+  const followupStatus = () => {
+    if (!appointmentWrapper) return;
+    const folloNames = [
+      "First follow up",
+      "Second follow up",
+      "Third follow up",
+      "Fourth follow up",
+    ];
+
+    return (
+      <div>
+        <p>
+          Case Status :
+          <span
+            className={`${appointmentWrapper?.appointment_status === "Closed" ? "text-red-600" : "text-green-600"} ml-4`}
+          >
+            {appointmentWrapper?.appointment_status}{" "}
+          </span>
+        </p>
+        <div className="flex gap-4">
+          <button
+            className={`${appointment_id === pId ? "text-yellow-600" : "text-gray-600"}`}
+            onClick={() => {
+              setPId(appointment_id);
+              getAppointment(appointment_id);
+            }}
+          >
+            Encounter
+          </button>
+          {followupIds.map((id, i) => (
+            <button
+              className={`${id === pId ? "text-yellow-400" : "text-gray-500"}`}
+              onClick={() => {
+                setPId(id);
+                getAppointment(id);
+              }}
+              key={i}
+            >
+              {folloNames[i]}
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="flex w-full m-auto h-screen gap-4 max-w-7xl  items-center justify-center ">
@@ -58,6 +132,11 @@ function VisitOverlay({ appointment_id, onClose, visitDate }: Tprops) {
             size={20}
           />
         </div>
+        <div className="pb-8">
+          <p className="text-lg font-semibold text-center">Visit Details</p>
+          {followupStatus()}
+          <p> Date: {formatDateDB(appointment.created_at)}</p>
+        </div>
         <div className="absolute right-5 bottom-5">
           <button onClick={() => setIsPrint(true)}>
             <Printer
@@ -70,12 +149,9 @@ function VisitOverlay({ appointment_id, onClose, visitDate }: Tprops) {
           <PrescriptionsPrint
             setIsOpen={setIsPrint}
             printDate={new Date()}
-            visitDate={formatDateDB(visitDate)}
+            visitDate={visitDate}
           />
         )}
-        <p className="text-lg font-semibold text-center">
-          Visit Details ( {formatDateDB(visitDate)} )
-        </p>
 
         <div
           className={`${darkMode ? "bg-gray-800" : "bg-white"}  rounded-lg shadow-md p-4 mb-2 transition-colors duration-200`}

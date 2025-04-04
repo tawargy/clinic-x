@@ -30,7 +30,16 @@ export type TpatientMedicalHistory = {
   family_history?: string;
   notes?: string;
 };
-
+export type TAppointmentWrapper = {
+  id: string;
+  patient_id: string;
+  main_complaint: string;
+  main_appointment: string;
+  followups_num: string;
+  followup_appointments: string[];
+  appointment_status: string;
+  date: string;
+};
 export type TAppointment = {
   id: string;
   patient_id: string;
@@ -48,9 +57,13 @@ export type TAppointment = {
   weight: string;
   height: string;
   prescription: TPrescription[];
+
   created_at: string;
 };
-
+//appointment_followups: string[];
+//appointment_status: string;
+//fee: string;
+//services: TService[];
 export type TPrescription = {
   name?: string;
   dosage?: string;
@@ -80,6 +93,28 @@ export type TEmployee = {
   n_id: string;
   phone: string;
   address: string;
-  roull: string;
-  sallary: number;
+  role: string;
+  salary: string;
+};
+export type TFeeAndServices = {
+  id: string;
+  fee: string;
+  followups: TFollowup[];
+  services: TService[];
+};
+export type TFollowup = {
+  followup_name: string;
+  followup_fee: string;
+};
+export type TService = {
+  service_name: string;
+  service_fee: string;
+};
+export type TDiagnosis = {
+  diagnosis_type: string; // chronic or Non-chronic
+  diagnosis_title: string;
+  start: string;
+  end?: string;
+  containue?: boolean;
+  comment: string;
 };

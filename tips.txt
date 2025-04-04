@@ -1,3 +1,12 @@
 RR - respiratory rate (lung icon)
 RBS - blood drop icon - blood sugar
-make medication add dose and show dose on hover 
+make medication add dose and show dose on hover
+
+
+vitals
+bp=blood pressure
+p=pulse
+rr=respiratory rate
+temp=temperature
+rbs=random blood sugar
+spo2=saturation pressure of oxygen

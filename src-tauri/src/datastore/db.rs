@@ -21,6 +21,10 @@ pub fn init_db(app_handle: &tauri::AppHandle) -> Result<()> {
     println!("Creating patients table...");
     conn.execute(&patient_schema, [])?;
 
+    let appointment_wrapper_schema = appointment::appointment_wrapper_schema();
+    println!("Creating appointment wrapper table...");
+    conn.execute(&appointment_wrapper_schema, [])?;
+
     // Create appointments table
     let appointment_schema = appointment::appointment_schema();
     println!("Creating appointments table...");
@@ -38,6 +42,14 @@ pub fn init_db(app_handle: &tauri::AppHandle) -> Result<()> {
     let clinic_info_schema = clinic_info::clinic_info_schema();
     println!("Creating clinic info table...");
     conn.execute(&clinic_info_schema, [])?;
+
+    let employee_schema = employee::employee_schema();
+    println!("Creating employee table...");
+    conn.execute(&employee_schema, [])?;
+
+    let fee_and_services_schema = fee_and_services::fee_and_services_schema();
+    println!("Creating fee and services table...");
+    conn.execute(&fee_and_services_schema, [])?;
 
     // Verify tables were created
     let mut stmt = conn.prepare("SELECT name FROM sqlite_master WHERE type='table'")?;

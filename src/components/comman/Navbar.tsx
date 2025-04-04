@@ -1,27 +1,44 @@
 import { NavLink } from "react-router-dom";
 import { useAppSettings } from "../../contextApi/appContext";
+import { useClinic } from "../../contextApi/clinicContext";
 import { CalendarDays } from "lucide-react";
 
 import { Settings2, SunMoon, Moon } from "lucide-react";
 function Navbar() {
   const { darkMode, setDarkMode } = useAppSettings();
+  const { isAppointment } = useClinic();
   return (
     <nav className="flex justify-between items-center  p-4  mb-2">
       <h2>
-        <NavLink className="nav-link text-blue-500 text-2xl font-medium" to="/">
-          Doctor X
-        </NavLink>
+        {isAppointment ? (
+          <span className="nav-link text-blue-500 text-2xl font-medium">
+            Doctor X
+          </span>
+        ) : (
+          <NavLink
+            className="nav-link text-blue-500 text-2xl font-medium"
+            to="/"
+          >
+            Doctor X
+          </NavLink>
+        )}
       </h2>
 
       <ul className="flex flex-row justify-between items-center gap-3 ">
         <li>
-          <NavLink
-            className="flex items-center gap-1 nav-link dark:tems-centernav-link dark:text-white bg-blue-500 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg"
-            to="/agenda"
-          >
-            <CalendarDays size={20} />
-            Agenda
-          </NavLink>
+          {isAppointment ? (
+            <span className="flex items-center gap-1 nav-link dark:tems-centernav-link dark:text-white bg-gray-500 hover:bg-gray-500 text-white font-medium py-2 px-4 rounded-lg">
+              Agenda
+            </span>
+          ) : (
+            <NavLink
+              className="flex items-center gap-1 nav-link dark:tems-centernav-link dark:text-white bg-blue-500 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg"
+              to="/agenda"
+            >
+              <CalendarDays size={20} />
+              Agenda
+            </NavLink>
+          )}
         </li>
         <li className="nav-item">
           <button
@@ -36,12 +53,21 @@ function Navbar() {
           </button>
         </li>
         <li className="nav-item">
-          <NavLink className="nav-link dark:text-white" to="/manage">
-            <Settings2
-              className="hover:text-green-500 duration-200"
-              size={28}
-            />
-          </NavLink>
+          {isAppointment ? (
+            <span>
+              <Settings2
+                className="hover:text-gray-500 duration-200"
+                size={28}
+              />
+            </span>
+          ) : (
+            <NavLink className="nav-link dark:text-white" to="/manage">
+              <Settings2
+                className="hover:text-green-500 duration-200"
+                size={28}
+              />
+            </NavLink>
+          )}
         </li>
       </ul>
     </nav>

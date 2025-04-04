@@ -1,12 +1,12 @@
-import { invoke } from "@tauri-apps/api/core";
-import { X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import AddPatientForm from "../components/patient/AddPatientForm";
 import { useAppSettings } from "../contextApi/appContext";
-import { TPatientInfo } from "../types";
-import { formatDate, getAge } from "../utils/date";
 import { toastError, toastSuccess } from "../utils/toastify";
+import { formatDate, getAge } from "../utils/date";
 import { TPatientSchema } from "../validations/patientInfoSchema";
+import { addPatientApi } from "../api/patient";
+import { TPatientInfo } from "../types";
+import { X } from "lucide-react";
 
 function AddPatient() {
   const navigate = useNavigate();
@@ -23,8 +23,7 @@ function AddPatient() {
         insurance_policy_number: "",
         insurance_provider: "",
       };
-      console.log("front", completedData);
-      const res = await invoke<string>("add_patient", { data: completedData });
+      const res = await addPatientApi(completedData);
       toastSuccess("Successfully added patient");
       navigate(`/patient/${res}`);
     } catch (e) {

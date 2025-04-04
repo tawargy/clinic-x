@@ -1,6 +1,5 @@
 import { useAppSettings } from "../../contextApi/appContext";
 import { Phone, Mail, Home, Shield } from "lucide-react";
-
 import { TPatientInfo } from "../../types";
 
 type Tprops = {
