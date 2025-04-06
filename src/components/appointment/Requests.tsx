@@ -1,15 +1,8 @@
 import { useState } from "react";
 import { useAppSettings } from "../../contextApi/appContext";
 import { ArrowBigLeftDash, ArrowBigRightDash, X } from "lucide-react";
-
-type TRequest = {
-  id: string;
-  req_date: string;
-  req_name: string;
-  comment: string;
-  req_type: string;
-  resualt?: string;
-};
+import { TRequest } from "../../types";
+import { formatDate } from "../../utils/date";
 
 type TProps = {
   setStage: (stage: string) => void;
@@ -26,12 +19,11 @@ function Requests({ setStage, requstes, setRequstes }: TProps) {
     const uuid = Math.random().toString();
     const req: TRequest = {
       id: uuid,
-      req_date: new Date().toString(),
+      req_date: formatDate(new Date()),
       req_name: reqName,
       comment: reqComment,
       req_type: reqType,
     };
-    console.log(req);
     setRequstes([...requstes, req]);
     setReqName("");
     setReqComment("");

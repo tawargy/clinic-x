@@ -52,26 +52,6 @@ pub struct AppointmentWrapper {
 pub struct Appointment {
     pub id: String,
     pub patient_id: String,
-    pub past_history: Option<String>,
-    pub complaint: Option<String>,
-    pub present_history: Option<String>,
-    pub examination: Option<String>,
-    pub bp: Option<String>,
-    pub p: Option<String>,
-    pub t: Option<String>,
-    pub rr: Option<String>,
-    pub rbs: Option<String>,
-    pub spo2: Option<String>,
-    pub weight: Option<String>,
-    pub height: Option<String>,
-    pub provisional_diagnosis: Option<String>,
-    pub prescription: Option<Vec<Prescription>>,
-    pub created_at: String,
-}
-#[derive(Debug, Deserialize, Serialize)]
-pub struct Appointmentnew {
-    pub id: String,
-    pub patient_id: String,
     pub vitals: Vec<Vitals>,
     pub complaint: Option<String>,
     pub present_history: Option<String>,
@@ -90,8 +70,12 @@ pub struct Vitals {
 }
 
 #[derive(Debug, Deserialize, Serialize)]
-pub struct Diagnosis {
+pub struct AllDiagnosis {
     pub id: String,
+    pub diagnosis: Option<Vec<Diagnosis>>,
+}
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Diagnosis {
     pub diagnosis_type: Option<String>,
     pub start: Option<String>,
     pub end: Option<String>,
@@ -100,8 +84,14 @@ pub struct Diagnosis {
 }
 
 #[derive(Debug, Deserialize, Serialize)]
-pub struct Request {
+pub struct AllRequests {
     pub id: String,
+    pub requests: Option<Vec<Request>>,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Request {
+    pub id: Option<String>,
     pub req_date: Option<String>,
     pub req_name: Option<String>,
     pub comment: Option<String>,

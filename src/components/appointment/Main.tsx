@@ -6,18 +6,27 @@ import { ArrowBigRightDash } from "lucide-react";
 
 type TProps = {
   appointment: TAppointment;
-  onChangeHandler: (e: any) => void;
+  onVitalsChangeHandler: (name: string, value: string) => void;
+  onChangeHandler: (e) => void;
   setStage: (t: string) => void;
 
   addDiagnosis: (d: TDiagnosis) => void;
 };
 
-function Main({ appointment, onChangeHandler, setStage }: TProps) {
+function Main({
+  appointment,
+  onVitalsChangeHandler,
+  onChangeHandler,
+  setStage,
+}: TProps) {
   const { darkMode } = useAppSettings();
   return (
     <div className="h-[calc(100vh-190px)] flex flex-col justify-between">
       <div>
-        <Vitals appointment={appointment} onChangeHandler={onChangeHandler} />
+        <Vitals
+          appointment={appointment}
+          onVitalsChangeHandler={onVitalsChangeHandler}
+        />
         <div className="max-h-[600px]   overflow-y-auto custom-scrollbar ">
           <div
             className={`${darkMode ? "bg-gray-800" : "bg-white"}  rounded-lg shadow-md p-1 pb-2 mb-1 transition-colors duration-200`}

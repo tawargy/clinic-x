@@ -12,11 +12,14 @@ pub fn add_appointment_db(
         Ok(conn) => conn,
         Err(_) => return Err(String::from("Failed to connect to database!")),
     };
-    // Convert prescription Vec to JSON string
-    let prescription_json = match serde_json::to_string(&appointment.prescription) {
-        Ok(json) => json,
-        Err(_) => return Err(String::from("Failed to serialize prescription data")),
-    };
+
+    // Convert arrays/objects to JSON strings
+    let vitals_json = serde_json::to_string(&appointment.vitals)
+        .map_err(|_| String::from("Failed to serialize vitals data"))?;
+    let prescription_json = serde_json::to_string(&appointment.prescription)
+        .map_err(|_| String::from("Failed to serialize prescription data"))?;
+    let services_json = serde_json::to_string(&appointment.services)
+        .map_err(|_| String::from("Failed to serialize services data"))?;
 
     let id = Uuid::new_v4().to_string();
     appointment.id = id.clone();
@@ -25,38 +28,27 @@ pub fn add_appointment_db(
         "INSERT INTO appointments (
             id,
             patient_id,
-            past_history,
+            vitals,
             complaint,
             present_history,
             examination,
-            bp,
-            p,
-            t,
-            rr,
-            rbs,
-            spo2,
-            weight,
-            height,
             provisional_diagnosis,
-            prescription
-        ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16)",
+            prescription,
+            requests,
+            services,
+            created_at
+        ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, CURRENT_TIMESTAMP)",
         params![
             appointment.id,
             appointment.patient_id,
-            appointment.past_history,
+            vitals_json,
             appointment.complaint,
             appointment.present_history,
             appointment.examination,
-            appointment.bp,
-            appointment.p,
-            appointment.t,
-            appointment.rr,
-            appointment.rbs,
-            appointment.spo2,
-            appointment.weight,
-            appointment.height,
             appointment.provisional_diagnosis,
             prescription_json,
+            appointment.requests,
+            services_json,
         ],
     );
 
@@ -83,30 +75,33 @@ pub fn get_appointments_by_patient_id_db(
     };
 
     let appointment_iter = stmt.query_map([patient_id], |row| {
-        // Parse the prescription JSON string back to Vec
-        let prescription_str: String = row.get(15)?;
+        let vitals_str: String = row.get(2)?;
+        let prescription_str: String = row.get(7)?;
+        let services_str: String = row.get(9)?;
+
+        // Parse JSON strings back to their respective types
+        let vitals = serde_json::from_str(&vitals_str).map_err(|e| {
+            rusqlite::Error::FromSqlConversionFailure(0, rusqlite::types::Type::Text, Box::new(e))
+        })?;
         let prescription = serde_json::from_str(&prescription_str).map_err(|e| {
+            rusqlite::Error::FromSqlConversionFailure(0, rusqlite::types::Type::Text, Box::new(e))
+        })?;
+        let services = serde_json::from_str(&services_str).map_err(|e| {
             rusqlite::Error::FromSqlConversionFailure(0, rusqlite::types::Type::Text, Box::new(e))
         })?;
 
         Ok(Appointment {
             id: row.get(0)?,
             patient_id: row.get(1)?,
-            past_history: row.get(2)?,
+            vitals,
             complaint: row.get(3)?,
             present_history: row.get(4)?,
             examination: row.get(5)?,
-            bp: row.get(6)?,
-            p: row.get(7)?,
-            t: row.get(8)?,
-            rr: row.get(9)?,
-            rbs: row.get(10)?,
-            spo2: row.get(11)?,
-            weight: row.get(12)?,
-            height: row.get(13)?,
-            provisional_diagnosis: row.get(14)?,
+            provisional_diagnosis: row.get(6)?,
             prescription,
-            created_at: row.get(16)?,
+            requests: row.get(8)?,
+            services,
+            created_at: row.get(10)?,
         })
     });
 
@@ -140,30 +135,33 @@ pub fn get_appointment_by_id_db(
     };
 
     let appointment_result = stmt.query_row([appointment_id], |row| {
-        // Parse the prescription JSON string back to Vec
-        let prescription_str: String = row.get(15)?;
+        let vitals_str: String = row.get(2)?;
+        let prescription_str: String = row.get(7)?;
+        let services_str: String = row.get(9)?;
+
+        // Parse JSON strings back to their respective types
+        let vitals = serde_json::from_str(&vitals_str).map_err(|e| {
+            rusqlite::Error::FromSqlConversionFailure(0, rusqlite::types::Type::Text, Box::new(e))
+        })?;
         let prescription = serde_json::from_str(&prescription_str).map_err(|e| {
+            rusqlite::Error::FromSqlConversionFailure(0, rusqlite::types::Type::Text, Box::new(e))
+        })?;
+        let services = serde_json::from_str(&services_str).map_err(|e| {
             rusqlite::Error::FromSqlConversionFailure(0, rusqlite::types::Type::Text, Box::new(e))
         })?;
 
         Ok(Appointment {
             id: row.get(0)?,
             patient_id: row.get(1)?,
-            past_history: row.get(2)?,
+            vitals,
             complaint: row.get(3)?,
             present_history: row.get(4)?,
             examination: row.get(5)?,
-            bp: row.get(6)?,
-            p: row.get(7)?,
-            t: row.get(8)?,
-            rr: row.get(9)?,
-            rbs: row.get(10)?,
-            spo2: row.get(11)?,
-            weight: row.get(12)?,
-            height: row.get(13)?,
-            provisional_diagnosis: row.get(14)?,
+            provisional_diagnosis: row.get(6)?,
             prescription,
-            created_at: row.get(16)?,
+            requests: row.get(8)?,
+            services,
+            created_at: row.get(10)?,
         })
     });
 

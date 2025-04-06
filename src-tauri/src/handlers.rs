@@ -1,8 +1,10 @@
 pub mod appointment;
 pub mod appointment_day;
 pub mod clinic_info;
+pub mod diagnosis;
 pub mod employee;
 pub mod fee_and_services;
 pub mod patient;
 pub mod patient_medical_history;
 pub mod queue_and_recently;
+pub mod request;

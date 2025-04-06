@@ -40,26 +40,24 @@ export type TAppointmentWrapper = {
   appointment_status: string;
   date: string;
 };
+export type TVitals = {
+  v_name: string;
+  v_value: string;
+};
 export type TAppointment = {
   id: string;
   patient_id: string;
+  vitals: TVitals[];
   complaint: string;
   present_history: string;
   examination: string;
-  provisional_diagnosis: string;
-  past_history: string;
-  bp: string;
-  p: string;
-  t: string;
-  rr: string;
-  rbs: string;
-  spo2: string;
-  weight: string;
-  height: string;
+  provisional_diagnosis: string; // FOREIGN Key diagnosis
   prescription: TPrescription[];
-
+  requests: string; // FOREIGN Key Requests
+  services: TService[];
   created_at: string;
 };
+
 //appointment_followups: string[];
 //appointment_status: string;
 //fee: string;
@@ -110,6 +108,11 @@ export type TService = {
   service_name: string;
   service_fee: string;
 };
+
+export type TAllDiagnosis = {
+  id: string;
+  diagnosis: TDiagnosis[];
+};
 export type TDiagnosis = {
   diagnosis_type: string; // chronic or Non-chronic
   diagnosis_title: string;
@@ -117,4 +120,12 @@ export type TDiagnosis = {
   end?: string;
   containue?: boolean;
   comment: string;
+};
+export type TRequest = {
+  id: string;
+  req_date: string;
+  req_name: string;
+  comment: string;
+  req_type: string;
+  resualt?: string;
 };

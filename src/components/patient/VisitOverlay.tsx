@@ -2,22 +2,14 @@ import { useState, useEffect } from "react";
 import { useAppSettings } from "../../contextApi/appContext";
 import { useClinic } from "../../contextApi/clinicContext";
 import PrescriptionsPrint from "../comman/PrescriptionsPrint";
-import { TAppointment, TAppointmentWrapper } from "../../types";
+import getVitalIcon from "./getVitalIcon";
+import { TAppointment, TAppointmentWrapper, TAllDiagnosis } from "../../types";
 import { appointmentInit } from "../../initData";
 import { formatDateDB } from "../../utils/date";
 import { invoke } from "@tauri-apps/api/core";
 import { getAppointmentWrapperByIdApi } from "../../api/appointmentWrapper";
-import {
-  X,
-  Printer,
-  Heart,
-  Activity,
-  Clipboard,
-  Weight,
-  Ruler,
-  ThermometerSun,
-  Leaf,
-} from "lucide-react";
+import { X, Printer } from "lucide-react";
+import { getDiagnosisByIdApi } from "../../api/diagnosis";
 
 type Tprops = {
   appointment_id: string;
@@ -42,12 +34,15 @@ function VisitOverlay({
   const [pId, setPId] = useState(appointment_id);
   const [appointmentWrapper, setAppointmentWrapper] =
     useState<TAppointmentWrapper>();
+  const [diagnosis, setDiagnosis] = useState<TAllDiagnosis>();
+
   const getAppointment = async (id: string) => {
     try {
       const res = await invoke<TAppointment>("get_appointment_by_id", {
         appointmentId: id,
       });
-
+      const diagRes = await getDiagnosisByIdApi(res.provisional_diagnosis);
+      diagRes && setDiagnosis(diagRes);
       setAppointment(res);
       setPrescriptions(res.prescription);
       console.log("appointment", res);
@@ -63,6 +58,7 @@ function VisitOverlay({
       console.log(e);
     }
   };
+
   useEffect(() => {
     getAppointmentWrapper();
   }, []);
@@ -157,112 +153,19 @@ function VisitOverlay({
           className={`${darkMode ? "bg-gray-800" : "bg-white"}  rounded-lg shadow-md p-4 mb-2 transition-colors duration-200`}
         >
           <div className=" grid grid-cols-4 gap-4 ">
-            <div className="flex items-center">
-              <Ruler
-                className={`mr-3 ${darkMode ? "text-purple-400" : "text-purpl-500 "}`}
-                size={20}
-              />
-              <div>
-                <p
-                  className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}
-                >
-                  Hight: {appointment.height}
-                </p>
+            {appointment.vitals.map((vital, index) => (
+              <div key={index} className="flex items-center">
+                {/* You can create a mapping for icons based on vital names */}
+                {getVitalIcon(vital.v_name)}
+                <div>
+                  <p
+                    className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}
+                  >
+                    {vital.v_name}: {vital.v_value}
+                  </p>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center">
-              <Weight
-                className={`mr-3 ${darkMode ? "text-purple-400" : "text-purpl-500 "}`}
-                size={20}
-              />
-              <div>
-                <p
-                  className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}
-                >
-                  Weight: {appointment.weight}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center">
-              <Heart
-                className={`mr-3 ${darkMode ? "text-red-400" : "text-red-500"}`}
-                size={20}
-              />
-              <div>
-                <p
-                  className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}
-                >
-                  BP : {appointment.bp}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center">
-              <Activity
-                className={`mr-3 ${darkMode ? "text-blue-400" : "text-blue-500"}`}
-                size={20}
-              />
-              <div>
-                <p
-                  className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}
-                >
-                  P: {appointment.p}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center">
-              <ThermometerSun
-                className={`mr-3 ${darkMode ? "text-orange-400" : "text-orange-500"}`}
-                size={20}
-              />
-              <div>
-                <p
-                  className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}
-                >
-                  T : {appointment.t}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center">
-              <Clipboard
-                className={`mr-3 ${darkMode ? "text-yellow-400" : "text-yellow-600"}`}
-                size={20}
-              />
-              <div>
-                <p
-                  className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}
-                >
-                  RR : {appointment.rr}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center">
-              <Clipboard
-                className={`mr-3 ${darkMode ? "text-yellow-400" : "text-yellow-600"}`}
-                size={20}
-              />
-              <div>
-                <p
-                  className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}
-                >
-                  RBS : {appointment.rbs}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center">
-              <Leaf
-                className={`mr-3 ${darkMode ? "text-green-400" : "text-green-500"}`}
-                size={20}
-              />
-              <div>
-                <p
-                  className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}
-                >
-                  SPO2 : {appointment.spo2}
-                </p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
         <div className="grid grid-cols-2 gap-4 overflow-y-auto custom-scrollbar">
@@ -289,9 +192,19 @@ function VisitOverlay({
               className={`${darkMode ? "bg-gray-800" : "bg-white"}  rounded-lg shadow-md p-4 mb-2 transition-colors duration-200`}
             >
               <h3 className="text-gray-500">Diagnosis:</h3>
-              <p className="text-gray-400">
-                {appointment.provisional_diagnosis}
-              </p>
+              <div className="text-gray-400">
+                {/* {appointment.provisional_diagnosis} */}
+                {diagnosis &&
+                  diagnosis.diagnosis.map((d, i) => (
+                    <div key={i}>
+                      <p>title:{d.diagnosis_title}</p>
+                      <p>type:{d.diagnosis_type}</p>
+                      <p>start:{d.start}</p>
+                      <p>end:{d.end}</p>
+                      <p>comment{d.comment}</p>
+                    </div>
+                  ))}
+              </div>
             </div>
           </div>
 

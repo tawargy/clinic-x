@@ -1,6 +1,7 @@
 use super::migrations::*;
 use rusqlite::{Connection, Result};
 use tauri::Manager;
+
 pub fn init_db(app_handle: &tauri::AppHandle) -> Result<()> {
     let app_dir = app_handle
         .path()
@@ -29,6 +30,13 @@ pub fn init_db(app_handle: &tauri::AppHandle) -> Result<()> {
     let appointment_schema = appointment::appointment_schema();
     println!("Creating appointments table...");
     conn.execute(&appointment_schema, [])?;
+    let diagnosis_schema = appointment::diagnosis_schema();
+    println!("Creating diagnosis table...");
+    conn.execute(&diagnosis_schema, [])?;
+
+    let request_schema = appointment::request_schema();
+    println!("Creating Request table...");
+    conn.execute(&request_schema, [])?;
 
     // Create appointments day table
     let appointment_day_schema = appointment_day::appointment_day_schema();

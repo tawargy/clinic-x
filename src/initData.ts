@@ -29,20 +29,14 @@ export const patientMedicalHistoryInit = {
 export const appointmentInit = {
   id: "",
   patient_id: "",
+  vitals: [],
   complaint: "",
   present_history: "",
   examination: "",
   provisional_diagnosis: "",
-  past_history: "",
-  bp: "",
-  p: "",
-  t: "",
-  rr: "",
-  rbs: "",
-  spo2: "",
-  weight: "",
-  height: "",
   prescription: [],
+  requests: "",
+  services: [],
   created_at: new Date().toISOString(),
 };
 

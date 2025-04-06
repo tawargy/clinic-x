@@ -21,7 +21,7 @@ function Diagnosis({
   const [diagnosisType, setDiagnosisType] = useState("acute");
   const [start, setStart] = useState<Date | null>();
   const [end, setEnd] = useState<Date | null>();
-  const [still, setStill] = useState(false);
+  const [ongoing, setOngoing] = useState(false);
   const [comment, setComment] = useState("");
   const { darkMode } = useAppSettings();
 
@@ -36,7 +36,7 @@ function Diagnosis({
       diagnosis_title: title,
       start: formatDate(start),
       end: formatDate(end),
-      still,
+      ongoing,
       comment,
     };
     addDiagnosis(data);
@@ -44,11 +44,11 @@ function Diagnosis({
     setDiagnosisType("non-chronic");
     setStart(null);
     setEnd(null);
-    setStill(false);
+    setOngoing(false);
     setComment("");
   };
   const onCheckHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setStill(e.target.checked);
+    setOngoing(e.target.checked);
     setEnd(null);
   };
 
@@ -154,7 +154,7 @@ function Diagnosis({
           <div className="block w-full dark:text-white">
             <span className="block mb-0">end</span>
             <DatePicker
-              disabled={still}
+              disabled={ongoing}
               onChange={(date) => setEnd(date)}
               selected={end ? new Date(end) : null}
               dateFormat="dd-MM-yyyy"
@@ -172,7 +172,7 @@ function Diagnosis({
             </span>
             <input
               type="checkbox"
-              checked={still}
+              checked={ongoing}
               onChange={(e) => onCheckHandler(e)}
               className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"
             />

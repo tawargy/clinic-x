@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppSettings } from "../../contextApi/appContext";
 import { appointmentInit } from "../../initData";
 import { toastError, toastSuccess } from "../../utils/toastify";
 import { formatDate } from "../../utils/date";
@@ -23,41 +22,34 @@ import { getFeeAndServicesApi } from "../../api/feeAndServices";
 //import PrescriptionsPrint from "./PrescriptionsPrint";
 import { followupNames } from "../../utils/followupNames";
 import { Stethoscope } from "lucide-react";
+import Diagnosis from "./Diagnosis";
+import PatientColLayout from "../../layouts/PatientColLayout";
+import { addDiagnosisApi } from "../../api/diagnosis";
+import { addRequsetApi } from "../../api/request";
 import {
   TAppointment,
   TAppointmentWrapper,
   TFeeAndServices,
   TDiagnosis,
+  TRequest,
 } from "../../types";
-import Diagnosis from "./Diagnosis";
-import PatientColLayout from "../../layouts/PatientColLayout";
 type Tprops = {
   patient_id: string | undefined;
 };
-type TRequest = {
-  id: string;
-  req_date: string;
-  req_name: string;
-  comment: string;
-  req_type: string;
-  resualt?: string;
-};
+
 function Appointment({ patient_id }: Tprops) {
+  const { isAppointment, prescriptions, appointmentType } = useClinic();
   const [allDiagnosis, setAllDiagnosis] = useState<TDiagnosis[]>([]);
   const [isPrecisionOpen, setIsPrecisionOpen] = useState(false);
   const [appointment, setAppointment] = useState<TAppointment>(appointmentInit);
   const [requstes, setRequstes] = useState<TRequest[]>([]);
-
   const [feeAndServices, setFeeAndServices] = useState<TFeeAndServices>({
     id: "",
-    fee: "",
+    fee: "0",
     followups: [],
     services: [],
   });
-  const { setIsAppointment, isAppointment, prescriptions, appointmentType } =
-    useClinic();
-  const { darkMode } = useAppSettings();
-  const {} = useClinic();
+
   const [stage, setStage] = useState("main");
   const navigate = useNavigate();
 
@@ -80,31 +72,32 @@ function Appointment({ patient_id }: Tprops) {
       console.log(e);
     }
   };
+
   const addAppointment = async () => {
     try {
-      const appointmentData = {
-        id: "",
-        patient_id: patient_id || "",
-        complaint: appointment.complaint || null,
-        present_history: appointment.present_history || null,
-        examination: appointment.examination || null,
-        provisional_diagnosis: null,
-        past_history: appointment.past_history || null,
-        bp: appointment.bp || null,
-        p: appointment.p || null,
-        t: appointment.t || null,
-        rr: appointment.rr || null,
-        rbs: appointment.rbs || null,
-        spo2: appointment.spo2 || null,
-        weight: appointment.weight || null,
-        height: appointment.height || null,
-        prescription: prescriptions || [],
-        created_at: formatDate(new Date()),
-      };
-      console.log("ALLDATA", appointmentData);
-      const res = await addAppointmentApi(appointmentData);
-      return res;
-      toastSuccess("Appointment saved & closed successfully!");
+      const diagnosisId = await addDiagnosisApi(allDiagnosis);
+      const requestId = await addRequsetApi(requstes);
+      console.log("d", diagnosisId, "req", requestId);
+      if (diagnosisId && requestId) {
+        const appointmentData = {
+          id: "",
+          patient_id: patient_id || "",
+          vitals: appointment.vitals || [],
+          complaint: appointment.complaint || "",
+          present_history: appointment.present_history || "",
+          examination: appointment.examination || "",
+          provisional_diagnosis: diagnosisId,
+          prescription: prescriptions || [],
+          requests: requestId,
+          services: appointment.services || [],
+          created_at: formatDate(new Date()),
+        };
+        const res = await addAppointmentApi(appointmentData);
+        if (res) {
+          toastSuccess("Appointment saved & closed successfully!");
+        }
+        return res;
+      }
     } catch (e) {
       toastError("Faild to save");
       console.error("Error saving appointment:", e);
@@ -113,7 +106,6 @@ function Appointment({ patient_id }: Tprops) {
   useEffect(() => {
     getLastAppointmentWrapperApi(patient_id || "");
     getFeeAndServices();
-    console.log(appointmentType);
   }, []);
 
   const checkAppointmentType = async (appointmentId: string) => {
@@ -159,15 +151,30 @@ function Appointment({ patient_id }: Tprops) {
       updateAppointmentWrapperApi(data);
     }
   };
-  const onChangeHandler = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const name = e.target.name;
-    const value = e.target.value;
-    setAppointment((p) => {
-      return { ...p, [name]: value };
+
+  const onVitalsChangeHandler = (name: string, value: string) => {
+    setAppointment((prev) => {
+      const newVitals = [...prev.vitals];
+      const vitalIndex = newVitals.findIndex((v) => v.v_name === name);
+
+      if (vitalIndex !== -1) {
+        // Update existing vital
+        newVitals[vitalIndex] = { ...newVitals[vitalIndex], v_value: value };
+      } else {
+        // Add new vital
+        newVitals.push({ v_name: name, v_value: value });
+      }
+
+      return { ...prev, vitals: newVitals };
     });
   };
+  const onChangeHandler = (e) => {
+    const { name, value } = e.target;
+    setAppointment((prev) => {
+      return { ...prev, [name]: value };
+    });
+  };
+
   const addDiagnosisHandler = (d: TDiagnosis) => {
     setAllDiagnosis((prev) => [...prev, d]);
   };
@@ -217,6 +224,7 @@ function Appointment({ patient_id }: Tprops) {
           {stage === "main" && isAppointment && (
             <Main
               appointment={appointment}
+              onVitalsChangeHandler={onVitalsChangeHandler}
               onChangeHandler={onChangeHandler}
               setStage={setStage}
               addDiagnosis={addDiagnosisHandler}
