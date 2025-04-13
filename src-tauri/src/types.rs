@@ -31,7 +31,7 @@ pub struct PatientMedicalHistory {
     pub medications: Option<Vec<Med>>,
     pub conditions: Option<Vec<String>>,
     pub special_habits: Option<Vec<String>>,
-    pub past_history: Option<String>,
+    pub past_history: Option<Vec<String>>,
     pub family_history: Option<String>,
     pub notes: Option<String>,
 }
@@ -56,10 +56,10 @@ pub struct Appointment {
     pub complaint: Option<String>,
     pub present_history: Option<String>,
     pub examination: Option<String>,
-    pub provisional_diagnosis: Option<String>, // FOREIGN Key diagnosis
+    pub provisional_diagnosis: Option<String>,
     pub prescription: Option<Vec<Prescription>>,
-    pub requests: Option<String>, // FOREIGN Key Requests
-    pub services: Option<Vec<Service>>,
+    pub requests: Option<String>,
+    pub services: Option<String>,
     pub created_at: String,
 }
 
@@ -72,11 +72,13 @@ pub struct Vitals {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct AllDiagnosis {
     pub id: String,
+    pub patient_id: String,
     pub diagnosis: Option<Vec<Diagnosis>>,
 }
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Diagnosis {
     pub diagnosis_type: Option<String>,
+    pub diagnosis_title: Option<String>,
     pub start: Option<String>,
     pub end: Option<String>,
     pub ongoing: bool,
@@ -103,7 +105,6 @@ pub struct Request {
 pub struct Prescription {
     pub name: String,
     pub dosage: String,
-    pub frequency: String,
     pub duration: String,
 }
 
@@ -160,6 +161,18 @@ pub struct FeeAndServices {
     pub services: Vec<Service>,
 }
 
+#[derive(Debug, Deserialize, Serialize)]
+pub struct AppointmentFees {
+    pub id: String,
+    pub patient_id: String,
+    pub patient_name: String,
+    pub patient_phone: String,
+    pub appointment_type: String,
+    pub fee: String,
+    pub services: Vec<Service>,
+    pub total_fees: String,
+    pub date: String,
+}
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Folloup {
     pub followup_name: String,

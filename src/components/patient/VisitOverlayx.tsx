@@ -115,9 +115,9 @@ function VisitOverlay({
   };
 
   return (
-    <div className="flex w-full m-auto h-screen gap-4 max-w-7xl  items-center justify-center ">
+    <div className="flex w-full m-auto h-screen gap-4 max-w-10xl  items-center justify-center ">
       <div
-        className={`${darkMode ? "bg-gray-800" : "bg-white"}  w-[70%]  h-[90vh]  rounded-md p-4 flex flex-col gap-4 relative`}
+        className={`${darkMode ? "bg-gray-800" : "bg-white"}  w-[80%]  h-[90vh]  rounded-md p-4 flex flex-col gap-4 relative`}
       >
         <div
           className=" w-7 h-7 flex items-center justify-center bg-white  rounded-md absolute right-0 top-0  cursor-pointer"
@@ -168,7 +168,7 @@ function VisitOverlay({
             ))}
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-4 overflow-y-auto custom-scrollbar">
+        <div className="grid grid-cols-3 gap-4 overflow-y-auto custom-scrollbar">
           <div>
             <div
               className={`${darkMode ? "bg-gray-800" : "bg-white"}  rounded-lg shadow-md p-4 mb-2 transition-colors duration-200`}
@@ -196,12 +196,28 @@ function VisitOverlay({
                 {/* {appointment.provisional_diagnosis} */}
                 {diagnosis &&
                   diagnosis.diagnosis.map((d, i) => (
-                    <div key={i}>
-                      <p>title:{d.diagnosis_title}</p>
-                      <p>type:{d.diagnosis_type}</p>
-                      <p>start:{d.start}</p>
-                      <p>end:{d.end}</p>
-                      <p>comment{d.comment}</p>
+                    <div
+                      key={i}
+                      className="border border-gray-300 p-2 rounded-lg relative mb-2"
+                    >
+                      <p
+                        className={`${darkMode ? "text-gray-400" : "text-gray-600"}`}
+                      >
+                        {d.diagnosis_type}
+                        {d.diagnosis_title}
+                      </p>
+                      <p
+                        className={`${darkMode ? "text-gray-500" : "text-gray-500"} flex gap-2 text-sm`}
+                      >
+                        <span>[{d.start}</span>
+                        <span>:</span>
+                        <span>{d.end}]</span>
+                      </p>
+                      <p
+                        className={`${darkMode ? "text-gray-400" : "text-gray-600"} text-sm`}
+                      >
+                        {d.comment}
+                      </p>
                     </div>
                   ))}
               </div>
@@ -222,18 +238,18 @@ function VisitOverlay({
                   <p
                     className={`${darkMode ? "text-gray-300" : "text-gray-600"} pt-2`}
                   >
-                    name: {p.name}
+                    {p.name}
                   </p>
-                  <span className="text-gray-400">dosage: {p.dosage} - </span>
-                  <span className="text-gray-400">
-                    duration: {p.duration} -{" "}
-                  </span>
-                  <span className="text-gray-400">
-                    frequency: {p.frequency}
-                  </span>
+
+                  <span className="text-gray-400"> {p.dosage} </span>
+
+                  <span className="text-gray-400">{p.duration} </span>
                 </div>
               ))}
             </div>
+          </div>
+          <div className="col-span-1">
+            <h3>Requste</h3>
           </div>
         </div>
       </div>

@@ -6,7 +6,7 @@ export const addAppointmentWrapperApi = async (data: TAppointmentWrapper) => {
     const res = await invoke("add_appointment_wrapper", {
       appointment: data,
     });
-    console.log("add wrapper", res);
+    return res;
   } catch (e) {
     console.error("Faild to add wrapper", e);
   }
@@ -52,7 +52,6 @@ export const getAllAppointmentWrappersApi = async (id: string) => {
   }
 };
 export const getAppointmentWrapperByIdApi = async (id: string) => {
-  console.log("id", id);
   try {
     const wrapper = await invoke<TAppointmentWrapper>(
       "get_appointment_wrapper_by_id",

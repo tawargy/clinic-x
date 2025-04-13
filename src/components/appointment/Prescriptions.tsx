@@ -1,36 +1,34 @@
 import { useState } from "react";
 import { useAppSettings } from "../../contextApi/appContext";
-import { useClinic } from "../../contextApi/clinicContext";
+import { useAppointment } from "../../contextApi/appointmentContext";
 import { getDrug } from "../../utils/drug";
-
+import { TPrescription } from "../../types";
+import Rx from "../../assets/rx.png";
 import {
   X,
   ArrowBigRightDash,
   ArrowBigLeftDash,
   Edit2,
   Save,
+  ClipboardList,
 } from "lucide-react";
-// import { TPrescription } from "../../types";
 
 const prescriptionsInit = {
   name: "",
-  dosage: "10mg",
-  frequency: "daily",
-  duration: "1 month",
+  dosage: "",
+  duration: "",
 };
 type TProps = {
   setStage: (stage: string) => void;
-  // onSaveHandler: () => void;
-  // addPrescriptionHandler: (prescription: TPrescription[]) => void;
 };
 function Prescriptions({ setStage }: TProps) {
+  const { appointment, addPrescription, removePrescription } = useAppointment();
+  const { darkMode } = useAppSettings();
+  const [medicine, setMedicine] = useState<TPrescription>(prescriptionsInit);
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState([]);
-  const { medicine, setMedicine, prescriptions, setPrescriptions } =
-    useClinic();
-
   const [isIndex, setIsIndex] = useState<number | undefined>(undefined);
-  const { darkMode } = useAppSettings();
+  const { prescription } = appointment;
 
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -38,7 +36,7 @@ function Prescriptions({ setStage }: TProps) {
   };
   const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setPrescriptions([...prescriptions, medicine]);
+    addPrescription(medicine);
     setMedicine(prescriptionsInit);
     setSearchTerm("");
   };
@@ -58,11 +56,14 @@ function Prescriptions({ setStage }: TProps) {
   };
   return (
     <div>
-      <div className="h-[calc(100vh-280px)] flex flex-col gap-4   ">
+      <div className="h-[calc(100vh-290px)] flex flex-col gap-4   ">
         <div className=" h-[480px] max-h-[480px] overflow-y-auto custom-scrollbar   rounded-lg shadow-md px-4 ">
-          <h3>Prescriptions</h3>
+          <h3 className="flex items-center gap-2 mb-2">
+            <ClipboardList size={16} className="text-blue-500" />
+            <span> Prescriptions </span>{" "}
+          </h3>
           <div className="  ">
-            {prescriptions.map((p, i) => (
+            {prescription.map((p, i) => (
               <div key={i} className="relative">
                 {isIndex === i ? (
                   <div
@@ -74,7 +75,7 @@ function Prescriptions({ setStage }: TProps) {
                     >
                       <Save className="text-green-500" />
                     </button>
-                    <div className="grid grid-cols-3 gap-2 pb-2 px-1 pt-6 ">
+                    <div className="flex flex-col gap-2 pb-2 px-1 pt-6 ">
                       <div>
                         <label
                           className="text-gray-500 text-sm block "
@@ -136,8 +137,11 @@ function Prescriptions({ setStage }: TProps) {
                     key={i}
                     className={`${darkMode ? "border-gray-700" : "border-gray-300"} border  mb-1 rounded-lg px-2`}
                   >
-                    <h4 className="flex  items-center justify-between">
-                      <span>{p.name}</span>
+                    <div className="flex  items-center justify-between">
+                      <h3 className="flex items-center gap-2">
+                        <img src={Rx} alt="Rx" className="w-[20px] h-[20px]" />
+                        <span>{p.name}</span>
+                      </h3>
                       <div className="flex items-center gap-4 py-1">
                         <button onClick={() => setIsIndex(i)}>
                           <Edit2
@@ -145,14 +149,14 @@ function Prescriptions({ setStage }: TProps) {
                             size={18}
                           />
                         </button>
-                        <button>
+                        <button onClick={() => removePrescription(i)}>
                           <X className="text-red-300 hover:text-red-500" />
                         </button>
                       </div>
-                    </h4>
+                    </div>
                     <p className="flex gap-4 text-gray-500 ">
-                      <span>{p.dosage}</span>
                       <span>{p.duration}</span>
+                      <span>{p.dosage}</span>
                     </p>
                   </div>
                 )}
@@ -161,58 +165,39 @@ function Prescriptions({ setStage }: TProps) {
           </div>
         </div>
         <form className=" w-full   " onSubmit={onSubmitHandler}>
-          <div className="grid grid-cols-3 gap-4 ">
-            <div className=" bg-gray-50 col-span-3">
-              <input
-                className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-50 border-gray-300 text-gray-900"}
-                    border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 p-2.5 transition-colors duration-200`}
-                type="text"
-                value={searchTerm}
-                onChange={handleInputChange}
-                placeholder="Drug Name..."
-              />
-
-              {/* Display suggestions */}
-              {suggestions.length > 0 && (
-                <ul className="suggestions-list max-h-[300px]   overflow-y-auto custom-scrollbar">
-                  {suggestions.map((drug, index) => (
-                    <li
-                      className="cursor-pointer"
-                      key={index}
-                      onClick={() => handleSuggestionClick(drug.name)}
+          <div className="  ">
+            {/* Display suggestions */}
+            {suggestions.length > 0 && (
+              <ul className="suggestions-list max-h-[300px] overflow-y-auto custom-scrollbar my-2">
+                {suggestions.map((drug, index) => (
+                  <li
+                    className="cursor-pointer"
+                    key={index}
+                    onClick={() => handleSuggestionClick(drug.name)}
+                  >
+                    <span
+                      className={`${darkMode ? "text-yellow-500" : "text-yellow-700"} text-sm`}
                     >
+                      {" "}
                       {drug.name}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-            <div className="flex gap-4  col-span-3">
-              <div className="w-1/2">
-                <label
-                  className="text-gray-500 text-sm block mt-4"
-                  htmlFor="dosage"
-                >
-                  Dosage
-                </label>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <div className="flex flex-col gap-2">
+              <div className=" bg-gray-50 ">
                 <input
                   className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-50 border-gray-300 text-gray-900"}
-                          border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 p-2.5 transition-colors duration-200`}
+                                border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 p-2.5 transition-colors duration-200`}
                   type="text"
-                  name="dosage"
-                  value={medicine.dosage}
-                  id="dosage"
-                  placeholder="Dosage"
-                  onChange={onChangeHandler}
+                  value={searchTerm}
+                  onChange={handleInputChange}
+                  placeholder="Drug Name..."
                 />
               </div>
+
               <div>
-                <label
-                  className="text-gray-500 text-sm block mt-4"
-                  htmlFor="duration"
-                >
-                  Duration
-                </label>
                 <input
                   className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-50 border-gray-300 text-gray-900"}
                           border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 p-2.5 transition-colors duration-200`}
@@ -221,6 +206,19 @@ function Prescriptions({ setStage }: TProps) {
                   value={medicine.duration}
                   id="duration"
                   placeholder="Duration"
+                  onChange={onChangeHandler}
+                />
+              </div>
+
+              <div>
+                <input
+                  className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-50 border-gray-300 text-gray-900"}
+                          border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 p-2.5 transition-colors duration-200`}
+                  type="text"
+                  name="dosage"
+                  value={medicine.dosage}
+                  id="dosage"
+                  placeholder="Dosage"
                   onChange={onChangeHandler}
                 />
               </div>

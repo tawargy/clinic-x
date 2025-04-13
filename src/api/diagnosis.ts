@@ -11,9 +11,13 @@ export const getDiagnosisByIdApi = async (diagnosisId: string) => {
     console.error("Error getting appointment days:", e);
   }
 };
-export const addDiagnosisApi = async (allDiagnosis: TDiagnosis[]) => {
+export const addDiagnosisApi = async (
+  allDiagnosis: TDiagnosis[],
+  patientId: string,
+) => {
   try {
     const res = await invoke("add_diagnosis", {
+      patientId,
       diagnosis: allDiagnosis,
     });
     return res as string;

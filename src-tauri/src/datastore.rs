@@ -1,5 +1,6 @@
 pub mod appointment;
 pub mod appointment_day;
+pub mod appointment_fees;
 pub mod appointment_wrapper;
 pub mod clinic_info;
 pub mod db;

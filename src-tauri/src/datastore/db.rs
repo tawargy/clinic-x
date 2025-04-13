@@ -38,6 +38,10 @@ pub fn init_db(app_handle: &tauri::AppHandle) -> Result<()> {
     println!("Creating Request table...");
     conn.execute(&request_schema, [])?;
 
+    let appointment_fees_schema = appointment_fees::appointment_fees_schema();
+    println!("Creating appointment_fees table...");
+    conn.execute(&appointment_fees_schema, [])?;
+
     // Create appointments day table
     let appointment_day_schema = appointment_day::appointment_day_schema();
     println!("Creating appointment days table...");

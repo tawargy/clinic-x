@@ -54,7 +54,7 @@ export type TAppointment = {
   provisional_diagnosis: string; // FOREIGN Key diagnosis
   prescription: TPrescription[];
   requests: string; // FOREIGN Key Requests
-  services: TService[];
+  services: string;
   created_at: string;
 };
 
@@ -65,7 +65,6 @@ export type TAppointment = {
 export type TPrescription = {
   name?: string;
   dosage?: string;
-  frequency?: string;
   duration?: string;
 };
 export type TPatientInfoQ = {
@@ -74,7 +73,17 @@ export type TPatientInfoQ = {
   appointment_type: string;
   description: string;
 };
-
+export type TAppointmentFees = {
+  id: string;
+  patient_id: string;
+  patient_name: string;
+  patient_phone: string;
+  appointment_type: string;
+  fee: string;
+  services: TService[];
+  total_fees: string;
+  date: string;
+};
 export type TClinicInfo = {
   id: string;
   clinic_name: string;
@@ -111,6 +120,7 @@ export type TService = {
 
 export type TAllDiagnosis = {
   id: string;
+  patient_id: string;
   diagnosis: TDiagnosis[];
 };
 export type TDiagnosis = {
@@ -118,7 +128,7 @@ export type TDiagnosis = {
   diagnosis_title: string;
   start: string;
   end?: string;
-  containue?: boolean;
+  ongoing?: boolean;
   comment: string;
 };
 export type TRequest = {

@@ -27,7 +27,7 @@ function SearchPatient({
   const debouncedSearch = useCallback(
     debounce((query: string) => {
       onSearch(query);
-    }, 500),
+    }, 300),
     [onSearch],
   );
 
@@ -49,15 +49,17 @@ function SearchPatient({
   }, [onSearch]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // setVInput(e.target.value);
     const value = e.target.value;
     setInputValue(value);
     if (value.trim() === "") {
       onSearch("");
       return;
     }
+    if (value.length === 1) {
+      onSearch(value);
+      return;
+    }
     debouncedSearch(value);
-    console.log("res2", searchResults);
   };
   const newPaientHandler = () => {
     navigate("/add-patient");
@@ -70,7 +72,7 @@ function SearchPatient({
     >
       <div className="flex items-center justify-between mb-4">
         <h2
-          className={`${darkMode ? "text-gray-400" : "text-gray-500"} text-xl font-semibold flex items-center`}
+          className={`${darkMode ? "text-gray-400" : "text-gray-500"} md:text-lg font-semibold flex items-center`}
         >
           <Search className="mr-2 text-purple-500" size={20} />
           Search Patients

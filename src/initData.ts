@@ -1,3 +1,5 @@
+import { TAppointment, TAppointmentWrapper, TDiagnosis } from "./types";
+
 export const patientInit = {
   id: "",
   name: "",
@@ -26,7 +28,7 @@ export const patientMedicalHistoryInit = {
   family_history: "",
   notes: "",
 };
-export const appointmentInit = {
+export const appointmentInit: TAppointment = {
   id: "",
   patient_id: "",
   vitals: [],
@@ -36,8 +38,26 @@ export const appointmentInit = {
   provisional_diagnosis: "",
   prescription: [],
   requests: "",
-  services: [],
+  services: "",
   created_at: new Date().toISOString(),
+};
+export const appointmentWrapperInit: TAppointmentWrapper = {
+  id: "",
+  patient_id: "",
+  main_complaint: "",
+  main_appointment: "",
+  followups_num: "",
+  followup_appointments: [],
+  appointment_status: "",
+  date: "",
+};
+export const diagnosisInit: TDiagnosis = {
+  diagnosis_type: "",
+  diagnosis_title: "",
+  start: "",
+  end: "",
+  ongoing: false,
+  comment: "",
 };
 
 export const patientInfoQInit = {

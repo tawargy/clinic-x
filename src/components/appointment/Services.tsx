@@ -1,50 +1,40 @@
 import { useEffect, useState } from "react";
 import { useClinic } from "../../contextApi/clinicContext";
 import { useAppSettings } from "../../contextApi/appContext";
+import PrescriptionsPrint from "../comman/PrescriptionsPrint";
 import ReactSelect from "react-select";
-import { ArrowBigLeftDash, Printer, X } from "lucide-react";
 import { getFeeAndServicesApi } from "../../api/feeAndServices";
+import { formatDate } from "../../utils/date";
 import { TFeeAndServices } from "../../types";
+import { ArrowBigLeftDash, Printer, X } from "lucide-react";
+import { useAppointment } from "../../contextApi/appointmentContext";
+import { totalFees } from "../../utils/totalFees";
+
 type TProps = {
   setStage: (stage: string) => void;
   saveHandler: () => void;
-  prescriptionOpen: (isOpen: boolean) => void;
-  // services: TService[];
-  //setServices: (services: TService[]) => void;
 };
 
-type TService = {
-  service_name: string;
-  service_fee: string;
-};
-type TFeeAndServicesx = {
-  fee: string;
-  services: TService[];
-};
-function Services({ setStage, saveHandler, prescriptionOpen }: TProps) {
+function Services({ setStage, saveHandler }: TProps) {
   const { darkMode } = useAppSettings();
+  const { appointmentFees, setFee, addService, removeService, updateService } =
+    useAppointment();
   const { appointmentType } = useClinic();
   const [feeAndServicesDb, setfeeAndServicesDb] = useState<TFeeAndServices>();
-  const [feeAndServices, setFeeAndServices] = useState<TFeeAndServicesx>();
-  const [fee, setFee] = useState("");
-  const [services, setServices] = useState<TService[]>([]);
   const [selectedOption, setSelectedOption] = useState(null);
+  const [isPrecisionOpen, setIsPrecisionOpen] = useState(false);
 
   const getFeeAndServices = async () => {
     try {
       const res = await getFeeAndServicesApi();
       if (res) {
-        console.log("iii", res);
-
         if (appointmentType === "new") {
           setFee(res.fee);
         } else {
-          console.log("type", appointmentType);
           const followup = res.followups.find((f) => {
             return f.followup_name === appointmentType;
           });
           followup && setFee(followup?.followup_fee);
-          console.log("fff", followup);
         }
         setfeeAndServicesDb(res);
       }
@@ -52,6 +42,7 @@ function Services({ setStage, saveHandler, prescriptionOpen }: TProps) {
       console.log(error);
     }
   };
+
   useEffect(() => {
     getFeeAndServices();
   }, []);
@@ -62,24 +53,13 @@ function Services({ setStage, saveHandler, prescriptionOpen }: TProps) {
       (s) => s.service_name === selectedOption?.value,
     );
     if (service) {
-      const updatedServices = [...services, service];
-      setServices(updatedServices);
-      setFeeAndServices({
-        fee: fee,
-        services: updatedServices,
-      });
+      addService(service);
       setSelectedOption(null);
     }
   };
 
   const onDeleteHandler = (index: number) => {
-    const updatedServices = services.filter((_, i) => i !== index);
-    setServices(updatedServices);
-
-    setFeeAndServices({
-      fee: fee,
-      services: updatedServices,
-    });
+    removeService(index);
   };
   // Convert services to React-Select options format
   const serviceOptions = feeAndServicesDb?.services.map((service) => ({
@@ -122,22 +102,36 @@ function Services({ setStage, saveHandler, prescriptionOpen }: TProps) {
 
   return (
     <div className="h-[calc(100vh-210px)] flex flex-col justify-between ">
+      {isPrecisionOpen ? (
+        <div className="fixed inset-0 bg-black bg-opacity-50  z-50 ">
+          <PrescriptionsPrint
+            setIsOpen={setIsPrecisionOpen}
+            printDate={new Date()}
+            visitDate={formatDate(new Date())}
+          />
+        </div>
+      ) : (
+        ""
+      )}
       <div>
         <div className="h-[550px] max-h-[550px] overflow-y-auto custom-scrollbar rounded-lg shadow-md  px-4">
           <h2 className="py-2">Services</h2>
-          <div className="border border-gray-100 rounded-md">
+          <div
+            className={`${darkMode ? "border-gray-700" : " border-gray-100"} border  rounded-md`}
+          >
             <p className="px-2 py-4 pr-8 flex gap-2 items-center justify-between">
               <span>Clinic Fee: </span>
               <input
+                type="number"
                 className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-50 border-gray-300 text-gray-900"}
                         border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-[20%]  pl-4 p-2.5 transition-colors duration-200`}
-                value={fee}
+                value={appointmentFees.fee}
                 onChange={(e) => setFee(e.target.value)}
               />{" "}
             </p>
           </div>
           <div>
-            {services.map((service, index) => (
+            {appointmentFees.services.map((service, index) => (
               <div key={index} className="flex items-center gap-2 mt-4">
                 <div className="w-[100%]">
                   <p className="flex gap-2 pr-8 items-center justify-between relative">
@@ -153,13 +147,10 @@ function Services({ setStage, saveHandler, prescriptionOpen }: TProps) {
                                          border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-[20%]  pl-4 p-2.5 transition-colors duration-200`}
                       value={service.service_fee}
                       onChange={(e) =>
-                        setServices(
-                          services.map((s, i) =>
-                            i === index
-                              ? { ...s, service_fee: e.target.value }
-                              : s,
-                          ),
-                        )
+                        updateService(index, {
+                          ...service,
+                          service_fee: e.target.value,
+                        })
                       }
                     />{" "}
                   </p>
@@ -171,10 +162,18 @@ function Services({ setStage, saveHandler, prescriptionOpen }: TProps) {
             <div className="flex flex-col    gap-2 mt-16">
               <h4>Total: </h4>
               <p className="text-2xl font-bold">
-                {services.reduce(
-                  (acc, service) => acc + parseFloat(service.service_fee),
-                  0,
-                ) + parseFloat(fee === "" ? 0 : fee)}
+                {/* {appointmentFees.services.reduce((acc, service) => {
+                  // Check if service_fee is a valid number
+                  const serviceFee = !isNaN(parseFloat(service.service_fee))
+                    ? parseFloat(service.service_fee)
+                    : 0;
+                  return acc + serviceFee;
+                }, 0) +
+                  // Check if fee is a valid number
+                  (!isNaN(parseFloat(appointmentFees.fee))
+                    ? parseFloat(appointmentFees.fee)
+                    : 0)} */}
+                {totalFees(appointmentFees)}
               </p>
             </div>
           </div>
@@ -215,7 +214,7 @@ function Services({ setStage, saveHandler, prescriptionOpen }: TProps) {
         >
           Save & Close
         </button>
-        <button className=" py-4 px-2" onClick={() => prescriptionOpen(true)}>
+        <button className=" py-4 px-2" onClick={() => setIsPrecisionOpen(true)}>
           <Printer
             className="text-yellow-500 hover:text-yellow-400"
             size={40}

@@ -1,32 +1,35 @@
 import { useAppSettings } from "../../contextApi/appContext";
+import { useAppointment } from "../../contextApi/appointmentContext";
 import Vitals from "./Vitals";
-
-import { TAppointment, TDiagnosis } from "../../types";
 import { ArrowBigRightDash } from "lucide-react";
 
 type TProps = {
-  appointment: TAppointment;
-  onVitalsChangeHandler: (name: string, value: string) => void;
-  onChangeHandler: (e) => void;
   setStage: (t: string) => void;
-
-  addDiagnosis: (d: TDiagnosis) => void;
 };
 
-function Main({
-  appointment,
-  onVitalsChangeHandler,
-  onChangeHandler,
-  setStage,
-}: TProps) {
+function Main({ setStage }: TProps) {
+  const { appointment, addComplaint, addPresentHistory, addExamination } =
+    useAppointment();
   const { darkMode } = useAppSettings();
+
+  const onChangeHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    switch (name) {
+      case "complaint":
+        addComplaint(value);
+        break;
+      case "present_history":
+        addPresentHistory(value);
+        break;
+      case "examination":
+        addExamination(value);
+        break;
+    }
+  };
   return (
     <div className="h-[calc(100vh-190px)] flex flex-col justify-between">
       <div>
-        <Vitals
-          appointment={appointment}
-          onVitalsChangeHandler={onVitalsChangeHandler}
-        />
+        <Vitals />
         <div className="max-h-[600px]   overflow-y-auto custom-scrollbar ">
           <div
             className={`${darkMode ? "bg-gray-800" : "bg-white"}  rounded-lg shadow-md p-1 pb-2 mb-1 transition-colors duration-200`}

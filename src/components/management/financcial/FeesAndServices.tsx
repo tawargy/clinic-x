@@ -206,7 +206,7 @@ function FeesAndServices() {
                           : "bg-gray-50 border-gray-300 text-gray-900"
                       } border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full mb-2 pl-4 p-2.5 transition-colors duration-200`}
                       value={service.service_fee}
-                      placeholder="Vees"
+                      placeholder="fee"
                       onChange={(e) => {
                         const updatedServices = [...services];
                         updatedServices[index] = {

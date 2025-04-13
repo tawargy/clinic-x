@@ -1,19 +1,26 @@
 import { useState } from "react";
 import { useAppSettings } from "../../contextApi/appContext";
-import { ArrowBigLeftDash, ArrowBigRightDash, X } from "lucide-react";
 import { TRequest } from "../../types";
 import { formatDate } from "../../utils/date";
+import { useAppointment } from "../../contextApi/appointmentContext";
+import {
+  ArrowBigLeftDash,
+  ArrowBigRightDash,
+  X,
+  Fullscreen,
+  Microscope,
+} from "lucide-react";
 
 type TProps = {
   setStage: (stage: string) => void;
-  requstes: TRequest[];
-  setRequstes: (req: TRequest[]) => void;
 };
-function Requests({ setStage, requstes, setRequstes }: TProps) {
+function Requests({ setStage }: TProps) {
+  const { requests, addRequest, removeRequest } = useAppointment();
   const { darkMode } = useAppSettings();
   const [reqName, setReqName] = useState("");
   const [reqComment, setReqComment] = useState("");
   const [reqType, setReqType] = useState("imaging");
+
   const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const uuid = Math.random().toString();
@@ -24,15 +31,12 @@ function Requests({ setStage, requstes, setRequstes }: TProps) {
       comment: reqComment,
       req_type: reqType,
     };
-    setRequstes([...requstes, req]);
+    addRequest(req);
     setReqName("");
     setReqComment("");
   };
-  const deleteReq = (id: string) => {
-    setRequstes(requstes.filter((item) => id !== item.id));
-  };
   const imagingReqArr = () => {
-    const imaging = requstes.filter((r) => r.req_type === "imaging");
+    const imaging = requests.filter((r) => r.req_type === "imaging");
     return (
       <div className="flex flex-col gap-1">
         {imaging.map((img) => (
@@ -42,19 +46,21 @@ function Requests({ setStage, requstes, setRequstes }: TProps) {
           >
             <button
               className=" absolute right-1 top-1"
-              onClick={() => deleteReq(img.id)}
+              onClick={() => removeRequest(img.id)}
             >
               <X className="text-red-500 " size={18} />
             </button>
-            <p>Request : {img.req_name}</p>
-            <p>{img.comment}</p>
+            <p className="flex items-center gap-2">
+              <Fullscreen size={16} /> <span>{img.req_name}</span>
+            </p>
+            <p className="pl-6">{img.comment}</p>
           </div>
         ))}
       </div>
     );
   };
   const lapReqArr = () => {
-    const lapArr = requstes.filter((l) => l.req_type === "lap");
+    const lapArr = requests.filter((l) => l.req_type === "lap");
     return (
       <div className="flex flex-col gap-1">
         {lapArr.map((lap) => (
@@ -64,12 +70,15 @@ function Requests({ setStage, requstes, setRequstes }: TProps) {
           >
             <button
               className=" absolute right-1 top-1"
-              onClick={() => deleteReq(lap.id)}
+              onClick={() => removeRequest(lap.id)}
             >
               <X className="text-red-500 " size={18} />
             </button>
-            <p>Request:{lap.req_name}</p>
-            <p>{lap.comment}</p>
+            <p className="flex items-center gap-2">
+              <Microscope size={16} />
+              <span>{lap.req_name}</span>
+            </p>
+            <p className="pl-6">{lap.comment}</p>
           </div>
         ))}
       </div>
@@ -79,10 +88,15 @@ function Requests({ setStage, requstes, setRequstes }: TProps) {
     <div>
       <div>
         <div className="h-[477px] max-h-[477px] overflow-y-auto custom-scrollbar rounded-lg shadow-md  px-4">
-          <h2>Requstes</h2>
-          <h3 className="pt-4 text-yellow-500">imaging</h3>
+          <h3 className="flex gap-2 py-2 text-yellow-500">
+            <Fullscreen />
+            <span>imaging</span>
+          </h3>
           {imagingReqArr()}
-          <h3 className="pt-4 text-yellow-500">Lap</h3>
+          <h3 className="flex gap-2 py-2 text-yellow-500">
+            <Microscope />
+            <span>Lap</span>
+          </h3>
           {lapReqArr()}
         </div>
         <form onSubmit={onSubmitHandler}>

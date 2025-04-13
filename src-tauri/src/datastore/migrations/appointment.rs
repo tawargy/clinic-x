@@ -37,6 +37,7 @@ pub fn diagnosis_schema() -> String {
     String::from(
         "CREATE TABLE IF NOT EXISTS all_diagnosis (
             id TEXT PRIMARY KEY,
+            patient_id TEXT NOT NULL,
             diagnosis TEXT  -- This will store JSON array of Diagnosis
         );",
     )
@@ -49,6 +50,3 @@ pub fn request_schema() -> String {
         );",
     )
 }
-
-// FOREIGN KEY (provisional_diagnosis) REFERENCES all_diagnosis (id),
-// FOREIGN KEY (requests) REFERENCES all_requests (id)

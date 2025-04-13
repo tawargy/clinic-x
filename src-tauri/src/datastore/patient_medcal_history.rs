@@ -1,5 +1,5 @@
 use super::db::get_db_connection;
-use crate::types::PatientMedicalHistory;
+use crate::types::{Med, PatientMedicalHistory};
 use rusqlite::{params_from_iter, Result};
 use tauri::Manager;
 use uuid::Uuid;
@@ -15,21 +15,33 @@ pub fn get_patient_medical_history_db(
 
     let mut stmt = conn
         .prepare(
+            // "SELECT id, patient_id, allergies, medications, conditions, special_habits, past_history, family_history, notes
+            // FROM patient_medical_history
+            // WHERE patient_id = ?"
             "SELECT id, patient_id, allergies, medications, conditions, special_habits, past_history, family_history, notes
-            FROM patient_medical_history
-            WHERE patient_id = ?"
+                       FROM patient_medical_history
+                       WHERE patient_id = ?"
         )
         .map_err(|e| e.to_string())?;
 
     let result = stmt.query_row([&patient_id], |row| {
         Ok(PatientMedicalHistory {
+            // id: row.get(0)?,
+            // patient_id: row.get(1)?,
+            // allergies: parse_string_to_vec(row.get(2)?),
+            // medications: parse_string_to_vec(row.get(3)?),
+            // conditions: parse_string_to_vec(row.get(4)?),
+            // special_habits: parse_string_to_vec(row.get(5)?),
+            // past_history: row.get(6)?,
+            // family_history: row.get(7)?,
+            // notes: row.get(8)?,
             id: row.get(0)?,
             patient_id: row.get(1)?,
-            allergies: parse_string_to_vec(row.get(2)?),
-            medications: parse_string_to_vec(row.get(3)?),
-            conditions: parse_string_to_vec(row.get(4)?),
-            special_habits: parse_string_to_vec(row.get(5)?),
-            past_history: row.get(6)?,
+            allergies: parse_string_to_vec::<String>(row.get(2)?),
+            medications: parse_string_to_vec::<Med>(row.get(3)?),
+            conditions: parse_string_to_vec::<String>(row.get(4)?),
+            special_habits: parse_string_to_vec::<String>(row.get(5)?),
+            past_history: parse_string_to_vec::<String>(row.get(6)?),
             family_history: row.get(7)?,
             notes: row.get(8)?,
         })
@@ -71,13 +83,22 @@ pub fn add_patient_medical_history_db(
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     let values = [
+        // &data.id,
+        // &patient_id,
+        // &vec_to_string(&data.allergies) as &dyn rusqlite::ToSql,
+        // &vec_to_string(&data.medications) as &dyn rusqlite::ToSql,
+        // &vec_to_string(&data.conditions) as &dyn rusqlite::ToSql,
+        // &vec_to_string(&data.special_habits) as &dyn rusqlite::ToSql,
+        // &data.past_history as &dyn rusqlite::ToSql,
+        // &data.family_history as &dyn rusqlite::ToSql,
+        // &data.notes as &dyn rusqlite::ToSql,
         &data.id,
         &patient_id,
         &vec_to_string(&data.allergies) as &dyn rusqlite::ToSql,
         &vec_to_string(&data.medications) as &dyn rusqlite::ToSql,
         &vec_to_string(&data.conditions) as &dyn rusqlite::ToSql,
         &vec_to_string(&data.special_habits) as &dyn rusqlite::ToSql,
-        &data.past_history as &dyn rusqlite::ToSql,
+        &vec_to_string(&data.past_history) as &dyn rusqlite::ToSql,
         &data.family_history as &dyn rusqlite::ToSql,
         &data.notes as &dyn rusqlite::ToSql,
     ];
@@ -108,11 +129,19 @@ pub fn update_patient_medical_history_db(
         WHERE id = ?";
 
     let values = [
+        // &vec_to_string(&data.allergies) as &dyn rusqlite::ToSql,
+        // &vec_to_string(&data.medications) as &dyn rusqlite::ToSql,
+        // &vec_to_string(&data.conditions) as &dyn rusqlite::ToSql,
+        // &vec_to_string(&data.special_habits) as &dyn rusqlite::ToSql,
+        // &data.past_history as &dyn rusqlite::ToSql,
+        // &data.family_history as &dyn rusqlite::ToSql,
+        // &data.notes as &dyn rusqlite::ToSql,
+        // &data.id as &dyn rusqlite::ToSql,
         &vec_to_string(&data.allergies) as &dyn rusqlite::ToSql,
         &vec_to_string(&data.medications) as &dyn rusqlite::ToSql,
         &vec_to_string(&data.conditions) as &dyn rusqlite::ToSql,
         &vec_to_string(&data.special_habits) as &dyn rusqlite::ToSql,
-        &data.past_history as &dyn rusqlite::ToSql,
+        &vec_to_string(&data.past_history) as &dyn rusqlite::ToSql,
         &data.family_history as &dyn rusqlite::ToSql,
         &data.notes as &dyn rusqlite::ToSql,
         &data.id as &dyn rusqlite::ToSql,

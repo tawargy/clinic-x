@@ -38,9 +38,15 @@ pub fn run() {
             handlers::diagnosis::add_diagnosis,
             handlers::diagnosis::get_diagnosis_by_id,
             handlers::diagnosis::update_diagnosis,
+            handlers::diagnosis::get_all_diagnosis_by_patient_id,
             handlers::request::add_request,
             handlers::request::get_request_by_id,
             handlers::request::update_request,
+            handlers::appointment_fees::add_appointment_fees,
+            handlers::appointment_fees::get_appointment_fees_by_date,
+            handlers::appointment_fees::get_appointment_fees_by_id,
+            handlers::appointment_fees::get_appointment_fees_by_patient_id,
+            //
             handlers::queue_and_recently::get_queue,
             handlers::queue_and_recently::get_recently,
             handlers::patient_medical_history::get_patient_medical_history,
@@ -57,6 +63,8 @@ pub fn run() {
             handlers::fee_and_services::add_fee_and_services,
             handlers::fee_and_services::update_fee_and_services,
             handlers::fee_and_services::get_fee_and_services,
+            handlers::auth::bios_serial,
+            handlers::auth::system_info
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

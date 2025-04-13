@@ -1,14 +1,14 @@
 import { useRef, useEffect, useState } from "react";
 import { useReactToPrint } from "react-to-print"; // First install this package: npm install react-to-print
-import { invoke } from "@tauri-apps/api/core";
 import { useAppSettings } from "../../contextApi/appContext";
-import Rx from "../../assets/rx.png";
 import { useClinic } from "../../contextApi/clinicContext";
-import { X, PrinterCheck } from "lucide-react";
+import { getClinicInfoApi } from "../../api/clinicInfo";
 import { formatDate } from "../../utils/date";
-
 import { clinicInfoInit } from "../../initData";
 import { TClinicInfo } from "../../types";
+import { X, PrinterCheck } from "lucide-react";
+import Rx from "../../assets/rx.png";
+
 type Tprops = {
   setIsOpen: (isOpen: boolean) => void;
   visitDate: string;
@@ -17,16 +17,16 @@ type Tprops = {
 
 function PrescriptionsPrint({ setIsOpen, visitDate, printDate }: Tprops) {
   const { prescriptions, patientInfo } = useClinic();
+  const { darkMode } = useAppSettings();
   const [clinicInfo, setClinicInfo] = useState<TClinicInfo>(clinicInfoInit);
   const contentRef = useRef<HTMLDivElement>(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
-  const { darkMode } = useAppSettings();
   console.log(visitDate);
 
   const getClinicInfo = async () => {
     try {
-      const res = await invoke<TClinicInfo>("get_clinic_info", {});
-      setClinicInfo(res);
+      const res = await getClinicInfoApi();
+      res && setClinicInfo(res);
     } catch (e) {
       console.error("Error getting appointment days:", e);
     }
@@ -71,9 +71,10 @@ function PrescriptionsPrint({ setIsOpen, visitDate, printDate }: Tprops) {
                         {clinicInfo.clinic_name}
                       </h2>
                       <h3>{clinicInfo.speciality}</h3>
-                      {clinicInfo.memberships.map((membership, index) => (
-                        <p key={index}>{membership}</p>
-                      ))}
+                      {clinicInfo.memberships &&
+                        clinicInfo.memberships.map((membership, index) => (
+                          <p key={index}>{membership}</p>
+                        ))}
                     </div>
                   </div>
                   <div className="h-[1px] w-full bg-gray-300 my-4"></div>
@@ -85,7 +86,6 @@ function PrescriptionsPrint({ setIsOpen, visitDate, printDate }: Tprops) {
                       </h3>
                       <div className="flex gap-4">
                         <p>Dosage: {prescription.dosage}</p>
-                        <p>Frequency: {prescription.frequency}</p>
                         <p>Duration: {prescription.duration}</p>
                       </div>
                     </div>
@@ -105,9 +105,10 @@ function PrescriptionsPrint({ setIsOpen, visitDate, printDate }: Tprops) {
                       <span>({clinicInfo.appointments.excepting}) </span>
                     </p>
                     <p className="flex flex-row-reverse gap-4">
-                      {clinicInfo.contactus.map((c) => (
-                        <span key={c}>{c}</span>
-                      ))}
+                      {clinicInfo.contactus &&
+                        clinicInfo.contactus.map((c) => (
+                          <span key={c}>{c}</span>
+                        ))}
                     </p>
                   </div>
                 </div>

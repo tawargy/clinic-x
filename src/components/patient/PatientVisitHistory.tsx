@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAppSettings } from "../../contextApi/appContext";
-import VisitOverlay from "./VisitOverlay";
+import VisitOverlay from "./visitOverlay/VisitOverlay";
 import { TAppointmentWrapper } from "../../types";
 import { History, Calendar } from "lucide-react";
 
@@ -11,50 +11,43 @@ type Tprops = {
 function PatientVisitHistory({ appointmentWarappers, isEdit }: Tprops) {
   const { darkMode } = useAppSettings();
   const [isVisitOpen, setIsVisitOpen] = useState(false);
-  const [visitId, setVisitId] = useState("");
-  const [visitDate, setVisitDate] = useState("");
-  const [followupIds, setFollowupIds] = useState<string[]>([]);
+  //const [visitDate, setVisitDate] = useState("");
+  // const [followupIds, setFollowupIds] = useState<string[]>([]);
+
+  //const [appointmentId, setsetAppointmentId] = useState("");
   const [appointmentWarapperId, setAppointmentWarapperId] = useState("");
 
-  const onOpenVisitHandler = (
-    mainId: string,
-    followupIds: string[],
-    date: string,
-    id: string,
-  ) => {
+  const onOpenAppointmentHandler = (id: string, date: string) => {
     setIsVisitOpen(true);
-    setVisitId(mainId);
-    setVisitDate(date);
-    setFollowupIds(followupIds);
+    // setsetAppointmentId(mainId);
+    // setVisitDate(date);
+    //setFollowupIds(followupIds);
     setAppointmentWarapperId(id);
   };
   const onCloseVisitHandler = () => {
     setIsVisitOpen(!isVisitOpen);
   };
-  console.log("R", appointmentWarappers);
   return (
     <div className={`${darkMode ? "bg-gray-800" : "bg-white"} w-full `}>
       {isVisitOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50  z-50 ">
           <VisitOverlay
-            appointment_id={visitId}
+            // appointment_id={appointmentId}
             appointment_wrapper_id={appointmentWarapperId}
             onClose={onCloseVisitHandler}
-            visitDate={visitDate}
-            followupIds={followupIds}
           />
         </div>
       )}
-      <h3 className="text-lg font-semibold mb-4 flex items-center text-gray-500">
+      <h3 className="text-lg font-semibold mb-4 flex items-center text-gray-500 ">
         <History className="mr-2 text-green-700" size={18} />
-        Visits History
+        Appointments History
       </h3>
 
       {appointmentWarappers.length > 0 ? (
         <div
           className={`${isEdit ? "max-h-[380px]" : "max-h-[450px]"} space-y-6  overflow-y-auto custom-scrollbar pr-2`}
         >
-          {appointmentWarappers.map((visit, index) => (
+          {appointmentWarappers.map((appoint, index) => (
             <div
               key={index}
               className={`${darkMode ? "border-gray-700" : "border-gray-200"} border-l-4 pl-4 ${
@@ -70,15 +63,10 @@ function PatientVisitHistory({ appointmentWarappers, isEdit }: Tprops) {
                   <p
                     className={`${darkMode ? "text-green-300" : "text-green-700"} cursor-pointer font-medium hover:text-green-400`}
                     onClick={() => {
-                      onOpenVisitHandler(
-                        visit.main_appointment,
-                        visit.followup_appointments,
-                        visit.date,
-                        visit.id,
-                      );
+                      onOpenAppointmentHandler(appoint.id, appoint.date);
                     }}
                   >
-                    {visit.date}
+                    {appoint.date}
                   </p>
                 </div>
                 <p>
@@ -86,9 +74,9 @@ function PatientVisitHistory({ appointmentWarappers, isEdit }: Tprops) {
                     Case Status:{" "}
                   </span>
                   <span
-                    className={`${visit.appointment_status === "Closed" ? "text-red-500" : "text-green-500"} text-sm`}
+                    className={`${appoint.appointment_status === "Closed" ? "text-red-500" : "text-green-500"} text-sm`}
                   >
-                    {visit.appointment_status}
+                    {appoint.appointment_status}
                   </span>
                 </p>
               </div>
@@ -102,7 +90,7 @@ function PatientVisitHistory({ appointmentWarappers, isEdit }: Tprops) {
                   <p
                     className={`${darkMode ? "text-gray-500" : "text-gray-500"} text-sm`}
                   >
-                    {visit.main_complaint}
+                    {appoint.main_complaint}
                   </p>
                 </div>
                 <div></div>

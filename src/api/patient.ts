@@ -24,7 +24,6 @@ export const getPatientInfoByIdApi = async (id: string) => {
   }
 };
 export const searchPatientApi = async (input: string) => {
-  console.log(input);
   try {
     const res = await invoke<TPatient[]>("search_patients", {
       searchTerm: input,

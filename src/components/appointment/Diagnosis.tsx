@@ -1,22 +1,22 @@
 import { useState } from "react";
 import { useAppSettings } from "../../contextApi/appContext";
+import { useAppointment } from "../../contextApi/appointmentContext";
 import DatePicker from "react-datepicker";
 import { formatDate } from "../../utils/date";
 import { TDiagnosis } from "../../types";
-import { ArrowBigLeftDash, ArrowBigRightDash, X } from "lucide-react";
+import {
+  ArrowBigLeftDash,
+  ArrowBigRightDash,
+  X,
+  Stethoscope,
+} from "lucide-react";
 
 type TProps = {
-  addDiagnosis: (d: TDiagnosis) => void;
   setStage: (s: string) => void;
-  diagnosis: TDiagnosis[];
-  deletedDiagnosis: (i: number) => void;
 };
-function Diagnosis({
-  addDiagnosis,
-  setStage,
-  diagnosis,
-  deletedDiagnosis,
-}: TProps) {
+function Diagnosis({ setStage }: TProps) {
+  const { diagnosis, addDiagnosis, removeDiagnosis } = useAppointment();
+
   const [title, setTitle] = useState("");
   const [diagnosisType, setDiagnosisType] = useState("acute");
   const [start, setStart] = useState<Date | null>();
@@ -31,7 +31,7 @@ function Diagnosis({
   };
   const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = {
+    const newDiagnosis: TDiagnosis = {
       diagnosis_type: diagnosisType,
       diagnosis_title: title,
       start: formatDate(start),
@@ -39,9 +39,9 @@ function Diagnosis({
       ongoing,
       comment,
     };
-    addDiagnosis(data);
+    addDiagnosis(newDiagnosis);
     setTitle("");
-    setDiagnosisType("non-chronic");
+    setDiagnosisType("acute");
     setStart(null);
     setEnd(null);
     setOngoing(false);
@@ -55,14 +55,17 @@ function Diagnosis({
   return (
     <div>
       <div className="h-[360px]  max-h-[360px] overflow-y-auto custom-scrollbar rounded-lg shadow-md px-4 ">
-        <h2>Diagnosis:</h2>
+        <h2 className="flex items-center gap-2">
+          <Stethoscope className=" text-blue-500" size={16} />
+          <span>Diagnosis</span>
+        </h2>
         <div className="flex flex-col gap-4   p-1 pb-2 ">
           {diagnosis.map((d, index) => (
             <div key={index}>
               <div className="border border-gray-300 p-2 rounded-lg relative">
                 <button
                   className=" absolute right-1 top-1"
-                  onClick={() => deletedDiagnosis(index)}
+                  onClick={() => removeDiagnosis(index)}
                 >
                   <X className="text-red-500" size={18} />
                 </button>
@@ -72,9 +75,10 @@ function Diagnosis({
                   {d.diagnosis_title}
                 </p>
                 <p
-                  className={`${darkMode ? "text-gray-500" : "text-gray-500"} flex gap-4 text-sm`}
+                  className={`${darkMode ? "text-gray-500" : "text-gray-500"} flex gap-2 text-sm`}
                 >
-                  <span>[{d.start} :</span>
+                  <span>[{d.start}</span>
+                  <span>:</span>
                   <span>{d.end}]</span>
                 </p>
                 <p

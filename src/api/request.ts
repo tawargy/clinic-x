@@ -11,3 +11,13 @@ export const addRequsetApi = async (requests: TRequest[]) => {
     console.error("Faild to add request");
   }
 };
+export const getRequsetsApi = async (id: string) => {
+  try {
+    const res = await invoke("get_request_by_id", {
+      requestId: id,
+    });
+    return res;
+  } catch (e) {
+    console.error("Faild to add request");
+  }
+};

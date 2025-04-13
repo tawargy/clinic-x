@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import PatientInfo from "../components/patient/PatientInfo";
-import PatientMedicalInfo from "../components/patient/PatientMedicalInfo";
+import PatientMedicalInfo from "../components/patient/patientMedicalInfo/PatientMedicalInfo";
 import PatientLayout from "../layouts/PatientLayout";
 import Appointment from "../components/appointment/Appointment";
 
