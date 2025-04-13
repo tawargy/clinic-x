@@ -63,8 +63,6 @@ pub fn run() {
             handlers::fee_and_services::add_fee_and_services,
             handlers::fee_and_services::update_fee_and_services,
             handlers::fee_and_services::get_fee_and_services,
-            handlers::auth::bios_serial,
-            handlers::auth::system_info
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

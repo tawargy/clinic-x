@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
+import TauriSqlitePathSelector from "./pathSelector/TauriSqlitePathSelector";
+
 function AppSettings() {
   const [biosSerial, setBiosSerial] = useState<string>("");
   const [systemInfo, setSystemInfo] = useState<string>("");
@@ -42,7 +44,8 @@ function AppSettings() {
   return (
     <div>
       <h2>AppSettings</h2>
-      <div>Status: {loading ? "Loading..." : "Done"}</div>
+      <TauriSqlitePathSelector />
+      {/* <div>Status: {loading ? "Loading..." : "Done"}</div>
 
       <div>
         <h3>BIOS Serial:</h3>
@@ -59,7 +62,7 @@ function AppSettings() {
           <h3>Errors:</h3>
           <pre>{error}</pre>
         </div>
-      )}
+      )} */}
     </div>
   );
 }
