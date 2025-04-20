@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { invoke } from "@tauri-apps/api/core";
-import { getDiagnosisByIdApi } from "../api/diagnosis";
+import { getDiagnosesByIdApi } from "../api/diagnosis";
 import { getAppointmentWrapperByIdApi } from "../api/appointmentWrapper";
-import { TAllDiagnosis, TAppointment, TAppointmentWrapper } from "../types";
+import { TDiagnoses, TAppointment, TAppointmentWrapper } from "../types";
 
 import { appointmentInit, appointmentWrapperInit } from "../initData";
 
@@ -11,7 +11,7 @@ export function useVisitOverlay(appointment_wrapper_id: string) {
   const [appointmentWrapper, setAppointmentWrapper] =
     useState<TAppointmentWrapper>(appointmentWrapperInit);
   const [appointmentId, setAppointmentId] = useState("");
-  const [diagnosis, setDiagnosis] = useState<TAllDiagnosis>();
+  const [diagnosis, setDiagnosis] = useState<TDiagnoses>();
 
   const getAppointment = async (id: string) => {
     try {
@@ -19,7 +19,7 @@ export function useVisitOverlay(appointment_wrapper_id: string) {
       const res = await invoke<TAppointment>("get_appointment_by_id", {
         appointmentId: id,
       });
-      const diagRes = await getDiagnosisByIdApi(res.provisional_diagnosis);
+      const diagRes = await getDiagnosesByIdApi(res.provisional_diagnosis);
       diagRes && setDiagnosis(diagRes);
       setAppointment(res);
       //  setPrescriptions(res.prescription);

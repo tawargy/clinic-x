@@ -1,6 +1,6 @@
 import { createContext, useContext, useReducer, ReactNode } from "react";
 import appointmentReducer from "./reducers/appointmentReducer";
-import diagnosisReducer from "./reducers/diagnosisReducer";
+import diagnosesReducer from "./reducers/diagnosesReducer";
 import requstsReducer from "./reducers/requstsReducer";
 import appointmentFeesReducer from "./reducers/appointmentFees";
 import { TRequest, TAppointmentFees } from "../types";
@@ -21,7 +21,7 @@ const appointmentFeesInit: TAppointmentFees = {
 
 type TAppointmentContext = {
   appointment: TAppointment;
-  diagnosis: TDiagnosis[];
+  diagnoses: TDiagnosis[];
   requests: TRequest[];
   appointmentFees: TAppointmentFees;
   setVitals: React.Dispatch<any>;
@@ -54,7 +54,7 @@ function AppointmentProvider({ children }: { children: ReactNode }) {
     appointmentReducer,
     appointmentInit,
   );
-  const [diagnosis, diagnosisDispatch] = useReducer(diagnosisReducer, []);
+  const [diagnoses, diagnosesDispatch] = useReducer(diagnosesReducer, []);
   const [requests, requestsDispatch] = useReducer(requstsReducer, []);
   const [appointmentFees, appointmentFeesDispatch] = useReducer(
     appointmentFeesReducer,
@@ -63,7 +63,7 @@ function AppointmentProvider({ children }: { children: ReactNode }) {
 
   const resetAll = () => {
     appointmentDispatch({ type: "RESET", payload: appointmentInit });
-    diagnosisDispatch({ type: "RESET", payload: [] });
+    diagnosesDispatch({ type: "RESET", payload: [] });
     requestsDispatch({ type: "RESET", payload: [] });
     requestsDispatch({ type: "RESET", payload: appointmentFeesInit });
   };
@@ -81,7 +81,7 @@ function AppointmentProvider({ children }: { children: ReactNode }) {
     appointmentDispatch({ type: "EXAMINATION", payload });
   };
   const setDiagnosisId = (payload: any) => {
-    appointmentDispatch({ type: "DIAGNOSIS", payload });
+    appointmentDispatch({ type: "DIAGNOSES", payload });
   };
   const addPrescription = (payload: any) => {
     appointmentDispatch({ type: "ADD_PRESCRIPTION", payload });
@@ -91,11 +91,11 @@ function AppointmentProvider({ children }: { children: ReactNode }) {
   };
   // Diagnosis actions
   const addDiagnosis = (diagnosis: TDiagnosis) => {
-    diagnosisDispatch({ type: "ADD_DIAGNOSIS", payload: diagnosis });
+    diagnosesDispatch({ type: "ADD_DIAGNOSIS", payload: diagnosis });
   };
 
   const removeDiagnosis = (index: number) => {
-    diagnosisDispatch({ type: "REMOVE_DIAGNOSIS", payload: index });
+    diagnosesDispatch({ type: "REMOVE_DIAGNOSIS", payload: index });
   };
   // Requestes actions
   const addRequest = (request: TRequest) => {
@@ -135,7 +135,7 @@ function AppointmentProvider({ children }: { children: ReactNode }) {
     <AppointmentContext.Provider
       value={{
         appointment,
-        diagnosis,
+        diagnoses,
         requests,
         appointmentFees,
         setVitals,

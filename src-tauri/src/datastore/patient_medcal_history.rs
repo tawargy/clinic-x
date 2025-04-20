@@ -15,10 +15,7 @@ pub fn get_patient_medical_history_db(
 
     let mut stmt = conn
         .prepare(
-            // "SELECT id, patient_id, allergies, medications, conditions, special_habits, past_history, family_history, notes
-            // FROM patient_medical_history
-            // WHERE patient_id = ?"
-            "SELECT id, patient_id, allergies, medications, conditions, special_habits, past_history, family_history, notes
+            "SELECT id, patient_id, allergies, medications, conditions, special_habits, family_history, notes
                        FROM patient_medical_history
                        WHERE patient_id = ?"
         )
@@ -26,24 +23,14 @@ pub fn get_patient_medical_history_db(
 
     let result = stmt.query_row([&patient_id], |row| {
         Ok(PatientMedicalHistory {
-            // id: row.get(0)?,
-            // patient_id: row.get(1)?,
-            // allergies: parse_string_to_vec(row.get(2)?),
-            // medications: parse_string_to_vec(row.get(3)?),
-            // conditions: parse_string_to_vec(row.get(4)?),
-            // special_habits: parse_string_to_vec(row.get(5)?),
-            // past_history: row.get(6)?,
-            // family_history: row.get(7)?,
-            // notes: row.get(8)?,
             id: row.get(0)?,
             patient_id: row.get(1)?,
             allergies: parse_string_to_vec::<String>(row.get(2)?),
             medications: parse_string_to_vec::<Med>(row.get(3)?),
             conditions: parse_string_to_vec::<String>(row.get(4)?),
             special_habits: parse_string_to_vec::<String>(row.get(5)?),
-            past_history: parse_string_to_vec::<String>(row.get(6)?),
-            family_history: row.get(7)?,
-            notes: row.get(8)?,
+            family_history: row.get(6)?,
+            notes: row.get(7)?,
         })
     });
 
@@ -56,7 +43,6 @@ pub fn get_patient_medical_history_db(
             medications: None,
             conditions: None,
             special_habits: None,
-            past_history: None,
             family_history: None,
             notes: None,
         }),
@@ -79,26 +65,16 @@ pub fn add_patient_medical_history_db(
 
     let query = "INSERT INTO patient_medical_history (
         id, patient_id, allergies, medications, conditions,
-        special_habits, past_history, family_history, notes
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        special_habits,  family_history, notes
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
     let values = [
-        // &data.id,
-        // &patient_id,
-        // &vec_to_string(&data.allergies) as &dyn rusqlite::ToSql,
-        // &vec_to_string(&data.medications) as &dyn rusqlite::ToSql,
-        // &vec_to_string(&data.conditions) as &dyn rusqlite::ToSql,
-        // &vec_to_string(&data.special_habits) as &dyn rusqlite::ToSql,
-        // &data.past_history as &dyn rusqlite::ToSql,
-        // &data.family_history as &dyn rusqlite::ToSql,
-        // &data.notes as &dyn rusqlite::ToSql,
         &data.id,
         &patient_id,
         &vec_to_string(&data.allergies) as &dyn rusqlite::ToSql,
         &vec_to_string(&data.medications) as &dyn rusqlite::ToSql,
         &vec_to_string(&data.conditions) as &dyn rusqlite::ToSql,
         &vec_to_string(&data.special_habits) as &dyn rusqlite::ToSql,
-        &vec_to_string(&data.past_history) as &dyn rusqlite::ToSql,
         &data.family_history as &dyn rusqlite::ToSql,
         &data.notes as &dyn rusqlite::ToSql,
     ];
@@ -123,25 +99,15 @@ pub fn update_patient_medical_history_db(
         medications = ?,
         conditions = ?,
         special_habits = ?,
-        past_history = ?,
         family_history = ?,
         notes = ?
         WHERE id = ?";
 
     let values = [
-        // &vec_to_string(&data.allergies) as &dyn rusqlite::ToSql,
-        // &vec_to_string(&data.medications) as &dyn rusqlite::ToSql,
-        // &vec_to_string(&data.conditions) as &dyn rusqlite::ToSql,
-        // &vec_to_string(&data.special_habits) as &dyn rusqlite::ToSql,
-        // &data.past_history as &dyn rusqlite::ToSql,
-        // &data.family_history as &dyn rusqlite::ToSql,
-        // &data.notes as &dyn rusqlite::ToSql,
-        // &data.id as &dyn rusqlite::ToSql,
         &vec_to_string(&data.allergies) as &dyn rusqlite::ToSql,
         &vec_to_string(&data.medications) as &dyn rusqlite::ToSql,
         &vec_to_string(&data.conditions) as &dyn rusqlite::ToSql,
         &vec_to_string(&data.special_habits) as &dyn rusqlite::ToSql,
-        &vec_to_string(&data.past_history) as &dyn rusqlite::ToSql,
         &data.family_history as &dyn rusqlite::ToSql,
         &data.notes as &dyn rusqlite::ToSql,
         &data.id as &dyn rusqlite::ToSql,

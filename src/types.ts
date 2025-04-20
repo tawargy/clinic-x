@@ -26,7 +26,6 @@ export type TpatientMedicalHistory = {
   medications?: TMed[];
   conditions?: string[];
   special_habits?: string[];
-  past_history?: string;
   family_history?: string;
   notes?: string;
 };
@@ -118,18 +117,21 @@ export type TService = {
   service_fee: string;
 };
 
-export type TAllDiagnosis = {
+export type TDiagnoses = {
   id: string;
   patient_id: string;
-  diagnosis: TDiagnosis[];
+  diagnoses: TDiagnosis[];
+  date: string;
 };
 export type TDiagnosis = {
+  id: string;
   diagnosis_type: string; // chronic or Non-chronic
   diagnosis_title: string;
   start: string;
   end?: string;
   ongoing?: boolean;
   comment: string;
+  created_at: string;
 };
 export type TRequest = {
   id: string;

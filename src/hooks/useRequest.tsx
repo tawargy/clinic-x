@@ -1,26 +1,38 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { getRequsetsApi } from "../api/request";
 
 import { TRequest } from "../types";
 
-export function useRequest(requestId: string) {
-  const [requests, setRequests] = useState<TRequest[]>([]);
+export const useRequest = (requestId: string | undefined) => {
+  const [requests, setRequests] = useState<TRequest[] | null>(null);
+  const [requestsId, setRequestsId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const getRequests = async (id: string) => {
+  const fetchRequests = useCallback(async () => {
+    if (!requestId) return;
+
+    setLoading(true);
     try {
-      if (!id) return;
-      const res = await getRequsetsApi(id);
-      res && setRequests(res.requests);
-    } catch (e) {
-      console.log("error", e);
+      const response = await getRequsetsApi(requestId);
+      if (response) {
+        setRequestsId(response.id);
+        setRequests(response.requests || []);
+      }
+    } catch (err) {
+      console.error("Failed to fetch requests:", err);
+    } finally {
+      setLoading(false);
     }
-  };
+  }, [requestId]);
 
   useEffect(() => {
-    getRequests(requestId);
-  }, [requestId]);
+    fetchRequests();
+  }, [fetchRequests]);
 
   return {
     requests,
+    requestsId,
+    loading,
+    refetch: fetchRequests,
   };
-}
+};

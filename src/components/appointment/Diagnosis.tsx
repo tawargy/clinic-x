@@ -15,7 +15,7 @@ type TProps = {
   setStage: (s: string) => void;
 };
 function Diagnosis({ setStage }: TProps) {
-  const { diagnosis, addDiagnosis, removeDiagnosis } = useAppointment();
+  const { diagnoses, addDiagnosis, removeDiagnosis } = useAppointment();
 
   const [title, setTitle] = useState("");
   const [diagnosisType, setDiagnosisType] = useState("acute");
@@ -32,12 +32,14 @@ function Diagnosis({ setStage }: TProps) {
   const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const newDiagnosis: TDiagnosis = {
+      id: Math.random().toString(),
       diagnosis_type: diagnosisType,
       diagnosis_title: title,
       start: formatDate(start),
       end: formatDate(end),
       ongoing,
       comment,
+      created_at: new Date().toISOString(),
     };
     addDiagnosis(newDiagnosis);
     setTitle("");
@@ -60,7 +62,7 @@ function Diagnosis({ setStage }: TProps) {
           <span>Diagnosis</span>
         </h2>
         <div className="flex flex-col gap-4   p-1 pb-2 ">
-          {diagnosis.map((d, index) => (
+          {diagnoses.map((d, index) => (
             <div key={index}>
               <div className="border border-gray-300 p-2 rounded-lg relative">
                 <button

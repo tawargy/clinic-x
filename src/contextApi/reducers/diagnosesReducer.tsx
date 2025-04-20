@@ -1,6 +1,6 @@
 import { TDiagnosis } from "../../types";
 
-const diagnosisReducer = (state: TDiagnosis[], action: any) => {
+const diagnosesReducer = (state: TDiagnosis[], action: any) => {
   switch (action.type) {
     case "ADD_DIAGNOSIS":
       return [...state, action.payload];
@@ -14,4 +14,4 @@ const diagnosisReducer = (state: TDiagnosis[], action: any) => {
   }
 };
 
-export default diagnosisReducer;
+export default diagnosesReducer;

@@ -47,8 +47,8 @@ function RecentAppointment({ patients }: TProps) {
   }, []);
   return (
     <div>
-      <div className="flex-grow overflow-hidden">
-        <div className="h-full overflow-y-auto pr-1 custom-scrollbar">
+      <div className="flex-grow  max-h-[730px]  overflow-y-auto pr-1 custom-scrollbar ">
+        <div className="  ">
           {finshAppointments.length === 0 ? (
             <div
               className={`text-center py-8 ${darkMode ? "text-gray-400" : "text-gray-500"} `}

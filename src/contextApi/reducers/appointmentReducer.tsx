@@ -24,7 +24,7 @@ const appointmentReducer = (state: TAppointment, action: any) => {
         ...state,
         examination: action.payload,
       };
-    case "DIAGNOSIS":
+    case "DIAGNOSES":
       return {
         ...state,
         provisional_diagnosis: action.payload,

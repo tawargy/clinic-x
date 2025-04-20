@@ -25,7 +25,6 @@ pub fn patient_medical_history_schema() -> String {
                            medications TEXT,
                            conditions TEXT,
                            special_habits TEXT,
-                           past_history TEXT,
                            family_history TEXT,
                            notes TEXT,
                            FOREIGN KEY (patient_id) REFERENCES patients (id)

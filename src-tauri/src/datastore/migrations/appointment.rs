@@ -35,10 +35,11 @@ pub fn appointment_schema() -> String {
 
 pub fn diagnosis_schema() -> String {
     String::from(
-        "CREATE TABLE IF NOT EXISTS all_diagnosis (
+        "CREATE TABLE IF NOT EXISTS all_diagnoses (
             id TEXT PRIMARY KEY,
             patient_id TEXT NOT NULL,
-            diagnosis TEXT  -- This will store JSON array of Diagnosis
+            diagnoses TEXT,  -- This will store JSON array of Diagnosis
+            date TEXT
         );",
     )
 }

@@ -53,34 +53,6 @@ pub fn add_request_db(requests: Vec<Request>, window: &tauri::Window) -> Result<
         }
     }
 }
-// pub fn add_request_db(requests: Vec<Request>, window: &tauri::Window) -> Result<String, String> {
-//     let conn = match get_db_connection(window.app_handle()) {
-//         Ok(conn) => conn,
-//         Err(_) => return Err(String::from("Failed to connect to database!")),
-//     };
-
-//     let id = Uuid::new_v4().to_string();
-//     let all_requests = AllRequests {
-//         id: id.clone(),
-//         requests: Some(requests),
-//     };
-
-//     // Serialize requests to JSON string
-//     let requests_json = match serde_json::to_string(&all_requests.requests) {
-//         Ok(json) => json,
-//         Err(e) => return Err(format!("Failed to serialize requests: {}", e)),
-//     };
-
-//     let result = conn.execute(
-//         "INSERT INTO all_requests (id, request) VALUES (?1, ?2)",
-//         params![id, requests_json],
-//     );
-
-//     match result {
-//         Ok(_) => Ok(id),
-//         Err(e) => Err(format!("Failed to add requests: {}", e)),
-//     }
-// }
 
 pub fn get_request_by_id_db(
     request_id: String,
@@ -135,5 +107,56 @@ pub fn update_request_db(all_requests: AllRequests, window: &tauri::Window) -> R
     match result {
         Ok(_) => Ok(()),
         Err(e) => Err(format!("Failed to update requests: {}", e)),
+    }
+}
+
+pub fn update_request_by_id_db(
+    all_requests_id: String,
+    request_id: String,
+    updated_request: Request,
+    window: &tauri::Window,
+) -> Result<(), String> {
+    println!(
+        "Starting update_request_by_id_db for request ID: {}",
+        request_id
+    );
+
+    // Get the current AllRequests collection
+    let mut all_requests = match get_request_by_id_db(all_requests_id.clone(), window) {
+        Ok(req) => req,
+        Err(e) => return Err(format!("Failed to fetch AllRequests: {}", e)),
+    };
+
+    // Find and update the specific request with the given ID
+    if let Some(requests) = &mut all_requests.requests {
+        let mut found = false;
+
+        for req in requests.iter_mut() {
+            if let Some(id) = &req.id {
+                if id == &request_id {
+                    // Preserve the original ID when updating
+                    let original_id = req.id.clone();
+                    *req = updated_request;
+                    req.id = original_id;
+                    found = true;
+                    break;
+                }
+            }
+        }
+
+        if !found {
+            return Err(format!("Request with ID {} not found", request_id));
+        }
+
+        // Save the updated AllRequests back to the database
+        match update_request_db(all_requests, window) {
+            Ok(_) => {
+                println!("Successfully updated request with ID: {}", request_id);
+                Ok(())
+            }
+            Err(e) => Err(format!("Failed to save updated request: {}", e)),
+        }
+    } else {
+        Err("No requests found in the collection".to_string())
     }
 }

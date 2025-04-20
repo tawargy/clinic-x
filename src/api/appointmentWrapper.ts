@@ -14,13 +14,15 @@ export const addAppointmentWrapperApi = async (data: TAppointmentWrapper) => {
 export const updateAppointmentWrapperApi = async (
   data: TAppointmentWrapper,
 ) => {
+  console.log("wrapperApi", data);
+
   try {
     const res = await invoke("update_appointment_wrapper", {
       appointment: data,
     });
-    console.log("add wrapper", res);
+    console.log("update wrapper", res);
   } catch (e) {
-    console.error("Faild to add wrapper", e);
+    console.error("Faild to update wrapper", e);
   }
 };
 export const getLastAppointmentWrapperApi = async (

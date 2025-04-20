@@ -9,7 +9,7 @@ import Diagnosis from "./Diagnosis";
 import Requests from "./Requests";
 import Services from "./Services";
 import { getFeeAndServicesApi } from "../../api/feeAndServices";
-import { addDiagnosisApi } from "../../api/diagnosis";
+import { addDiagnosesApi } from "../../api/diagnosis";
 import { addRequsetApi } from "../../api/request";
 import {
   addAppointmentWrapperApi,
@@ -33,7 +33,7 @@ type Tprops = {
 };
 
 function Appointment({ patient_id }: Tprops) {
-  const { appointment, diagnosis, requests, appointmentFees } =
+  const { appointment, diagnoses, requests, appointmentFees } =
     useAppointment();
   const { isAppointment, appointmentType, patientInfo } = useClinic();
   //const [isPrecisionOpen, setIsPrecisionOpen] = useState(false);
@@ -68,9 +68,8 @@ function Appointment({ patient_id }: Tprops) {
   };
 
   const addAppointment = async () => {
-    console.log("addAppointment", diagnosis);
     try {
-      const diagnosisId = await addDiagnosisApi(diagnosis, patient_id || "");
+      const diagnosesId = await addDiagnosesApi(diagnoses, patient_id);
       const requestId = await addRequsetApi(requests);
       const feesId = await addAppointmentFeesApi({
         ...appointmentFees,
@@ -81,11 +80,11 @@ function Appointment({ patient_id }: Tprops) {
         total_fees: totalFees(appointmentFees).toString(),
         date: formatDate(new Date()),
       });
-      if (diagnosisId && requestId && feesId) {
+      if (diagnosesId && requestId && feesId) {
         const appointmentData = {
           ...appointment,
           patient_id: patient_id || "",
-          provisional_diagnosis: diagnosisId,
+          provisional_diagnosis: diagnosesId,
           requests: requestId,
           services: feesId,
           created_at: formatDate(new Date()),
@@ -124,18 +123,15 @@ function Appointment({ patient_id }: Tprops) {
       if (!patient_id) return;
       const lastWrapper = await getLastAppointmentWrapperApi(patient_id);
       if (!lastWrapper) return;
+
       const followupsLength = Number(
         lastWrapper.followup_appointments.length + 1,
       );
       const followupsNum = Number(lastWrapper.followups_num);
+
       let caseStatus = "Open";
-      console.log(
-        "followupsnum",
-        followupsNum,
-        "followupsLength",
-        followupsLength,
-      );
-      if (followupsNum < followupsLength) return;
+
+      if (followupsLength > followupsNum) return;
       if (followupsNum === followupsLength) {
         caseStatus = "Closed";
       }
@@ -146,15 +142,12 @@ function Appointment({ patient_id }: Tprops) {
         followup_appointments: [...arr, id],
         appointment_status: caseStatus,
       };
+
       updateAppointmentWrapperApi(data);
     }
   };
 
   return (
-    // <div
-    //   className={`${darkMode ? "bg-gray-800" : "bg-white"}  flex flex-col justify-between   h-[calc(100vh-130px)] w-full
-    //     rounded-lg shadow-md   transition-colors duration-200`}
-    // >
     <PatientColLayout>
       <div>
         <div>

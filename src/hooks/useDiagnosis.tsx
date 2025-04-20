@@ -1,19 +1,17 @@
 import { useState, useEffect } from "react";
-import { getDiagnosisByIdApi } from "../api/diagnosis";
-
-import { TAllDiagnosis } from "../types";
+import { getDiagnosesByIdApi } from "../api/diagnosis";
+import { TDiagnoses } from "../types";
 
 export function useDiagnosis() {
-  const [diagnosis, setDiagnosis] = useState<TAllDiagnosis>();
-  const [diagnosisId, setDiagnosisId] = useState<string>("");
+  const [diagnoses, setDiagnoses] = useState<TDiagnoses>();
+  const [diagnosesId, setDiagnosesId] = useState<string>("");
 
   const getDiagnosis = async () => {
     try {
-      if (!diagnosisId) return;
-      console.log("getDiagnosis");
-      const res = await getDiagnosisByIdApi(diagnosisId);
+      if (!diagnosesId) return;
+      const res = await getDiagnosesByIdApi(diagnosesId);
 
-      res && setDiagnosis(res);
+      res && setDiagnoses(res);
     } catch (e) {
       console.log("error", e);
     }
@@ -21,10 +19,12 @@ export function useDiagnosis() {
 
   useEffect(() => {
     getDiagnosis();
-  }, [diagnosisId]);
+  }, [diagnosesId]);
 
   return {
-    diagnosis,
-    setDiagnosisId,
+    diagnoses,
+    setDiagnosesId,
+    setDiagnoses,
+    refreshDiagnosis: getDiagnosis,
   };
 }

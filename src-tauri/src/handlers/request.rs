@@ -22,3 +22,13 @@ pub async fn update_request(
 ) -> Result<(), String> {
     request::update_request_db(all_requests, &window)
 }
+
+#[tauri::command]
+pub async fn update_request_by_id(
+    all_requests_id: String,
+    request_id: String,
+    updated_request: Request,
+    window: tauri::Window,
+) -> Result<(), String> {
+    request::update_request_by_id_db(all_requests_id, request_id, updated_request, &window)
+}

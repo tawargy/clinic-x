@@ -31,7 +31,6 @@ pub struct PatientMedicalHistory {
     pub medications: Option<Vec<Med>>,
     pub conditions: Option<Vec<String>>,
     pub special_habits: Option<Vec<String>>,
-    pub past_history: Option<Vec<String>>,
     pub family_history: Option<String>,
     pub notes: Option<String>,
 }
@@ -70,19 +69,22 @@ pub struct Vitals {
 }
 
 #[derive(Debug, Deserialize, Serialize)]
-pub struct AllDiagnosis {
+pub struct Diagnoses {
     pub id: String,
     pub patient_id: String,
-    pub diagnosis: Option<Vec<Diagnosis>>,
+    pub diagnoses: Option<Vec<Diagnosis>>,
+    pub date: Option<String>,
 }
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Diagnosis {
+    pub id: Option<String>,
     pub diagnosis_type: Option<String>,
     pub diagnosis_title: Option<String>,
     pub start: Option<String>,
     pub end: Option<String>,
     pub ongoing: bool,
     pub comment: Option<String>,
+    pub created_at: Option<String>,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
