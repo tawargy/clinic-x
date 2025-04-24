@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { TPatientInfo, TAppointmentWrapper } from "../../types";
 import PatientColLayout from "../../layouts/PatientColLayout";
+import { toastWarning } from "../../utils/toastify";
 
 type Tprops = {
   id: string | undefined;
@@ -40,7 +41,7 @@ function PatientInfo({ id }: Tprops) {
   const { setPatientInfo, isAppointment } = useClinic();
 
   const navigate = useNavigate();
-  const { darkMode } = useAppSettings();
+  const { darkMode, isAuth } = useAppSettings();
 
   const getPatientInfo = async () => {
     if (!id) return;
@@ -88,8 +89,12 @@ function PatientInfo({ id }: Tprops) {
     setPatient(originalPatient);
   };
 
-  const onSchedule = () => {
-    navigate("/agenda");
+  const onScheduleHandler = () => {
+    if (isAuth) {
+      navigate("/agenda");
+    } else {
+      toastWarning("You have to active the App");
+    }
   };
 
   return (
@@ -163,8 +168,8 @@ function PatientInfo({ id }: Tprops) {
             )}
             {!isAppointment && !isEdit && (
               <button
-                className="bg-purple-500 text-white text-sm block p-2 ml-4   rounded-md hover:bg-purple-700"
-                onClick={() => onSchedule()}
+                className={`${isAuth ? "bg-purple-500 hover:bg-purple-700" : "bg-gray-400 hover:bg-gray-400"} text-white text-sm block p-2 ml-4   rounded-md `}
+                onClick={() => onScheduleHandler()}
               >
                 schedule appointment
               </button>

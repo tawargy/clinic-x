@@ -12,7 +12,9 @@
   "dependencies": {
     "@hookform/resolvers": "^4.1.2",
     "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-dialog": "^2.2.1",
     "@tauri-apps/plugin-opener": "^2",
+    "@tauri-apps/plugin-updater": "^2.7.1",
     "@types/react-datepicker": "^7.0.0",
     "lucide-react": "^0.476.0",
     "react": "^18.3.1",

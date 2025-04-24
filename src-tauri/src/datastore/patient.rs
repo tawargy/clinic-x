@@ -138,3 +138,17 @@ pub fn delete_patient_db(id: String, window: tauri::Window) -> Result<String, St
         Err(e) => Err(format!("Failed to delete patient: {}", e)),
     }
 }
+
+pub fn get_patients_count_db(window: tauri::Window) -> Result<usize, String> {
+    let conn = match get_db_connection(window.app_handle()) {
+        Ok(conn) => conn,
+        Err(_) => return Err(String::from("Failed to connect to database!")),
+    };
+
+    let query = "SELECT COUNT(*) FROM patients";
+
+    match conn.query_row(query, [], |row| row.get::<_, i64>(0)) {
+        Ok(count) => Ok(count as usize),
+        Err(e) => Err(format!("Failed to count patients: {}", e)),
+    }
+}

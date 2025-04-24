@@ -1,7 +1,9 @@
 pub mod appointment;
 pub mod appointment_day;
 pub mod appointment_fees;
+pub mod auth;
 pub mod clinic_info;
+pub mod db_backup;
 pub mod diagnosis;
 pub mod employee;
 pub mod fee_and_services;

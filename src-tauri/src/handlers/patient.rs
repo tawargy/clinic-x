@@ -28,3 +28,8 @@ pub fn delete_patient(id: String, window: tauri::Window) -> Result<String, Strin
 pub fn search_patients(search_term: String, window: tauri::Window) -> Result<Vec<Patient>, String> {
     search::search_patients_db(search_term, window)
 }
+
+#[tauri::command]
+pub fn get_patients_count(window: tauri::Window) -> Result<usize, String> {
+    patient::get_patients_count_db(window)
+}

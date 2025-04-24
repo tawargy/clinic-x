@@ -26,3 +26,12 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 rusqlite = { version = "0.29.0", features = ["bundled"] }
 uuid = { version = "1.6", features = ["v4"] }
+get_if_addrs = "0.5"
+sha2 = "0.10"
+hostname = "0.3"
+
+mac_address = "1.1.4" # Or the latest version
+tauri-plugin-dialog = "2"
+
+[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
+tauri-plugin-updater = "2"

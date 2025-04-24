@@ -9,7 +9,7 @@ pub fn init_db(app_handle: &tauri::AppHandle) -> Result<()> {
         .expect("Failed to get app data directory");
     std::fs::create_dir_all(&app_dir).expect("Failed to create app data directory");
 
-    let db_path = app_dir.join("app.db");
+    let db_path = app_dir.join("drx-database.db");
     println!("Creating database at: {}", db_path.display());
 
     let conn = Connection::open(db_path)?;
@@ -63,6 +63,10 @@ pub fn init_db(app_handle: &tauri::AppHandle) -> Result<()> {
     println!("Creating fee and services table...");
     conn.execute(&fee_and_services_schema, [])?;
 
+    let app_settings_schema = app_settings::app_settings_schema();
+    println!("Creating app settings table...");
+    conn.execute(&app_settings_schema, [])?;
+
     // Verify tables were created
     let mut stmt = conn.prepare("SELECT name FROM sqlite_master WHERE type='table'")?;
     let tables: Vec<String> = stmt
@@ -76,10 +80,15 @@ pub fn init_db(app_handle: &tauri::AppHandle) -> Result<()> {
 
 pub fn get_db_connection(app_handle: &tauri::AppHandle) -> Result<Connection> {
     let app_dir = app_handle.path().app_data_dir().unwrap();
-    let db_path = app_dir.join("app.db");
+    let db_path = app_dir.join("drx-database.db");
     println!("Database path: {}", db_path.display());
     if !db_path.exists() {
         init_db(app_handle)?;
     }
     Connection::open(db_path)
+}
+
+pub fn get_db_path(app_handle: &tauri::AppHandle) -> std::path::PathBuf {
+    let app_dir = app_handle.path().app_data_dir().unwrap();
+    app_dir.join("app.db")
 }

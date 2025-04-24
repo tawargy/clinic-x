@@ -2,6 +2,8 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { debounce } from "../../utils/debounce";
 import { Phone, Search, UserPlus } from "lucide-react";
+import { useAppSettings } from "../../contextApi/appContext";
+import { toastWarning } from "../../utils/toastify";
 
 type TSearchPatientProps = {
   searchTerm: string;
@@ -20,6 +22,7 @@ function SearchPatient({
   searchResults,
   darkMode,
 }: TSearchPatientProps) {
+  const { isAuth } = useAppSettings();
   const [inputValue, setInputValue] = useState("");
   const navigate = useNavigate();
   const componentRef = useRef<HTMLInputElement>(null);
@@ -62,7 +65,11 @@ function SearchPatient({
     debouncedSearch(value);
   };
   const newPaientHandler = () => {
-    navigate("/add-patient");
+    if (isAuth) {
+      navigate("/add-patient");
+    } else {
+      toastWarning("You have to active the App");
+    }
   };
   return (
     <div
@@ -79,7 +86,8 @@ function SearchPatient({
         </h2>
         <button
           onClick={newPaientHandler}
-          className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md flex items-center text-sm transition-colors duration-200"
+          className={`${isAuth ? "bg-blue-500 hover:bg-blue-600" : "bg-gray-400 hover:bg-gray-400"} text-white px-3 py-1 rounded-md
+          flex items-center text-sm transition-colors duration-200`}
         >
           <UserPlus className="mr-1" size={16} />
           New Patient

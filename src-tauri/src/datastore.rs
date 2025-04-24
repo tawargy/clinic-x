@@ -1,3 +1,4 @@
+pub mod app_settings;
 pub mod appointment;
 pub mod appointment_day;
 pub mod appointment_fees;

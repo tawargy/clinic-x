@@ -1,12 +1,22 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAppSettings } from "../../contextApi/appContext";
 import { useClinic } from "../../contextApi/clinicContext";
 import { CalendarDays } from "lucide-react";
 import { Settings2, SlidersHorizontal } from "lucide-react";
+import { toastWarning } from "../../utils/toastify";
 
 function Navbar() {
-  const { darkMode, setDarkMode } = useAppSettings();
+  const { darkMode, setDarkMode, isAuth } = useAppSettings();
   const { isAppointment } = useClinic();
+  const navigate = useNavigate();
+
+  const onAgendaHandler = () => {
+    if (isAuth) {
+      navigate("/agenda");
+    } else {
+      toastWarning("You have to active the App");
+    }
+  };
   return (
     <nav className="flex justify-between items-center  p-4  mb-2">
       <h2>
@@ -31,13 +41,14 @@ function Navbar() {
               Agenda
             </span>
           ) : (
-            <NavLink
-              className="flex items-center gap-1 nav-link dark:tems-centernav-link dark:text-white bg-blue-500 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg"
-              to="/agenda"
+            <button
+              className={`${isAuth ? "bg-blue-500 hover:bg-blue-700" : "bg-gray-400 hover:bg-gray-400"} flex items-center gap-1 nav-link dark:tems-centernav-link dark:text-white
+                text-white font-medium py-2 px-4 rounded-lg`}
+              onClick={onAgendaHandler}
             >
               <CalendarDays size={20} />
               Agenda
-            </NavLink>
+            </button>
           )}
         </li>
         <li className="nav-item">
@@ -45,11 +56,6 @@ function Navbar() {
             className="nav-link  block "
             onClick={() => setDarkMode((p) => !p)}
           >
-            {/* {darkMode ? (
-              <SunMoon className="hover:text-yellow-400" size={28} />
-            ) : (
-              <Moon className="hover:text-blue-900 " size={28} />
-            )} */}
             {darkMode ? "🌞" : "🌙"}
           </button>
         </li>

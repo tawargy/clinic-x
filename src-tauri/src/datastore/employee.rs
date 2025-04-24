@@ -71,37 +71,6 @@ pub fn update_employee_by_id_db(
         Err(e) => Err(e.to_string()),
     }
 }
-// pub fn update_employee_db(data: Employee, window: tauri::Window) -> Result<(), String> {
-//     let conn = match get_db_connection(window.app_handle()) {
-//         Ok(conn) => conn,
-//         Err(_) => return Err(String::from("Failed to connect to database!")),
-//     };
-
-//     let sql = "UPDATE employees SET
-//         name = ?,
-//         n_id = ?,
-//         phone = ?,
-//         address = ?,
-//         role = ?,
-//         salary = ?
-//         WHERE id = ?";
-
-//     match conn.execute(
-//         sql,
-//         (
-//             &data.name,
-//             &data.n_id,
-//             &data.phone,
-//             &data.address,
-//             &data.role,
-//             &data.salary,
-//             &data.id,
-//         ),
-//     ) {
-//         Ok(_) => Ok(()),
-//         Err(e) => Err(e.to_string()),
-//     }
-// }
 
 pub fn get_employees_db(window: tauri::Window) -> Result<Vec<Employee>, String> {
     let conn = match get_db_connection(window.app_handle()) {

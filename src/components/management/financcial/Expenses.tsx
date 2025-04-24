@@ -19,6 +19,7 @@ type TExpenses = {
   id: string;
   month: string;
   rent: number;
+  taxes: number;
   electricity_invoice: number;
   water_invoice: number;
   phone_and_internet_invoice: number;
@@ -32,6 +33,7 @@ function Expenses() {
     id: "",
     month: "",
     rent: 0,
+    taxes: 0,
     electricity_invoice: 0,
     water_invoice: 0,
     phone_and_internet_invoice: 0,

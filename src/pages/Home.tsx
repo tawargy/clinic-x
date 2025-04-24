@@ -14,6 +14,8 @@ import { patientInit, patientInfoQInit, prescriptionsInit } from "../initData";
 import RecentAppointment from "../components/home/RecentAppointment";
 import { Clock, BriefcaseMedical } from "lucide-react";
 //import useClinicInit from "../hooks/useClinicInit";
+import { toastWarning } from "../utils/toastify";
+import { getDbBackupPathApi } from "../api/appSettings";
 
 type TPatient = {
   id: string;
@@ -31,7 +33,6 @@ function Home() {
   const [searchTerm, setSearchTerm] = useState("");
   const [show, setShow] = useState("recentPatient");
   const currentDate = new Date();
-  //const { setClinicInit } = useClinicInit();
 
   const initAppSettings = async () => {
     try {
