@@ -13,9 +13,6 @@ import { TPatientInfo, TPatientInfoQ } from "../types";
 import { patientInit, patientInfoQInit, prescriptionsInit } from "../initData";
 import RecentAppointment from "../components/home/RecentAppointment";
 import { Clock, BriefcaseMedical } from "lucide-react";
-//import useClinicInit from "../hooks/useClinicInit";
-import { toastWarning } from "../utils/toastify";
-import { getDbBackupPathApi } from "../api/appSettings";
 
 type TPatient = {
   id: string;

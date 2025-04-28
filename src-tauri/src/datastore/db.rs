@@ -9,7 +9,7 @@ pub fn init_db(app_handle: &tauri::AppHandle) -> Result<()> {
         .expect("Failed to get app data directory");
     std::fs::create_dir_all(&app_dir).expect("Failed to create app data directory");
 
-    let db_path = app_dir.join("drx-database.db");
+    let db_path = app_dir.join("clinicX-database.db");
     println!("Creating database at: {}", db_path.display());
 
     let conn = Connection::open(db_path)?;
@@ -80,7 +80,7 @@ pub fn init_db(app_handle: &tauri::AppHandle) -> Result<()> {
 
 pub fn get_db_connection(app_handle: &tauri::AppHandle) -> Result<Connection> {
     let app_dir = app_handle.path().app_data_dir().unwrap();
-    let db_path = app_dir.join("drx-database.db");
+    let db_path = app_dir.join("clinicX-database.db");
     println!("Database path: {}", db_path.display());
     if !db_path.exists() {
         init_db(app_handle)?;

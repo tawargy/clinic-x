@@ -556,6 +556,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "clinicX"
+version = "0.1.0"
+dependencies = [
+ "get_if_addrs",
+ "hostname",
+ "mac_address",
+ "rusqlite",
+ "serde",
+ "serde_json",
+ "sha2",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-dialog",
+ "tauri-plugin-fs",
+ "tauri-plugin-opener",
+ "tauri-plugin-updater",
+ "uuid",
+]
+
+[[package]]
 name = "cocoa"
 version = "0.26.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -920,26 +940,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f25c0e292a7ca6d6498557ff1df68f32c99850012b6ea401cf8daf771f22ff53"
 dependencies = [
  "serde",
-]
-
-[[package]]
-name = "drx"
-version = "0.1.0"
-dependencies = [
- "get_if_addrs",
- "hostname",
- "mac_address",
- "rusqlite",
- "serde",
- "serde_json",
- "sha2",
- "tauri",
- "tauri-build",
- "tauri-plugin-dialog",
- "tauri-plugin-fs",
- "tauri-plugin-opener",
- "tauri-plugin-updater",
- "uuid",
 ]
 
 [[package]]

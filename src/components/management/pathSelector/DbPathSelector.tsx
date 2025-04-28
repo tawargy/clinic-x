@@ -25,7 +25,7 @@ function DbPathSelector() {
             extensions: ["db"],
           },
         ],
-        defaultPath: "drx-database.db",
+        defaultPath: "clinicX-database.db",
       });
 
       if (selectedPath) {

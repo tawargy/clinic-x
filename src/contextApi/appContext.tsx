@@ -51,10 +51,11 @@ function AppProvider({ children }: { children: ReactNode }) {
   const activation = async () => {
     const verifyActivation = await verifyActivationApi();
     const patientsCount = await patientsCountApi();
+
     if (verifyActivation) {
       setIsAuth(true);
     }
-    if (patientsCount && patientsCount <= 5) {
+    if (Number(patientsCount) <= 20) {
       setIsAuth(true);
     }
   };
