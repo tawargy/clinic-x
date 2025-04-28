@@ -1,8 +1,14 @@
-# Tauri + React + Typescript
+# Clinic X
+## Desktop App Clinic Management System
 
-This template should help get you started developing with Tauri, React and Typescript in Vite.
+### Stack
+Tauri (Rust) + React + Typescript
 
-## Recommended IDE Setup
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
-# doctor-x
+### Installation
+- add yarn: `npm install yarn`
+- install dependencies: `yarn install`
+- run the app: `yarn tauri dev`
+
+## Screenshot
+![img](./screenshot/one.png)
