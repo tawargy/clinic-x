@@ -47,6 +47,12 @@ function Appointment({ patient_id }: Tprops) {
   const [stage, setStage] = useState("main");
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (!patient_id) return;
+    getLastAppointmentWrapperApi(patient_id);
+    getFeeAndServices();
+  }, []);
+
   const getFeeAndServices = async () => {
     try {
       const res = await getFeeAndServicesApi();
@@ -69,21 +75,23 @@ function Appointment({ patient_id }: Tprops) {
 
   const addAppointment = async () => {
     try {
+      if (!patient_id || !patientInfo) return;
       const diagnosesId = await addDiagnosesApi(diagnoses, patient_id);
       const requestId = await addRequsetApi(requests);
       const feesId = await addAppointmentFeesApi({
         ...appointmentFees,
-        patient_id: patient_id || "",
-        patient_name: patientInfo?.name || "",
-        patient_phone: patientInfo?.phone || "",
+        patient_id: patient_id,
+        patient_name: patientInfo?.name,
+        patient_phone: patientInfo?.phone,
         appointment_type: appointmentType,
         total_fees: totalFees(appointmentFees).toString(),
         date: formatDate(new Date()),
       });
+
       if (diagnosesId && requestId && feesId) {
         const appointmentData = {
           ...appointment,
-          patient_id: patient_id || "",
+          patient_id: patient_id,
           provisional_diagnosis: diagnosesId,
           requests: requestId,
           services: feesId,
@@ -100,16 +108,13 @@ function Appointment({ patient_id }: Tprops) {
       console.error("Error saving appointment:", e);
     }
   };
-  useEffect(() => {
-    getLastAppointmentWrapperApi(patient_id || "");
-    getFeeAndServices();
-  }, []);
 
   const checkAppointmentType = async (appointmentId: string) => {
+    if (!patient_id) return;
     if (appointmentType === "new") {
       const data: TAppointmentWrapper = {
         id: "",
-        patient_id: patient_id || "",
+        patient_id: patient_id,
         main_complaint: appointment.complaint,
         main_appointment: appointmentType === "new" ? appointmentId : "",
         followups_num: feeAndServices.followups.length.toString(),
@@ -119,6 +124,7 @@ function Appointment({ patient_id }: Tprops) {
       };
 
       addAppointmentWrapperApi(data);
+      console.log("Created Appointment Wrapper");
     } else {
       if (!patient_id) return;
       const lastWrapper = await getLastAppointmentWrapperApi(patient_id);
@@ -144,6 +150,7 @@ function Appointment({ patient_id }: Tprops) {
       };
 
       updateAppointmentWrapperApi(data);
+      console.log("Updated Appointment wrapper");
     }
   };
 

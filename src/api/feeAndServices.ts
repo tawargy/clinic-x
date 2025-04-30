@@ -3,6 +3,7 @@ import { TFeeAndServices } from "../types";
 export const getFeeAndServicesApi = async () => {
   try {
     const result = await invoke<TFeeAndServices>("get_fee_and_services");
+
     return result;
   } catch (error) {
     console.log(error);

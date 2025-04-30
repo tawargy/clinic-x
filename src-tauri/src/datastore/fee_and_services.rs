@@ -36,14 +36,13 @@ pub fn get_fee_and_services_db(window: tauri::Window) -> Result<FeeAndServices, 
         Ok(conn) => conn,
         Err(_) => return Err(String::from("Failed to connect to database!")),
     };
-
     let mut stmt =
         match conn.prepare("SELECT id, fee, followups, services FROM fee_and_services LIMIT 1") {
             // Added id to SELECT
             Ok(stmt) => stmt,
             Err(_) => return Err(String::from("Failed to prepare statement!")),
         };
-
+    println!("stmt {:?}", stmt);
     let mut rows = stmt
         .query([])
         .map_err(|_| String::from("Failed to execute query!"))?;
@@ -65,7 +64,7 @@ pub fn get_fee_and_services_db(window: tauri::Window) -> Result<FeeAndServices, 
             .map_err(|_| String::from("Failed to deserialize followups"))?;
         let services: Vec<Service> = serde_json::from_str(&services_json)
             .map_err(|_| String::from("Failed to deserialize services"))?;
-
+        println!("xxxxxxxxx");
         Ok(FeeAndServices {
             id,
             fee,

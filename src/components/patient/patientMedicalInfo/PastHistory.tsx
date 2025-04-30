@@ -15,7 +15,7 @@ type TProps = {
 
 function PastHistory({ patientId, isEdit }: TProps) {
   const { darkMode } = useAppSettings();
-  const [expandedSections, setExpandedSections] = useState(true);
+  const [expandedSections, setExpandedSections] = useState(false);
   const [allDiagnoses, setAllDiagnoses] = useState<TDiagnoses[]>([]);
   const [editingDiagnosis, setEditingDiagnosis] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,7 +37,7 @@ function PastHistory({ patientId, isEdit }: TProps) {
     try {
       const res = await getAllDiagnosesByPatientIdApi(patientId);
       setAllDiagnoses(res);
-      console.log(res);
+      // console.log(res);
     } catch (e) {
       console.error("Error saving appointment:", e);
     }
@@ -164,7 +164,7 @@ function PastHistory({ patientId, isEdit }: TProps) {
                       key={diagnosis.id}
                       className={`border ${
                         darkMode
-                          ? "border-gray-600 bg-gray-700"
+                          ? "border-gray-600 bg-gray-800"
                           : "border-gray-200 bg-gray-50"
                       } p-3 rounded-lg hover:shadow-md transition-shadow duration-200 flex flex-col gap-1 mb-2`}
                     >

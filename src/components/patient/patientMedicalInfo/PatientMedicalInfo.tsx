@@ -28,7 +28,7 @@ function PatientMedicalInfo({ id }: Tprops) {
       setPatientMedicalHistory(res);
       setOriginalPatientMedicalHistory(res);
       setIsPatientMedicalHistory(res.id !== "");
-      console.log("Medical history data:", res);
+      // console.log("Medical history data:", res);
     } catch (e) {
       console.log(e);
     }
@@ -38,7 +38,7 @@ function PatientMedicalInfo({ id }: Tprops) {
   }, []);
 
   const addPatientMedicalHistory = async (data: TpatientMedicalHistory) => {
-    console.log("id", id, "data", data);
+    // console.log("id", id, "data", data);
     try {
       const res = (await invoke("add_patient_medical_history", {
         id,
@@ -47,7 +47,7 @@ function PatientMedicalInfo({ id }: Tprops) {
 
       await getPatientMedicalHistory();
       toastSuccess("Medical History Added Successfully");
-      console.log("add", res);
+      //   console.log("add", res);
     } catch (e) {
       toastError("Error Adding Medical History");
       console.log("add", e);
@@ -62,7 +62,7 @@ function PatientMedicalInfo({ id }: Tprops) {
 
       await getPatientMedicalHistory();
       toastSuccess("Medical History Updated Successfully");
-      console.log("update", res);
+      // console.log("update", res);
     } catch (e) {
       toastError("Error Updating Medical History");
       console.log("update", e);

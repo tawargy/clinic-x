@@ -47,6 +47,17 @@ pub struct AppointmentWrapper {
     pub appointment_status: String,
     pub date: String,
 }
+
+// #[derive(Debug, Deserialize, Serialize)]
+// pub struct AppointmentWrapper {
+//     pub id: String,
+//     pub patient_id: String,
+//     pub const_followups_cunt: String,
+//     pub followup_appointments: Vec<String>,
+//     pub case_status: String,
+//     pub date: String,
+// }
+
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Appointment {
     pub id: String,

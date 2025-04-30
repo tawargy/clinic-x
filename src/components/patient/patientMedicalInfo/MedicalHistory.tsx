@@ -32,7 +32,7 @@ function MedicalHistory({
   const [allergies, setAllergies] = useState<string[]>(
     patientMedicalHistory.allergies || [],
   );
-  const [expandedSections, setExpandedSections] = useState(true);
+  const [expandedSections, setExpandedSections] = useState(false);
 
   const [suggestions, setSuggestions] = useState([]);
   const [activeMedicationIndex, setActiveMedicationIndex] = useState<

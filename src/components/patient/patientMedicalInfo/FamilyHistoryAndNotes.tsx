@@ -26,8 +26,8 @@ function FamilyHistoryAndNotes({
   );
   const [notes, setNotes] = useState<string | undefined>(undefined);
   const [expandedSections, setExpandedSections] = useState({
-    familyHistory: true,
-    notes: true,
+    familyHistory: false,
+    notes: false,
   });
 
   useEffect(() => {

@@ -25,7 +25,7 @@ function PatientsQueue({
   selectedDate,
   currentDate,
 }: TProps) {
-  const { setIsAppointment } = useClinic();
+  const { setIsAppointment, setAppointmentType } = useClinic();
   const { darkMode } = useAppSettings();
   const navigate = useNavigate();
 
@@ -37,6 +37,7 @@ function PatientsQueue({
       console.log(e);
     }
   };
+
   const isPatientInQueue = async (id: string) => {
     const patients = await getQueue();
     if (patients) {
@@ -45,8 +46,12 @@ function PatientsQueue({
     return false;
   };
 
-  const openPatientInfoHandeler = async (id: string) => {
+  const openPatientInfoHandeler = async (
+    id: string,
+    appointmentType: string,
+  ) => {
     setIsAppointment(await isPatientInQueue(id));
+    setAppointmentType(appointmentType);
     navigate(`/patient/${id}`);
   };
   return (
@@ -71,7 +76,12 @@ function PatientsQueue({
           >
             <button
               className="flex flex-col"
-              onClick={() => openPatientInfoHandeler(patient.patient_id)}
+              onClick={() =>
+                openPatientInfoHandeler(
+                  patient.patient_id,
+                  patient.appointment_type,
+                )
+              }
             >
               <span className="hover:text-blue-500"> {patient.name}</span>
               <span
