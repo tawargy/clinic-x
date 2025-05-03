@@ -1,0 +1,103 @@
+name: CI - Build Tauri App
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - main
+
+env:
+  # On tag pushes like v0.1.0-beta.1, GITHUB_REF_NAME holds the tag (e.g. v0.1.0-beta.1)
+  TAG_VERSION: ${{ github.ref_name }}
+  APP_NAME: "clinic x"
+
+jobs:
+  build-linux:
+    name: Build for Linux ({{ env.TAG_VERSION }})
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+      - name: Install dependencies
+        run: |
+          yarn install
+      - name: Build Tauri App (Linux)
+        run: |
+          yarn build
+          yarn tauri build --target x86_64-unknown-linux-gnu --release
+      - name: Upload Linux Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.APP_NAME }}-linux-${{ env.TAG_VERSION }}
+          path: src-tauri/target/release/bundle
+
+  build-windows:
+    name: Build for Windows ({{ env.TAG_VERSION }})
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+      - name: Install MSYS2 dependencies
+        run: |
+          choco install msys2 --no-progress
+          refreshenv
+          ridk install 3
+      - name: Install dependencies
+        run: |
+          yarn install
+      - name: Build Tauri App (Windows)
+        run: |
+          yarn build
+          yarn tauri build --target x86_64-pc-windows-msvc --release
+      - name: Upload Windows Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.APP_NAME }}-windows-${{ env.TAG_VERSION }}
+          path: src-tauri\\target\\release\\bundle
+
+  build-macos:
+    name: Build for macOS ({{ env.TAG_VERSION }})
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+      - name: Install dependencies
+        run: |
+          yarn install
+      - name: Build Tauri App (macOS)
+        run: |
+          yarn build
+          yarn tauri build --target x86_64-apple-darwin --release
+      - name: Upload macOS Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.APP_NAME }}-macos-${{ env.TAG_VERSION }}
+          path: src-tauri/target/release/bundle
