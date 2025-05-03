@@ -1,103 +1,51 @@
-name: CI - Build Tauri App
-
+name: Release
 on:
   push:
-    branches:
-      - main
     tags:
-      - 'v*'
-  pull_request:
-    branches:
-      - main
-
-env:
-  # On tag pushes like v0.1.0-beta.1, GITHUB_REF_NAME holds the tag (e.g. v0.1.0-beta.1)
-  TAG_VERSION: ${{ github.ref_name }}
-  APP_NAME: "clinic x"
+      - "v*"
+  workflow_dispatch:
 
 jobs:
-  build-linux:
-    name: Build for Linux ({{ env.TAG_VERSION }})
-    runs-on: ubuntu-latest
+  release:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [macos-latest, ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.platform }}
     steps:
-      - uses: actions/checkout@v3
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-      - name: Install Rust toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
-      - name: Install dependencies
-        run: |
-          yarn install
-      - name: Build Tauri App (Linux)
-        run: |
-          yarn build
-          yarn tauri build --target x86_64-unknown-linux-gnu --release
-      - name: Upload Linux Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ env.APP_NAME }}-linux-${{ env.TAG_VERSION }}
-          path: src-tauri/target/release/bundle
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-  build-windows:
-    name: Build for Windows ({{ env.TAG_VERSION }})
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-      - name: Install Rust toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
-      - name: Install MSYS2 dependencies
-        run: |
-          choco install msys2 --no-progress
-          refreshenv
-          ridk install 3
-      - name: Install dependencies
-        run: |
-          yarn install
-      - name: Build Tauri App (Windows)
-        run: |
-          yarn build
-          yarn tauri build --target x86_64-pc-windows-msvc --release
-      - name: Upload Windows Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ env.APP_NAME }}-windows-${{ env.TAG_VERSION }}
-          path: src-tauri\\target\\release\\bundle
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
 
-  build-macos:
-    name: Build for macOS ({{ env.TAG_VERSION }})
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install Node.js
-        uses: actions/setup-node@v3
+      - name: Install dependencies (ubuntu only)
+        if: matrix.platform == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
-      - name: Install Rust toolchain
-        uses: actions-rs/toolchain@v1
+          node-version: "20.x"
+          cache: "npm"
+
+      - name: Setup Rust cache
+        uses: Swatinem/rust-cache@v2
         with:
-          toolchain: stable
-          override: true
+          workspaces: "./src-tauri -> target"
+
       - name: Install dependencies
-        run: |
-          yarn install
-      - name: Build Tauri App (macOS)
-        run: |
-          yarn build
-          yarn tauri build --target x86_64-apple-darwin --release
-      - name: Upload macOS Artifact
-        uses: actions/upload-artifact@v3
+        run: npm install
+
+      - name: Build the app
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: ${{ env.APP_NAME }}-macos-${{ env.TAG_VERSION }}
-          path: src-tauri/target/release/bundle
+          tagName: ${{ github.ref_name }}
+          releaseName: "App v__VERSION__"
+          releaseBody: "See the assets to download this version and install."
+          releaseDraft: true
+          prerelease: false
