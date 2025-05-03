@@ -50,7 +50,7 @@ function FeesAndServices() {
       if (res) {
         setFeeAndServices(res);
         setFollowups(
-          res.followups || [{ followup_name: "followup_1", followup_fee: "" }],
+          res.followups || [{ followup_name: "followup_1", followup_fee: "" }]
         );
         setServices(res.services || []);
 
@@ -90,7 +90,22 @@ function FeesAndServices() {
   };
 
   const { darkMode } = useAppSettings();
-
+  const onCancelHandler = () => {
+    if (feeAndServices.id) {
+      // If editing, reload the original data
+      getFeeAndServices();
+    } else {
+      // If adding new, reset to initial state
+      setFeeAndServices({
+        id: "",
+        fee: "",
+        followups: [{ followup_name: "followup_1", followup_fee: "" }],
+        services: [],
+      });
+      setFollowups([{ followup_name: "followup_1", followup_fee: "" }]);
+      setServices([]);
+    }
+  };
   return (
     <div className="flex justify-around mt-8">
       <form
@@ -105,7 +120,11 @@ function FeesAndServices() {
                 type="number"
                 id="fee"
                 value={feeAndServices.fee}
-                className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-50 border-gray-300 text-gray-900"} border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 p-2.5 transition-colors duration-200`}
+                className={`${
+                  darkMode
+                    ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                    : "bg-gray-50 border-gray-300 text-gray-900"
+                } border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 p-2.5 transition-colors duration-200`}
                 onChange={(e) => {
                   setFeeAndServices({
                     ...feeAndServices,
@@ -125,7 +144,11 @@ function FeesAndServices() {
                   >
                     {followupNames(f.followup_name)}
                     <input
-                      className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-50 border-gray-300 text-gray-900"} border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 p-2.5 transition-colors duration-200`}
+                      className={`${
+                        darkMode
+                          ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                          : "bg-gray-50 border-gray-300 text-gray-900"
+                      } border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 p-2.5 transition-colors duration-200`}
                       type="number"
                       id={f.followup_name}
                       name={f.followup_name}
@@ -246,15 +269,16 @@ function FeesAndServices() {
         </div>
         <div className="flex justify-evenly">
           <button
-            className="mt-8 py-4 px-8 bg-green-500 rounded-lg w-1/3 m-auto"
+            className="mt-8 py-4 px-8 bg-green-500 rounded-lg w-1/3 m-auto  text-white  hover:bg-green-600 transition-colors "
             type="submit"
           >
             Save
           </button>
 
           <button
-            className="mt-8 py-4 px-8 bg-red-500 rounded-lg w-1/3 m-auto"
-            type="submit"
+            className="mt-8 py-4 px-8 bg-red-500 rounded-lg w-1/3 m-auto text-white  hover:bg-red-600 transition-colors "
+            type="button"
+            onClick={onCancelHandler}
           >
             Cansel
           </button>

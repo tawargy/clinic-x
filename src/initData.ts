@@ -52,12 +52,14 @@ export const appointmentWrapperInit: TAppointmentWrapper = {
   date: "",
 };
 export const diagnosisInit: TDiagnosis = {
+  id: "",
   diagnosis_type: "",
   diagnosis_title: "",
   start: "",
   end: "",
   ongoing: false,
   comment: "",
+  created_at: "",
 };
 
 export const patientInfoQInit = {

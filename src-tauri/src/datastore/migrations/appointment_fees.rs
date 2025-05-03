@@ -9,7 +9,8 @@ pub fn appointment_fees_schema() -> String {
             fee Text,
             services TEXT,  -- This will store JSON serialized services
             total_fees TEXT,
-            date TEXT
+            date TEXT,
+            time_stamp TEXT
         );",
     )
 }

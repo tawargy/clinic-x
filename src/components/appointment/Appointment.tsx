@@ -86,6 +86,7 @@ function Appointment({ patient_id }: Tprops) {
         appointment_type: appointmentType,
         total_fees: totalFees(appointmentFees).toString(),
         date: formatDate(new Date()),
+        time_stamp: new Date().getTime().toString(),
       });
 
       if (diagnosesId && requestId && feesId) {

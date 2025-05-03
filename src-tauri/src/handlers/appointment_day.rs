@@ -25,3 +25,13 @@ pub fn remove_patient_from_appointment_day(
 ) -> Result<(), String> {
     appointment_day::remove_patient_from_appointment_day_db(day, patient_id, &window)
 }
+
+#[tauri::command]
+pub fn update_patient_time(
+    day: String,
+    patient_id: String,
+    new_time: String,
+    window: tauri::Window,
+) -> Result<(), String> {
+    appointment_day::update_patient_time_db(day, patient_id, new_time, &window)
+}

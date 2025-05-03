@@ -24,27 +24,64 @@ function Management() {
         />
       </div>
       <div
-        className={`${darkMode ? "bg-gray-800 text-white" : "bg-white"} min-h-[85vh] flex w-full   rounded-lg shadow-md p-4 transition-colors duration-200  `}
+        className={`${
+          darkMode ? "bg-gray-800 text-white" : "bg-white"
+        } min-h-[85vh] flex gap-2 w-full   rounded-lg shadow-md p-4 transition-colors duration-200  `}
       >
-        <ul className="w-[20%] flex flex-col gap-4 pt-4 ">
-          <li>
-            <button onClick={() => setShow("clinicSettings")}>
+        <ul className="w-[20%] flex flex-col gap-4 pt-4">
+          <li
+            className={`${
+              show === "clinicSettings"
+                ? "bg-blue-500 text-white rounded-md"
+                : ""
+            }`}
+          >
+            <button
+              className="w-full p-2"
+              onClick={() => setShow("clinicSettings")}
+            >
               Clinic Info
             </button>
           </li>
 
-          <li>
-            <button onClick={() => setShow("accountment")}>Financial</button>
+          <li
+            className={`${
+              show === "accountment" ? "bg-blue-500 text-white rounded-md" : ""
+            }`}
+          >
+            <button
+              className="w-full p-2"
+              onClick={() => setShow("accountment")}
+            >
+              Financial
+            </button>
           </li>
-          <li>
-            <button onClick={() => setShow("employees")}>Employees</button>
+          <li
+            className={`${
+              show === "employees" ? "bg-blue-500 text-white rounded-md" : ""
+            }`}
+          >
+            <button className="w-full p-2" onClick={() => setShow("employees")}>
+              Employees
+            </button>
           </li>
-          <li>
-            <button onClick={() => setShow("appsettings")}>App Settings</button>
+          <li
+            className={`${
+              show === "appsettings" ? "bg-blue-500 text-white rounded-md" : ""
+            }`}
+          >
+            <button
+              className="w-full p-2"
+              onClick={() => setShow("appsettings")}
+            >
+              App Settings
+            </button>
           </li>
         </ul>
         <div
-          className={`${darkMode ? "border border-gray-700" : " border border-gray-300"} w-full   rounded-lg p-4 `}
+          className={`${
+            darkMode ? "border border-gray-700" : " border border-gray-300"
+          } w-full   rounded-lg p-4 `}
         >
           {show === "clinicSettings" && <ClinicInfo />}
           {show === "employees" && <Employees />}

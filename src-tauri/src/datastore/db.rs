@@ -63,6 +63,10 @@ pub fn init_db(app_handle: &tauri::AppHandle) -> Result<()> {
     println!("Creating fee and services table...");
     conn.execute(&fee_and_services_schema, [])?;
 
+    let expenses_schema = fee_and_services::expenses_schema();
+    println!("Creating expenses table...");
+    conn.execute(&expenses_schema, [])?;
+
     let app_settings_schema = app_settings::app_settings_schema();
     println!("Creating app settings table...");
     conn.execute(&app_settings_schema, [])?;

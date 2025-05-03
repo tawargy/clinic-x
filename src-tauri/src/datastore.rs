@@ -7,6 +7,7 @@ pub mod clinic_info;
 pub mod db;
 pub mod diagnosis;
 pub mod employee;
+pub mod expenses;
 pub mod fee_and_services;
 pub mod migrations;
 pub mod patient;

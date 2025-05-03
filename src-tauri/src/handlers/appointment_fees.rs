@@ -30,3 +30,11 @@ pub fn get_appointment_fees_by_patient_id(
 ) -> Result<Vec<AppointmentFees>, String> {
     appointment_fees::get_appointment_fees_by_patient_id_db(patient_id, &window)
 }
+
+#[tauri::command]
+pub fn get_appointment_fees_by_month(
+    month: String,
+    window: tauri::Window,
+) -> Result<Vec<AppointmentFees>, String> {
+    appointment_fees::get_appointment_fees_by_month_db(month, &window)
+}

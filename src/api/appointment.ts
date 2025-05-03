@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { formatDate } from "../utils/date";
-import { TPrescription, TAppointment } from "../types";
+import { TAppointment } from "../types";
 
 export const addAppointmentApi = async (appointment: TAppointment) => {
   try {

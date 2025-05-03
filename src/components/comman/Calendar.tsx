@@ -3,7 +3,6 @@ import { useAppSettings } from "../../contextApi/appContext";
 
 interface CalendarProps {
   currentDate: Date;
-  events: Event[];
   onDayClick: (day: number) => void;
 }
 
@@ -46,10 +45,14 @@ const Calendar: React.FC<CalendarProps> = ({ currentDate, onDayClick }) => {
         key={`day-${day}`}
         onClick={() => onDayClick(day)}
         className={`h-10 text-center flex flex-col items-center justify-center relative cursor-pointer
-          ${isToday ? "bg-blue-100 text-blue-800 font-bold rounded-full" : "hover:bg-gray-100"} ${darkMode ? "hover:text-gray-800" : ""}`}
+          ${
+            isToday
+              ? "bg-blue-100 text-blue-800 font-bold rounded-full"
+              : "hover:bg-gray-100"
+          } ${darkMode ? "hover:text-gray-800" : ""}`}
       >
         {day}
-      </div>,
+      </div>
     );
   }
 

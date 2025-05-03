@@ -1,5 +1,5 @@
 use super::db::get_db_connection;
-use crate::types::AppointmentDay;
+use crate::types::{AppointmentDay, PatientData};
 use rusqlite::Result;
 use serde_json;
 use tauri::Manager;
@@ -82,16 +82,35 @@ pub fn get_appointment_days_by_date_db(
         Err(e) => return Err(format!("Failed to execute query: {}", e)),
     };
 
+    // if let Some(row) = rows.next().unwrap_or(None) {
+    //     let id: String = row.get(0).unwrap();
+    //     let day: String = row.get(1).unwrap();
+    //     let patient_data_json: String = row.get(2).unwrap();
+
+    //     let patient_data = match serde_json::from_str(&patient_data_json) {
+    //         Ok(data) => data,
+    //         Err(_) => return Err(String::from("Failed to deserialize patient data!")),
+    //     };
+
     if let Some(row) = rows.next().unwrap_or(None) {
         let id: String = row.get(0).unwrap();
         let day: String = row.get(1).unwrap();
         let patient_data_json: String = row.get(2).unwrap();
 
-        let patient_data = match serde_json::from_str(&patient_data_json) {
+        let mut patient_data: Vec<PatientData> = match serde_json::from_str(&patient_data_json) {
             Ok(data) => data,
-            Err(_) => return Err(String::from("Failed to deserialize patient data!")),
+            Err(e) => {
+                return Err(format!("Failed to deserialize patient data: {}", e));
+            }
         };
 
+        // Ensure each PatientData has a time field
+        // This is only needed for backward compatibility if you have old data
+        for patient in &mut patient_data {
+            if patient.time.is_empty() {
+                patient.time = "00:00".to_string(); // Default time if missing
+            }
+        }
         Ok(Some(AppointmentDay {
             id,
             day,
@@ -121,6 +140,58 @@ pub fn remove_patient_from_appointment_day_db(
             appointment_day
                 .patient_data
                 .retain(|patient| patient.patient_id != patient_id);
+
+            // Convert updated patient_data to JSON
+            let updated_patient_data_json =
+                match serde_json::to_string(&appointment_day.patient_data) {
+                    Ok(json) => json,
+                    Err(_) => {
+                        return Err(String::from("Failed to serialize updated patient data!"))
+                    }
+                };
+
+            // Update the database
+            match conn.execute(
+                "UPDATE appointment_days SET prescription_data = ?1 WHERE day = ?2",
+                &[&updated_patient_data_json, &day],
+            ) {
+                Ok(_) => Ok(()),
+                Err(e) => Err(format!("Failed to update appointment day: {}", e)),
+            }
+        }
+        None => Err(String::from("Appointment day not found!")),
+    }
+}
+
+pub fn update_patient_time_db(
+    day: String,
+    patient_id: String,
+    new_time: String,
+    window: &tauri::Window,
+) -> Result<(), String> {
+    let conn = match get_db_connection(window.app_handle()) {
+        Ok(conn) => conn,
+        Err(_) => return Err(String::from("Failed to connect to database!")),
+    };
+
+    // First get the appointment day
+    let existing_day = get_appointment_days_by_date_db(day.clone(), window)?;
+
+    match existing_day {
+        Some(mut appointment_day) => {
+            // Find the specific patient and update their time
+            let mut patient_updated = false;
+            for patient in &mut appointment_day.patient_data {
+                if patient.patient_id == patient_id {
+                    patient.time = new_time.clone();
+                    patient_updated = true;
+                    break;
+                }
+            }
+
+            if !patient_updated {
+                return Err(String::from("Patient not found in the appointment day!"));
+            }
 
             // Convert updated patient_data to JSON
             let updated_patient_data_json =

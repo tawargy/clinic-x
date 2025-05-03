@@ -48,16 +48,6 @@ pub struct AppointmentWrapper {
     pub date: String,
 }
 
-// #[derive(Debug, Deserialize, Serialize)]
-// pub struct AppointmentWrapper {
-//     pub id: String,
-//     pub patient_id: String,
-//     pub const_followups_cunt: String,
-//     pub followup_appointments: Vec<String>,
-//     pub case_status: String,
-//     pub date: String,
-// }
-
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Appointment {
     pub id: String,
@@ -134,6 +124,7 @@ pub struct PatientData {
     pub name: String,
     pub appointment_type: String,
     pub description: String,
+    pub time: String,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -185,6 +176,7 @@ pub struct AppointmentFees {
     pub services: Vec<Service>,
     pub total_fees: String,
     pub date: String,
+    pub time_stamp: String,
 }
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Folloup {
@@ -196,4 +188,36 @@ pub struct Folloup {
 pub struct Service {
     pub service_name: String,
     pub service_fee: String,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Purchases {
+    pub item_name: String,
+    pub price: String,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Installment {
+    pub insinternet_name: String,
+    pub value: String,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct OtherExpense {
+    pub other_expense_name: String,
+    pub value: String,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Expenses {
+    pub id: String,
+    pub month: Option<String>,
+    pub rent: Option<String>,
+    pub taxes: Option<String>,
+    pub electricity_invoice: Option<String>,
+    pub water_invoice: Option<String>,
+    pub phone_and_internet_invoice: Option<String>,
+    pub purchases: Option<Vec<Purchases>>,
+    pub installments: Option<Vec<Installment>>,
+    pub other_expenses: Option<Vec<OtherExpense>>,
 }

@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useClinic } from "../contextApi/clinicContext";
 import { useAppSettings } from "../contextApi/appContext";
-import Calendar from "../components/agenda/Calendar";
 import CalendarEvent from "../components/agenda/CalendarEvent";
 import PatientsQueue from "../components/agenda/PatientsQueue";
-import MonthHeader from "../components/agenda/MonthHeader";
+import MonthHeader from "../components/comman/MonthHeader";
+import Calendar from "../components/comman/Calendar";
 import {
   addAppointmentDayApi,
   deleteAppointmentDayApi,
@@ -28,12 +28,11 @@ type TPatientData = {
   name: string;
   appointment_type: string;
   description: string;
+  time: string;
 };
 
 function Agenda() {
   const [currentDate, setCurrentDate] = useState(new Date());
-
-  const [events, setEvents] = useState<Event[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [showEventForm, setShowEventForm] = useState(false);
   const [patientsQueue, setPatientsQueue] = useState<TPatientData[]>([]);
@@ -44,12 +43,14 @@ function Agenda() {
   const getAppointmentDays = async (date: string) => {
     try {
       const res = await getAppointmentDaysApi(date);
+      console.log("res", res);
+
       res && setPatientsQueue(res);
     } catch (e) {
       console.error("Error getting appointment days:", e);
     }
   };
-  const addAppointmentDay = async (data: object) => {
+  const addAppointmentDay = async (data) => {
     try {
       const res = await addAppointmentDayApi(data);
       console.log(res);
@@ -61,7 +62,7 @@ function Agenda() {
     try {
       const res = await deleteAppointmentDayApi(
         patientId,
-        formatDate(selectedDate),
+        formatDate(selectedDate)
       );
       console.log(res);
       toastSuccess("The Appointment deleted successfly");
@@ -91,13 +92,12 @@ function Agenda() {
     });
   };
 
-  // TODO: check if patient in current queue
   const handleDayClick = (day: number) => {
     // setPatientQueue(patientList);
     const clickedDate = new Date(
       currentDate.getFullYear(),
       currentDate.getMonth(),
-      day,
+      day
     );
     getAppointmentDays(formatDate(clickedDate));
     setSelectedDate(clickedDate);
@@ -113,16 +113,10 @@ function Agenda() {
     year: "numeric",
   });
 
-  // Get events for the current month
-  const currentMonthEvents = events.filter(
-    (event) =>
-      event.date.getMonth() === currentDate.getMonth() &&
-      event.date.getFullYear() === currentDate.getFullYear(),
-  );
-
   const addAppoimtmentDayHandler = (data: {
     appointment_type: string;
     description: string;
+    time: string;
   }) => {
     const patientData = {
       ...data,
@@ -134,6 +128,7 @@ function Agenda() {
       id: "",
       day: formatDate(selectedDate),
       patient_data: [patientData],
+      time: data.time,
     };
     addAppointmentDay(appointmentDay);
     setShowEventForm(false);
@@ -159,7 +154,9 @@ function Agenda() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div
-          className={`${darkMode ? "bg-gray-800 text-white " : "bg-white"} w-full  rounded-lg shadow-md p-4 transition-colors
+          className={`${
+            darkMode ? "bg-gray-800 text-white " : "bg-white"
+          } w-full  rounded-lg shadow-md p-4 transition-colors
             duration-200 h-[50vh] flex flex-col`}
         >
           <MonthHeader
@@ -167,11 +164,7 @@ function Agenda() {
             nextMonth={nextMonth}
             monthName={monthName}
           />
-          <Calendar
-            currentDate={currentDate}
-            events={currentMonthEvents}
-            onDayClick={handleDayClick}
-          />
+          <Calendar currentDate={currentDate} onDayClick={handleDayClick} />
           {showEventForm && selectedDate && patientInfo?.id && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
               <CalendarEvent

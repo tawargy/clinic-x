@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useAppSettings } from "../../contextApi/appContext";
-import Select from "../comman/formFaild/Select";
 import Input from "../comman/formFaild/Input";
 import { clinicInfoInit } from "../../initData";
 import SelectExcepting from "./SelectExcepting";
@@ -12,16 +11,22 @@ import {
 } from "../../api/clinicInfo";
 import { toastError, toastSuccess } from "../../utils/toastify";
 import { TClinicInfo } from "../../types";
+import TimePicker from "react-time-picker";
+import "react-time-picker/dist/TimePicker.css";
+import "react-clock/dist/Clock.css";
+import { formatTimeTo12Hour } from "../../utils/timeTo12Hour";
 
 function ClinicInfo() {
   const { darkMode } = useAppSettings();
   const [clinicInfo, setClinicInfo] = useState<TClinicInfo>(clinicInfoInit);
 
   const [memberships, setMemberships] = useState<string[]>(
-    clinicInfo.memberships || [],
+    clinicInfo.memberships || []
   );
   const [contactus, setContactus] = useState<string[]>([]);
   const [excepting, setExcepting] = useState<string[]>([]);
+  const [timeFrom, setTimeFrom] = useState<string>("19:00");
+  const [timeTo, setTimeTo] = useState<string>("22:00");
 
   const getClinicInfo = async () => {
     try {
@@ -58,7 +63,6 @@ function ClinicInfo() {
   const {
     register,
     handleSubmit,
-    control,
     reset,
 
     formState: { errors },
@@ -83,7 +87,9 @@ function ClinicInfo() {
 
       appointments: {
         ...data.appointments,
-        excepting: excepting, // Add the excepting array to appointments
+        excepting: excepting,
+        from: formatTimeTo12Hour(timeFrom),
+        to: formatTimeTo12Hour(timeTo),
       },
     };
     if (clinicInfo.id) {
@@ -128,7 +134,11 @@ function ClinicInfo() {
                 <div className="flex gap-2 " key={index}>
                   <input
                     type="text"
-                    className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-50 border-gray-300 text-gray-900"}
+                    className={`${
+                      darkMode
+                        ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                        : "bg-gray-50 border-gray-300 text-gray-900"
+                    }
                     border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full mb-2 pl-4 p-2.5 transition-colors duration-200`}
                     value={membership}
                     id="memberships"
@@ -144,7 +154,7 @@ function ClinicInfo() {
                     onClick={() => {
                       const allMemberships = [...memberships];
                       const updatedAllMemberships = allMemberships.filter(
-                        (i) => i !== allMemberships[index],
+                        (i) => i !== allMemberships[index]
                       );
                       setMemberships(updatedAllMemberships);
                     }}
@@ -178,7 +188,11 @@ function ClinicInfo() {
               {contactus.map((c, index) => (
                 <div className="flex gap-2" key={index}>
                   <input
-                    className={`${darkMode ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400" : "bg-gray-50 border-gray-300 text-gray-900"}
+                    className={`${
+                      darkMode
+                        ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                        : "bg-gray-50 border-gray-300 text-gray-900"
+                    }
                     mb-2 border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 p-2.5 transition-colors duration-200`}
                     type="text"
                     id="contactus"
@@ -194,7 +208,7 @@ function ClinicInfo() {
                     onClick={() => {
                       const allContactus = [...contactus];
                       const updatedAllContactus = allContactus.filter(
-                        (i) => i !== allContactus[index],
+                        (i) => i !== allContactus[index]
                       );
                       setContactus(updatedAllContactus);
                     }}
@@ -219,17 +233,27 @@ function ClinicInfo() {
             <h4>Appointments</h4>
             <div>
               <div className="flex  gap-2">
-                <Select
-                  label="From"
-                  name="appointments.from"
-                  control={control}
-                  options={["5:00 PM", "6:00 PM", "7:00 PM"]}
+                <TimePicker
+                  onChange={(value) => {
+                    setTimeFrom(value || "19:00");
+                  }}
+                  value={timeFrom}
+                  clearIcon={null}
+                  disableClock={true}
+                  className={`${
+                    darkMode ? "dark-time-picker " : " light-time-picker"
+                  } w-full  `}
                 />
-                <Select
-                  label="To"
-                  name="appointments.to"
-                  control={control}
-                  options={["10:00 PM", "11:00 PM", "12:00 PM"]}
+                <TimePicker
+                  onChange={(value) => {
+                    setTimeTo(value || "22:00");
+                  }}
+                  value={timeTo}
+                  clearIcon={null}
+                  disableClock={true}
+                  className={`${
+                    darkMode ? "dark-time-picker " : " light-time-picker"
+                  } w-full `}
                 />
               </div>
               <div>

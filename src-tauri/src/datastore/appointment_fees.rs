@@ -39,8 +39,9 @@ pub fn add_appointment_fees_db(
             fee,
             services,
             total_fees,
-            date
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            date,
+            time_stamp
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         params![
             id,
             appointment_fees.patient_id,
@@ -51,6 +52,7 @@ pub fn add_appointment_fees_db(
             services_json,
             appointment_fees.total_fees,
             appointment_fees.date,
+            appointment_fees.time_stamp
         ],
     );
 
@@ -71,15 +73,16 @@ pub fn get_appointment_fees_by_id_db(
     };
 
     let mut stmt = match conn.prepare(
-        "SELECT id, patient_id, appointment_type, fee, services, date
-         FROM appointment_fees WHERE id = ?",
+
+         "SELECT id, patient_id, patient_name, patient_phone, appointment_type, fee, services, total_fees, date, time_stamp
+          FROM appointment_fees WHERE id = ?",
     ) {
         Ok(stmt) => stmt,
         Err(e) => return Err(format!("Failed to prepare statement: {}", e)),
     };
 
     let result = stmt.query_row([id], |row| {
-        let services_json: String = row.get(4)?;
+        let services_json: String = row.get(6)?;
         let services: Vec<Service> = serde_json::from_str(&services_json).map_err(|e| {
             rusqlite::Error::FromSqlConversionFailure(0, rusqlite::types::Type::Text, Box::new(e))
         })?;
@@ -94,6 +97,7 @@ pub fn get_appointment_fees_by_id_db(
             services,
             total_fees: row.get(7)?,
             date: row.get(8)?,
+            time_stamp: row.get(9)?,
         })
     });
 
@@ -114,15 +118,16 @@ pub fn get_appointment_fees_by_patient_id_db(
     };
 
     let mut stmt = match conn.prepare(
-        "SELECT id, patient_id, appointment_type, fee, services, date
-         FROM appointment_fees WHERE patient_id = ?",
+
+         "SELECT id, patient_id, patient_name, patient_phone, appointment_type, fee, services, total_fees, date, time_stamp
+          FROM appointment_fees WHERE patient_id = ?",
     ) {
         Ok(stmt) => stmt,
         Err(e) => return Err(format!("Failed to prepare statement: {}", e)),
     };
 
     let fees_iter = stmt.query_map([patient_id], |row| {
-        let services_json: String = row.get(4)?;
+        let services_json: String = row.get(6)?;
         let services: Vec<Service> = serde_json::from_str(&services_json).map_err(|e| {
             rusqlite::Error::FromSqlConversionFailure(0, rusqlite::types::Type::Text, Box::new(e))
         })?;
@@ -137,6 +142,7 @@ pub fn get_appointment_fees_by_patient_id_db(
             services,
             total_fees: row.get(7)?,
             date: row.get(8)?,
+            time_stamp: row.get(9)?,
         })
     });
 
@@ -165,8 +171,9 @@ pub fn get_appointment_fees_by_date_db(
     };
 
     let mut stmt = match conn.prepare(
-        "SELECT id, patient_id, patient_name, patient_phone, appointment_type, fee, services, total_fees, date
-         FROM appointment_fees WHERE date = ? ORDER BY patient_name",
+
+         "SELECT id, patient_id, patient_name, patient_phone, appointment_type, fee, services, total_fees, date, time_stamp
+          FROM appointment_fees WHERE date = ? ORDER BY patient_name",
     ) {
         Ok(stmt) => stmt,
         Err(e) => return Err(format!("Failed to prepare statement: {}", e)),
@@ -188,6 +195,59 @@ pub fn get_appointment_fees_by_date_db(
             services,
             total_fees: row.get(7)?,
             date: row.get(8)?,
+            time_stamp: row.get(9)?,
+        })
+    });
+
+    match fees_iter {
+        Ok(iter) => {
+            let mut fees = Vec::new();
+            for fee in iter {
+                match fee {
+                    Ok(f) => fees.push(f),
+                    Err(e) => return Err(format!("Failed to process appointment fee: {}", e)),
+                }
+            }
+            Ok(fees)
+        }
+        Err(e) => Err(format!("Failed to fetch appointment fees: {}", e)),
+    }
+}
+
+pub fn get_appointment_fees_by_month_db(
+    month: String,
+    window: &tauri::Window,
+) -> Result<Vec<AppointmentFees>, String> {
+    let conn = match get_db_connection(window.app_handle()) {
+        Ok(conn) => conn,
+        Err(_) => return Err(String::from("Failed to connect to database!")),
+    };
+
+    let mut stmt = match conn.prepare(
+        "SELECT id, patient_id, patient_name, patient_phone, appointment_type, fee, services, total_fees, date, time_stamp
+         FROM appointment_fees WHERE substr(date, 4) = ? ORDER BY date",
+    ) {
+        Ok(stmt) => stmt,
+        Err(e) => return Err(format!("Failed to prepare statement: {}", e)),
+    };
+
+    let fees_iter = stmt.query_map([month], |row| {
+        let services_json: String = row.get(6)?;
+        let services: Vec<Service> = serde_json::from_str(&services_json).map_err(|e| {
+            rusqlite::Error::FromSqlConversionFailure(0, rusqlite::types::Type::Text, Box::new(e))
+        })?;
+
+        Ok(AppointmentFees {
+            id: row.get(0)?,
+            patient_id: row.get(1)?,
+            patient_name: row.get(2)?,
+            patient_phone: row.get(3)?,
+            appointment_type: row.get(4)?,
+            fee: row.get(5)?,
+            services,
+            total_fees: row.get(7)?,
+            date: row.get(8)?,
+            time_stamp: row.get(9)?,
         })
     });
 

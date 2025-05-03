@@ -15,6 +15,7 @@ import {
   Blend,
 } from "lucide-react";
 import { TPatientInfoQ } from "../../types";
+import { formatTimeTo12Hour } from "../../utils/timeTo12Hour";
 
 interface PatientQueueProps {
   patients: TPatientInfoQ[];
@@ -94,127 +95,129 @@ function PatientQueue({ patients, currentDate }: PatientQueueProps) {
             <ul
               className={`divide-y ${darkMode ? "divide-gray-700" : "divide-gray-200"} transition-colors duration-100 mt-8`}
             >
-              {patients.map((patient) => {
-                const isHovered = hoveredPatientId === patient.patient_id;
+              {[...patients]
+                .sort((a, b) => a.time.localeCompare(b.time))
+                .map((patient) => {
+                  const isHovered = hoveredPatientId === patient.patient_id;
 
-                return (
-                  <li
-                    key={patient.patient_id}
-                    className={`cursor-pointer py-3 flex flex-col justify-between ${darkMode ? "hover:bg-gray-600" : "hover:bg-gray-100"} px-2 rounded
+                  return (
+                    <li
+                      key={patient.patient_id}
+                      className={`cursor-pointer py-3 flex flex-col justify-between ${darkMode ? "hover:bg-gray-600" : "hover:bg-gray-100"} px-2 rounded
                       transition-colors duration-100 relative`}
-                    onMouseEnter={() => onHoverHandler(patient.patient_id)}
-                    onMouseLeave={() => setHoveredPatientId(null)}
-                    onClick={() =>
-                      onPatientClick(
-                        patient.patient_id,
-                        patient.appointment_type,
-                      )
-                    }
-                  >
-                    <div className="flex justify-between w-full">
-                      <div>
-                        <h3 className="font-medium flex gap-2 items-center">
+                      onMouseEnter={() => onHoverHandler(patient.patient_id)}
+                      onMouseLeave={() => setHoveredPatientId(null)}
+                      onClick={() =>
+                        onPatientClick(
+                          patient.patient_id,
+                          patient.appointment_type,
+                        )
+                      }
+                    >
+                      <div className=" w-full ">
+                        <h3 className="font-medium flex gap-2 items-center ">
                           <UserRound size={16} className="text-blue-500" />
                           <span
                             className={`${darkMode ? "text-gray-400" : "text-gray-500"}`}
                           >
-                            {" "}
                             {patient.name}
                           </span>
                         </h3>
                         <div
-                          className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"} flex items-center transition-colors duration-100`}
+                          className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}
+                            flex justify-between items-center py-1 px-2 transition-colors duration-100`}
                         >
                           <span
                             className={`${patient.appointment_type === "new" ? "text-green-400" : "text-yellow-600"} mr-3`}
                           >
                             {followupNames(patient.appointment_type)}
                           </span>
-                        </div>
-                      </div>
-                    </div>
 
-                    {/* Patient details card that appears on hover */}
-                    {isHovered && (
-                      <div
-                        className={`${
-                          darkMode
-                            ? "bg-gray-700 border-gray-600"
-                            : "bg-white border-gray-200"
-                        } border rounded-md p-3 mt-2 shadow-lg transition-all duration-100 z-10`}
-                      >
-                        <div className="grid grid-cols-1 gap-2">
-                          <div className="flex items-center">
-                            <VenusAndMars
-                              className={`mr-2 ${darkMode ? "text-purple-500" : "text-purple-700"}`}
-                              size={16}
-                            />
-                            <span
-                              className={`text-sm ${darkMode ? "text-gray-300" : "text-gray-700"}`}
-                            >
-                              <span className="font-medium">Gender:</span>{" "}
-                              {patientInfo?.gender}
-                            </span>
-                          </div>
-                          <div className="flex items-center">
-                            <CalendarHeart
-                              className={`mr-2 ${darkMode ? "text-blue-400" : "text-blue-500"}`}
-                              size={16}
-                            />
-                            <span
-                              className={`text-sm ${darkMode ? "text-gray-300" : "text-gray-700"}`}
-                            >
-                              <span className="font-medium">Age:</span>{" "}
-                              {patientInfo?.age}
-                              {patientInfo?.age && patientInfo?.age * 1 <= 0
-                                ? ""
-                                : " Years"}
-                            </span>
-                          </div>
-                          <div className="flex items-center">
-                            <Building2
-                              className={`mr-2 ${darkMode ? "text-amber-900" : "text-amber-700"}`}
-                              size={16}
-                            />
-                            <span
-                              className={`text-sm ${darkMode ? "text-gray-300" : "text-gray-700"}`}
-                            >
-                              <span className="font-medium">Born city:</span>{" "}
-                              {patientInfo?.born_city}
-                            </span>
-                          </div>
-                          <div className="flex items-center">
-                            <Blend
-                              className={`mr-2 ${darkMode ? "text-green-400" : "text-green-600"}`}
-                              size={16}
-                            />
-                            <span
-                              className={`text-sm ${darkMode ? "text-gray-300" : "text-gray-700"}`}
-                            >
-                              <span className="font-medium">Marital:</span>{" "}
-                              {patientInfo?.marital_status}
-                            </span>
-                          </div>
-                          <div className="flex items-center">
-                            <Clipboard
-                              className={`mr-2 ${darkMode ? "text-yellow-400" : "text-yellow-600"}`}
-                              size={16}
-                            />
-                            <span
-                              className={`text-sm ${darkMode ? "text-gray-300" : "text-gray-700"}`}
-                            >
-                              <span className="font-medium">
-                                Appointment decription:
-                              </span>{" "}
-                              {patient.description}
-                            </span>
-                          </div>
+                          <p>{formatTimeTo12Hour(patient.time)}</p>
                         </div>
                       </div>
-                    )}
-                  </li>
-                );
-              })}
+
+                      {/* Patient details card that appears on hover */}
+                      {isHovered && (
+                        <div
+                          className={`${
+                            darkMode
+                              ? "bg-gray-700 border-gray-600"
+                              : "bg-white border-gray-200"
+                          } border rounded-md p-3 mt-2 shadow-lg transition-all duration-100 z-10`}
+                        >
+                          <div className="grid grid-cols-1 gap-2">
+                            <div className="flex items-center">
+                              <VenusAndMars
+                                className={`mr-2 ${darkMode ? "text-purple-500" : "text-purple-700"}`}
+                                size={16}
+                              />
+                              <span
+                                className={`text-sm ${darkMode ? "text-gray-300" : "text-gray-700"}`}
+                              >
+                                <span className="font-medium">Gender:</span>{" "}
+                                {patientInfo?.gender}
+                              </span>
+                            </div>
+                            <div className="flex items-center">
+                              <CalendarHeart
+                                className={`mr-2 ${darkMode ? "text-blue-400" : "text-blue-500"}`}
+                                size={16}
+                              />
+                              <span
+                                className={`text-sm ${darkMode ? "text-gray-300" : "text-gray-700"}`}
+                              >
+                                <span className="font-medium">Age:</span>{" "}
+                                {patientInfo?.age}
+                                {patientInfo?.age && patientInfo?.age * 1 <= 0
+                                  ? ""
+                                  : " Years"}
+                              </span>
+                            </div>
+                            <div className="flex items-center">
+                              <Building2
+                                className={`mr-2 ${darkMode ? "text-amber-900" : "text-amber-700"}`}
+                                size={16}
+                              />
+                              <span
+                                className={`text-sm ${darkMode ? "text-gray-300" : "text-gray-700"}`}
+                              >
+                                <span className="font-medium">Born city:</span>{" "}
+                                {patientInfo?.born_city}
+                              </span>
+                            </div>
+                            <div className="flex items-center">
+                              <Blend
+                                className={`mr-2 ${darkMode ? "text-green-400" : "text-green-600"}`}
+                                size={16}
+                              />
+                              <span
+                                className={`text-sm ${darkMode ? "text-gray-300" : "text-gray-700"}`}
+                              >
+                                <span className="font-medium">Marital:</span>{" "}
+                                {patientInfo?.marital_status}
+                              </span>
+                            </div>
+                            <div className="flex items-center">
+                              <Clipboard
+                                className={`mr-2 ${darkMode ? "text-yellow-400" : "text-yellow-600"}`}
+                                size={16}
+                              />
+                              <span
+                                className={`text-sm ${darkMode ? "text-gray-300" : "text-gray-700"}`}
+                              >
+                                <span className="font-medium">
+                                  Appointment decription:
+                                </span>{" "}
+                                {patient.description}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </li>
+                  );
+                })}
             </ul>
           )}
         </div>

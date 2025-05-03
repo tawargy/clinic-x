@@ -71,6 +71,7 @@ export type TPatientInfoQ = {
   name: string;
   appointment_type: string;
   description: string;
+  time: string;
 };
 export type TAppointmentFees = {
   id: string;
@@ -82,6 +83,7 @@ export type TAppointmentFees = {
   services: TService[];
   total_fees: string;
   date: string;
+  time_stamp: string;
 };
 export type TClinicInfo = {
   id: string;
@@ -140,4 +142,30 @@ export type TRequest = {
   comment: string;
   req_type: string;
   resualt?: string;
+};
+
+export type Purchase = {
+  item_name: string;
+  price: string;
+};
+
+export type Installment = {
+  insinternet_name: string;
+  value: string;
+};
+export type OtherExpense = {
+  other_expense_name: string;
+  value: string;
+};
+export type TExpenses = {
+  id: string;
+  month: string;
+  rent: string;
+  taxes: string;
+  electricity_invoice: string;
+  water_invoice: string;
+  phone_and_internet_invoice: string;
+  purchases: Array<Purchase>;
+  installments: Array<Installment>;
+  other_expenses: Array<OtherExpense>;
 };

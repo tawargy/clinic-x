@@ -6,6 +6,7 @@ pub mod clinic_info;
 pub mod db_backup;
 pub mod diagnosis;
 pub mod employee;
+pub mod expenses;
 pub mod fee_and_services;
 pub mod patient;
 pub mod patient_medical_history;

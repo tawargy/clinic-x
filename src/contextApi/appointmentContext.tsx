@@ -17,6 +17,7 @@ const appointmentFeesInit: TAppointmentFees = {
   services: [],
   total_fees: "",
   date: "",
+  time_stamp: "",
 };
 
 type TAppointmentContext = {

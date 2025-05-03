@@ -6,6 +6,9 @@ import { followupNames } from "../../utils/followupNames";
 import { getLastAppointmentWrapperApi } from "../../api/appointmentWrapper";
 import { getFeeAndServicesApi } from "../../api/feeAndServices";
 import { TAppointmentWrapper } from "../../types";
+import TimePicker from "react-time-picker";
+import "react-time-picker/dist/TimePicker.css";
+import "react-clock/dist/Clock.css";
 
 interface EventFormProps {
   selectedDate: Date;
@@ -28,6 +31,7 @@ const CalendarEvent: React.FC<EventFormProps> = ({
     TAppointmentWrapper | undefined
   >();
   const [appointmentType, setAppointmentType] = useState("new");
+  const [time, setTime] = useState("19:00");
 
   const getFollowupsIds = async () => {
     try {
@@ -62,6 +66,7 @@ const CalendarEvent: React.FC<EventFormProps> = ({
     onAddAppoimtmentDate({
       appointment_type: appointmentType,
       description,
+      time,
     });
   };
   const handleAppointmentTypeChange = (
@@ -91,6 +96,23 @@ const CalendarEvent: React.FC<EventFormProps> = ({
             className={`${darkMode ? " border-gray-600 text-gray-500 placeholder-gray-400" : "bg-gray-50 border-gray-300 text-gray-900"}
                border text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 p-2.5 transition-colors duration-200`}
             required
+          />
+        </div>
+        <div className="mb-4">
+          <label
+            htmlFor="time"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Time *
+          </label>
+          <TimePicker
+            onChange={(value) => {
+              setTime(value || "19:00");
+            }}
+            value={time}
+            clearIcon={null}
+            disableClock={true}
+            className="w-full text-gray-600 light-time-picker"
           />
         </div>
         <div className="mb-4">

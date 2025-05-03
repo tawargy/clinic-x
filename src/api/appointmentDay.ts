@@ -7,12 +7,20 @@ export const getAppointmentDaysApi = async (date: string) => {
       date,
     });
 
-    return res?.patient_data as TPatientInfoQ[];
+    return res?.patient_data;
+    //return res;
   } catch (e) {
     console.error("Error getting appointment days:", e);
+    return [];
   }
 };
-export const addAppointmentDayApi = async (data: object) => {
+export const addAppointmentDayApi = async (data: {
+  id?: string;
+  day: string;
+  patient_data: TPatientInfoQ[];
+}) => {
+  console.log(data);
+
   try {
     const res = await invoke("add_appointment_day", {
       appointmentDay: data,
@@ -35,5 +43,23 @@ export const deleteAppointmentDayApi = async (
     return res;
   } catch (e) {
     console.error("Error removing patient from appointment day:", e);
+  }
+};
+
+export const updatePatientTimeApi = async (
+  day: string,
+  patientId: string,
+  newTime: string,
+) => {
+  try {
+    const res = await invoke("update_patient_time", {
+      day,
+      patientId,
+      newTime,
+    });
+    return res;
+  } catch (e) {
+    console.error("Error updating patient time:", e);
+    throw e;
   }
 };
