@@ -11,13 +11,22 @@ jobs:
       fail-fast: false
       matrix:
         platform: [macos-latest, ubuntu-latest, windows-latest]
+        include:
+          - platform: macos-latest
+            arch: aarch64
+          - platform: ubuntu-latest
+            arch: x86_64
+          - platform: windows-latest
+            arch: x86_64
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Rust
+      - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin, x86_64-apple-darwin
 
       - name: Install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-latest'
@@ -35,17 +44,31 @@ jobs:
         uses: Swatinem/rust-cache@v2
         with:
           workspaces: "./src-tauri -> target"
+          cache-directories: |
+            ~/.cargo/registry/index
+            ~/.cargo/registry/cache
+            ~/.cargo/git
+          shared-key: rust-${{ matrix.platform }}-${{ matrix.arch }}
+          save-if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/') }}
 
-      - name: Install dependencies
+      - name: Install frontend dependencies
         run: npm install
 
       - name: Build the app
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ENABLE_CODE_SIGNING: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         with:
           tagName: ${{ github.ref_name }}
           releaseName: "App v__VERSION__"
           releaseBody: "See the assets to download this version and install."
           releaseDraft: true
           prerelease: false
+          args: ${{ matrix.platform == 'macos-latest' && '--target aarch64-apple-darwin' || '' }}
