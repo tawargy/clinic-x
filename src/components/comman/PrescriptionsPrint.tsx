@@ -5,7 +5,7 @@ import { useClinic } from "../../contextApi/clinicContext";
 import { getClinicInfoApi } from "../../api/clinicInfo";
 import { formatDate } from "../../utils/date";
 import { clinicInfoInit } from "../../initData";
-import { TClinicInfo } from "../../types";
+import { TClinicInfo, TPrescription } from "../../types";
 import { X, PrinterCheck } from "lucide-react";
 import Rx from "../../assets/rx.png";
 
@@ -13,33 +13,44 @@ type Tprops = {
   setIsOpen: (isOpen: boolean) => void;
   visitDate: string;
   printDate: Date;
+  prescriptions: TPrescription[];
 };
 
-function PrescriptionsPrint({ setIsOpen, visitDate, printDate }: Tprops) {
-  const { prescriptions, patientInfo } = useClinic();
+function PrescriptionsPrint({
+  setIsOpen,
+  visitDate,
+  printDate,
+  prescriptions,
+}: Tprops) {
+  const { patientInfo } = useClinic();
   const { darkMode } = useAppSettings();
   const [clinicInfo, setClinicInfo] = useState<TClinicInfo>(clinicInfoInit);
   const contentRef = useRef<HTMLDivElement>(null);
-  const reactToPrintFn = useReactToPrint({ contentRef });
-  console.log(visitDate);
+  const handlePrint = useReactToPrint({
+    documentTitle: "Prescription",
+    onAfterPrint: () => setIsOpen(false),
+    contentRef,
+  });
 
   const getClinicInfo = async () => {
     try {
       const res = await getClinicInfoApi();
       res && setClinicInfo(res);
     } catch (e) {
-      console.error("Error getting appointment days:", e);
+      console.error("Error getting clinic info:", e);
     }
   };
+
   useEffect(() => {
     getClinicInfo();
   }, []);
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50  z-50 ">
-      <div className="flex  justify-center gap-4 min-h-screen p-4 ">
+    <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
+      <div className="flex justify-center gap-4 min-h-screen p-4">
         <div className="flex w-[40%] gap-4 max-w-7xl relative">
           <div
-            className=" w-7 h-7 flex items-center justify-center bg-white  rounded-md absolute right-0 top-0  cursor-pointer"
+            className="w-7 h-7 flex items-center justify-center bg-white rounded-md absolute right-0 top-0 cursor-pointer"
             onClick={() => setIsOpen(false)}
           >
             <X
@@ -49,17 +60,20 @@ function PrescriptionsPrint({ setIsOpen, visitDate, printDate }: Tprops) {
           </div>
 
           <div
-            className={`${darkMode ? "bg-gray-800" : "bg-white"} max-h-[100vh] overflow-y-auto custom-scrollbar rounded-lg shadow-xl p-6 w-full`}
+            className={`${
+              darkMode ? "bg-gray-800" : "bg-white"
+            } max-h-[100vh] overflow-y-auto custom-scrollbar rounded-lg shadow-xl p-6 w-full`}
           >
             <div
               ref={contentRef}
-              className={`${darkMode ? "bg-gray-800" : "bg-white"} rounded-lg shadow-xl p-6 w-full`}
+              className={`${
+                darkMode ? "bg-gray-800" : "bg-white"
+              } rounded-lg shadow-xl p-6 w-full`}
             >
-              <div className="print-content flex flex-col justify-between min-h-[800px] max-h-[800px] overflow-y-auto custom-scrollbar border-2 border-gray-300 rounded-lg p-4  custom-scrollbar">
+              <div className="print-content flex flex-col justify-between min-h-[800px] max-h-[800px] overflow-y-auto custom-scrollbar border-2 border-gray-300 rounded-lg p-4">
                 <div>
                   <div className="flex justify-between gap-4">
-                    <div className="">
-                      {/* <p>Code: {patientInfo?.id}</p> */}
+                    <div>
                       <p>Name: {patientInfo?.name}</p>
                       <p>Age: {patientInfo?.age}</p>
                       <p>Dx: </p>
@@ -71,10 +85,9 @@ function PrescriptionsPrint({ setIsOpen, visitDate, printDate }: Tprops) {
                         {clinicInfo.clinic_name}
                       </h2>
                       <h3>{clinicInfo.speciality}</h3>
-                      {clinicInfo.memberships &&
-                        clinicInfo.memberships.map((membership, index) => (
-                          <p key={index}>{membership}</p>
-                        ))}
+                      {clinicInfo.memberships?.map((membership, index) => (
+                        <p key={index}>{membership}</p>
+                      ))}
                     </div>
                   </div>
                   <div className="h-[1px] w-full bg-gray-300 my-4"></div>
@@ -92,31 +105,31 @@ function PrescriptionsPrint({ setIsOpen, visitDate, printDate }: Tprops) {
                   ))}
                 </div>
 
-                <div className=" ">
-                  <p>printted on {formatDate(printDate)}</p>
-                  <div className="flex flex-col text-right  border-[1px] border-gray-300 rounded-lg p-2 mt-1">
+                <div>
+                  <div className="flex flex-col text-right border-[1px] border-gray-300 rounded-lg p-2 mt-1">
                     <p>{clinicInfo.address}</p>
-                    <p className="flex  flex-row-reverse gap-4">
+                    <p className="flex flex-row-reverse gap-4">
                       <span>من</span>{" "}
-                      <span>{clinicInfo.appointments.from} </span>
+                      <span>{clinicInfo.appointments?.from} </span>
                       <span>الى </span>
-                      <span> {clinicInfo.appointments.to}</span>
+                      <span> {clinicInfo.appointments?.to}</span>
                       <span> ماعدا - </span>
-                      <span>({clinicInfo.appointments.excepting}) </span>
+                      <span>({clinicInfo.appointments?.excepting}) </span>
                     </p>
                     <p className="flex flex-row-reverse gap-4">
-                      {clinicInfo.contactus &&
-                        clinicInfo.contactus.map((c) => (
-                          <span key={c}>{c}</span>
-                        ))}
+                      {clinicInfo.contactus?.map((c) => (
+                        <span key={c}>{c}</span>
+                      ))}
                     </p>
                   </div>
+                  <p className="mt-2">Printed on: {formatDate(printDate)}</p>
                 </div>
               </div>
               <div className="flex flex-row-reverse">
                 <button
-                  className=" mt-6 py-3 px-8 "
-                  onClick={() => reactToPrintFn()}
+                  type="button"
+                  className="mt-6 py-3 px-8"
+                  onClick={() => handlePrint()}
                 >
                   <PrinterCheck className="text-yellow-500" size={40} />
                 </button>
